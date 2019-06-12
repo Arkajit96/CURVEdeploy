@@ -136,6 +136,16 @@ body {
   box-shadow: 0px 10px 38px -8px rgba(0,0,0,0.75);
 }
 
+    .caption-text{
+      margin: -0.3em 0em 1em;
+      padding: 0 1em;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .profile-card h6{
+      color: black;
+    }
 
 .pro-pic{
   object-fit: contain;
@@ -437,4 +447,12 @@ body {
   max-height: 75px;
   background-color: transparent;
   box-shadow: 0px 0px 12px -3px rgba(0,0,0,0.75); 
+}
+
+.research-summary, .current-projects{
+  margin: 2vw;
+  padding-bottom: 40px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: var(--font-color);
 }
