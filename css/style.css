@@ -456,3 +456,12 @@ body {
   border-bottom-width: 1px;
   border-color: var(--font-color);
 }
+
+
+
+#coming-soon{
+  position: absolute;
+  top: 300px;
+  color: rgba(0, 0, 0, 0.349);
+  font-family: 'Alegreya Sans SC', sans-serif;
+}
