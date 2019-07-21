@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-student-profile',
@@ -11,7 +12,11 @@ import { Router } from '@angular/router';
 export class StudentProfileComponent implements OnInit {
   student_id:any
   student:any
-  constructor(public route:ActivatedRoute, public http: HttpClient, public router: Router) { }
+  form: FormGroup
+  fileToUpload: File = null;
+  constructor(public route:ActivatedRoute, public http: HttpClient, public router: Router, private fb: FormBuilder) {
+    this.createForm();
+   }
   
   ngOnInit() {
     //let hrefUrl:any = location.href;
@@ -28,9 +33,46 @@ export class StudentProfileComponent implements OnInit {
       });
     });
   }
+  createForm() {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      avatar: null
+    });
+  }
+  onFileChange(event) {
+    if(event.target.files.length > 0) {
+      let file = event.target.files[0];
+      this.fileToUpload = event.target.files[0];
+      console.log(this.fileToUpload);
+      this.form.get('avatar').setValue(file);
+    }
+  }
+  private prepareSave(): any {
+    let input = new FormData();
+    input.append('name', this.form.get('name').value);
+    input.append('avatar', this.form.get('avatar').value);
+    console.log(input['avatar']);
+    return input;
+  }
 
   edit() {
     console.log(this.student_id);
     this.router.navigate(['/editStudentProfile/'], {queryParams : {student_id: this.student._id}});
+  }
+  
+
+  editTranscript() {
+    
+    // const formModel = this.prepareSave();
+    // console.log(formModel);
+    //const params = new HttpParams({fromObject: formModel});
+    // const params = new HttpParams({fromObject: this.fileToUpload});
+    const formData: FormData = new FormData();
+    formData.append('fileKey', this.fileToUpload, this.fileToUpload.name);
+    const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
+    // this.http.put("/api/student/edit/" + this.student_id, params, {headers:reqHeader, observe: "response"}
+    this.http.post("/api/student/edit/resumes/" + this.student_id, formData, {headers: reqHeader, observe: "response"}).subscribe((res:any)=> {
+      console.log(res);
+    })
   }
 }

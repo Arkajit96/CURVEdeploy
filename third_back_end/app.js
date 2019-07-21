@@ -31,7 +31,10 @@ const mongoDB = ("mongodb+srv://"+
                  +process.env.DATABASE);
 mongoose.connect(mongoDB, {useNewUrlParser: true, retryWrites: true});
 
-app.use(bodyParser.urlencoded({extended: true}));
+
+
+app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
+// app.use(express.bodyParser({limit: '50mb'}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
