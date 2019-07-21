@@ -1,0 +1,60 @@
+
+<body style=" background-image: linear-gradient(65deg, #AEEFF9, #FCF7CC);
+background-repeat: no-repeat;
+background-size: cover;
+background-attachment: fixed;">
+
+<div class="row flex-row-reverse no-gutters" id="signin-parent">
+    <div class="col-md-6" id="register-container">
+
+        <h1>CURVE</h1>
+        <br>
+
+        <p>Please complete to create your account.</p>
+        <form ngNativeValidate #RegisterForm="ngForm" (ngSubmit)="register(RegisterForm.value)">
+            <div class="input-group">
+                <input style="width: 300px" placeholder="Email" [(ngModel)]="username" type="email" name="username" required patter="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" onfocus="this.placeholder = ''"
+                    onblur="this.placeholder = 'Email'">
+            </div>
+            <div class="input-group">
+                <input style="width: 300px" placeholder="Password"  [(ngModel)]="password" type="password" name="password" required onfocus="this.placeholder = ''"
+                    onblur="this.placeholder = 'Password'" required> 
+            </div>
+            <div class="input-group">
+                <input style="width: 300px" type="password" [(ngModel)]="repassword" name="Confirm password" placeholder="Confirm password" onfocus="this.placeholder = ''"
+                    onblur="this.placeholder = 'Confirm password'" required>
+            </div>
+        <!-- <input placeholder="Confirm Password" [(ngModel)]="repassword" type="password" name="repassword" required>  -->
+            <div style="margin-top: 15px">
+                <label for="identity">Identity:</label>
+                <select style="margin-left: 20px; width: 220px;" id="identity" name="entity" [(ngModel)]="entity" required>Identity:
+                    <option value="">--Please choose an identity--</option>
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>        
+                </select>
+            </div>
+            <div class="options" style="margin: 30px 0;">
+                <div><input type="checkbox" name="remember user" style="margin-left: 15px;"> I agree to the terms and conditions.</div>
+            </div>
+        <!-- <input type="checkbox" [(ngModel)]="agree" id="agree" name="agree">  -->
+            <div style="text-align: center">
+                <button type="submit" class="myButton">Register</button>
+            </div>
+        </form>
+        
+        <br>
+
+        
+        
+        <a href id="account-exists">Already have an account? Sign in.</a>
+
+
+        <div id="legal">
+            <a href>Terms of Use</a>
+            <a href>Privacy</a>
+        </div>
+    </div>
+    <div class="col-md-6" id="wave-canvas"></div>
+</div>
+
+</body>

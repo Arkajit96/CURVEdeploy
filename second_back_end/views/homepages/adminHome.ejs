@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Travel Blog</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <link href="/favicon.ico" type="image/x-icon" rel="icon" />
+        <link rel="stylesheet" href="/stylesheets/main.css">
+    </head>
+    <body>
+    
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+        <a href="/blogs" class="ga-header-logo" style="margin-right: 30px;">
+            <svg class="logo-icon" style="height: 32px; width: 32px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                    <style>
+                    .st0 {
+                        fill: url(#gradientone);
+                    }
+                    .st1 {
+                        fill: #FFFFFF;
+                    }
+                    .st2 {
+                        fill: url(#gradienttwo);
+                    }
+                    </style>
+                    <g id="B_4_">
+                    <g id="XMLID_462_">
+                        <radialGradient id="gradientone" cx=".083" cy="0" r="44.988" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stop-color="#F59839"></stop>
+                        <stop offset="1" stop-color="#F38936"></stop>
+                        </radialGradient>
+                        <path id="XMLID_475_" class="st0" d="M32 29.3c0 1.5-1.2 2.7-2.7 2.7H2.7C1.2 32 0 30.8 0 29.3V2.7C0 1.2 1.2 0 2.7 0h26.7C30.8 0 32 1.2 32 2.7v26.6z"></path>
+                        <g id="XMLID_464_">
+                        <g id="XMLID_465_">
+                            <path id="XMLID_466_" class="st1" d="M25.3 13.3H24c-.7 0-1.3-.6-1.3-1.3 0-3.7-3-6.7-6.7-6.7h-4c-3.7 0-6.7 3-6.7 6.7v8c0 3.7 3 6.7 6.7 6.7h8c3.7 0 6.7-3 6.7-6.7v-5.3c0-.8-.6-1.4-1.4-1.4zm-13.4-2.6h4.8c.7 0 1.3.6 1.3 1.3 0 .7-.6 1.3-1.3 1.3h-4.8c-.7 0-1.3-.6-1.3-1.3 0-.7.6-1.3 1.3-1.3zm8.2 10.6H12c-.7 0-1.3-.6-1.3-1.3 0-.7.6-1.3 1.3-1.3h8.1c.7 0 1.3.6 1.3 1.3 0 .7-.6 1.3-1.3 1.3z"></path>
+                        </g>
+                        </g>
+                        <radialGradient id="gradienttwo" cx=".067" cy=".033" r="45.159" gradientUnits="userSpaceOnUse">
+                        <stop offset="0" stop-color="#FFF" stop-opacity=".1"></stop>
+                        <stop offset="1" stop-color="#FFF" stop-opacity="0"></stop>
+                        </radialGradient>
+                        <path id="XMLID_463_" class="st2" d="M32 29.3c0 1.5-1.2 2.7-2.7 2.7H2.7C1.2 32 0 30.8 0 29.3V2.7C0 1.2 1.2 0 2.7 0h26.7C30.8 0 32 1.2 32 2.7v26.6z"></path>
+                    </g>
+                    </g>
+                </svg>
+            </svg>
+            <span style="display: inline-block; color: #fff; margin-left: 10px; font-size: 20px; font-weight: bold; padding-top: 1px;">
+                Travel &nbsp;Blog
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <form class="form-inline" action="/blogs/search/name" method="GET">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Input the blog name">
+                        <div class="input-group-apend">
+                            <button style="border-left-width: 0;border-top-left-radius: 0;border-bottom-left-radius: 0;" type="submit" class="btn btn-outline-secondary">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </ul>
+            <ul class="navbar-nav" style="padding-right: 10px;">
+                <% if(!currentUser){ %>
+                    <li class="nav-item active"><a class="nav-link" href="/login" style="padding: 3px"><button type="button" class="btn btn-outline-secondary">SIGN IN</button></a></li>
+                <% } else { %>
+                    <li class="nav-item active"><a class="nav-link" href="/logout" style="padding: 3px"><button type="button" class="btn btn-outline-secondary">SIGN OUT</button></a></li>
+                <% } %>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <% if(error && error.length > 0){ %>
+            <div class="alert alert-danger" role="alert">
+                <%= error %>
+            </div>
+        <% } %>
+        <% if(success && success.length > 0){ %>
+            <div class="alert alert-success" role="alert">
+                <%= success %>
+            </div>
+        <% } %>
+    </div>
+    
+    <div class="container">
+        <div class="row">        
+            <div>
+                <% blogs.forEach(function(blog){ %>
+                    <div class="col-sm-12 col-12 col-lg-3 ">
+                        <div class="thumbnail gallery">
+                            <img src="<%= blog.image %>">
+                            <div class="caption">
+                                <h4><%= blog.name %></h4>
+                            </div>
+                            <p>
+                                <a href="/blogs/<%= blog._id %>" class="btn btn-primary">More Info</a>
+                            </p>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+
+<% include ../partials/footer %>

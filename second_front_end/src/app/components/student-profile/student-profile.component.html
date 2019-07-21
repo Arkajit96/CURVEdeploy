@@ -1,0 +1,77 @@
+
+<app-header></app-header>
+<body>
+    <div class = "container-fluid">
+        <div class = "row justify-content-lg-center">
+            <div class = "col-lg-3 col-sm-4">
+                <div class = "profile-card">
+                    <img src = "student.image" class = "pro-pic">
+                    <h4 id = "name">{{student.first_name}} {{student.last_name}}</h4>
+                    <div class = "caption-text">Class of 2020</div>
+                    
+                    <div class = "profile-item">
+                        <h6>Majors</h6>
+                        {{student.major}}
+                    </div> 
+                    <div class = "profile-item">
+                        <h6>Minors</h6>
+                        {{student.minor}}
+                    </div>
+                    <div class = "profile-item">
+                        <h6>Email</h6>
+                        {{student.email}}
+                    </div>
+                    <div class = "profile-item">
+                        <h6>Phone</h6>
+                        {{student.phone}}
+                    </div>
+                </div>
+                <div>
+                    <button class="myButton" (click)="edit()" >Edit</button>
+                </div>
+
+                <div class = "documents">
+                    <div class = "resume">
+                        <a href=""><h6>Resume</h6></a>
+                    </div>
+                    <div class = "transcript">
+                        <label for="avatar"><h6>Transcript</h6></label>
+                        <input type="file" id="rec-letter" name="rec-letter">
+                    </div>
+                    <div class = "cover-letter">
+                        <label for="avatar"><h6>Cover Letters</h6></label>
+                        <input type="file" id="rec-letter" name="rec-letter">
+                    </div>
+                    <div class = "rec-letter">
+                        <label for="avatar"><h6>Letters of Recommendation</h6></label>
+                        <input type="file" id="rec-letter" name="rec-letter">
+                    </div>
+                </div>
+            </div>
+            
+            <div class = "col-sm-8">           
+                <div class="d-flex flex-column align-items-center">
+                    <div class="searchbar">
+                        <input class="search_input" type="text" name="" placeholder="Search...">
+                        <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
+                    </div>
+                    <div class = "interests-container">
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Space Flight</div>                            
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>SpaceX</div>   
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Neurology</div>  
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Calculus</div> 
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Astrophysics</div>      
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Chesmitry</div>                      
+                    </div>
+                        
+                    <div class = "student-summary">
+                        <h1>STUDENT SUMMARY </h1>
+                        {{student.student_summary}}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>    
+</body>
+

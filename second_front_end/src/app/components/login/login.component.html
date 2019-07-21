@@ -1,0 +1,40 @@
+    
+<body style=" background-image: linear-gradient(65deg, #AEEFF9, #FCF7CC);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;">
+    <div class="row flex-row-reverse no-gutters" id="signin-parent">
+        <div class="col-md-6" id="signin-container">
+            <h1>CURVE</h1>
+            <br>
+            <p>Please sign into your account.</p>
+
+            <form ngNativeValidate #LoginForm="ngForm" style="display: flex; flex-direction: column;" (ngSubmit)="userLogin(LoginForm.value)">
+                <input placeholder="Email" [(ngModel)]="username" type="email" name="username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'" required patter="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                <br>    
+                <input placeholder="Password" [(ngModel)]="password" type="password" name="password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" required>   
+                <br>   
+                <div class="options">
+                    <div><input type="checkbox" [(ngModel)]="rememberMe" id="rememberMe" name="rememberMe"> Remember Me</div>
+                    <a href="#">Forgot your password?</a>
+                </div>
+                <br>
+                <div class="options">
+                    <button type="submit" class="myButton">Sign in</button>  
+                    <a class="myButton" routerLink="/register" routerLinkActive="active">Register</a>  
+                    <!-- <a href="" type="myButton" class="myButton">Register</a> -->
+                </div>
+                
+            </form>
+            
+
+            <div id="legal">
+                <a href>Terms of Use</a>
+                <a href>Privacy</a>
+            </div>
+            </div>
+        <div class="col-md-6" id="wave-canvas"></div>
+        </div> 
+    
+</body>
+

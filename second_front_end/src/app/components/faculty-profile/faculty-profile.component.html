@@ -1,0 +1,61 @@
+
+<app-header></app-header>
+
+<body>
+    <div class = "container-fluid">
+        <div class = "row justify-content-lg-center">
+            <div class = "col-lg-3 col-sm-4">
+                <div class = "profile-card">
+                        <img src = "{{faculty.image}}" class = "pro-pic">
+                        <h4 id = "name">{{faculty.first_name}} {{faculty.last_name}}</h4>
+                        <div class = "caption-text">PhD Associate Professor</div>
+                        
+                        <div class = "profile-item">
+                            <h6>Department</h6>
+                            {{faculty.department}}
+                        </div> 
+                        <div class = "profile-item">
+                            <h6>Education</h6>
+                            <ul>
+                                <li>{{faculty.education}}</li>
+                            </ul>         
+                        </div>
+                        <div class = "profile-item">
+                            <h6>Experience</h6>
+                            <ul>
+                                <li>{{faculty.experience}}</li>
+                            </ul>
+                        </div>
+                        <div class = "profile-item">
+                            <h6>Office</h6>
+                            {{faculty.address}}
+                        </div>
+                        <div class = "profile-item">
+                            <h6>Email</h6>
+                            {{faculty.email}}
+                        </div>
+                        <div class = "profile-item">
+                            <h6>Phone</h6>
+                            {{faculty.phone}}
+                        </div>
+                </div>
+                <div>
+                    <button class="myButton" (click)="edit()" >Edit</button>
+                </div>
+            </div>
+            <div class = "col-sm-8">           
+                <div class="d-flex flex-column align-items-center">                     
+                    <div class = "research-summary">
+                        <h1>RESEARCH SUMMARY</h1> {{faculty.research_summary}}
+                    </div>
+                    <div class = "current-projects">
+                        <h1>CURRENT PROJECTS</h1>
+                        {{faculty.current_projects}}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+

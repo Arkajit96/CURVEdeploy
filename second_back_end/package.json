@@ -1,0 +1,29 @@
+{
+  "name": "v1",
+  "version": "1.0.0",
+  "description": "Travel Blog",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "Colt Steele",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "connect-flash": "^0.1.1",
+<<<<<<< HEAD
+    "dotenv": "^8.0.0",
+=======
+    "dotenv": "^7.0.0",
+>>>>>>> 782cf0c457c20d5814beb0cd145ad6e9b519a845
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "express-session": "^1.11.3",
+    "method-override": "^2.3.5",
+    "mongoose": "^5.5.0",
+    "passport": "^0.3.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^3.1.0"
+  }
+}

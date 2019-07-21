@@ -1,0 +1,31 @@
+<% include ../partials/header %> 
+
+<header class="jumbotron">
+    <div>
+        <h1>Welcome to Travel Blog!</h1>
+        <p>View our hand-picked travel places.</p>
+        <p>
+            <a class="btn btn-primary btn-large" href="/blogs/new">Add New Campground</a>
+        </p>
+    </div>
+</header>
+
+ <div class="container">
+     <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+        <% blogs.forEach(function(blog){ %>
+            <div class="col-sm-12 col-12 col-lg-3 ">
+                <div class="thumbnail gallery">
+                   <img src="<%= blog.image %>">
+                   <div class="caption">
+                       <h4><%= blog.name %></h4>
+                   </div>
+                   <p>
+                       <a href="/blogs/<%= blog._id %>" class="btn btn-primary">More Info</a>
+                   </p>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</div>
+
+<% include ../partials/footer %>
