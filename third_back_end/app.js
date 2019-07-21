@@ -9,13 +9,11 @@ var express     = require("express"),
     methodOverride = require("method-override"),
     Blog  = require("./models/blog"),
     Comment     = require("./models/comment"),
-<<<<<<< HEAD
-    User       = require("./models/User"),
-    seedDB      = require("./seeds");
+    User       = require("./models/User")
    //  port        = 9292;
     
 //requiring routes
-var indexRoutes      = require("./routes/index"),
+var indexRoutes = require("./routes/index"),
    studentRoutes = require("./routes/student"),
    facultyRoutes = require("./routes/faculty")
  
@@ -23,19 +21,6 @@ var indexRoutes      = require("./routes/index"),
 // var uri = 'mongodb://JamesLin:<Lin!960605>@cluster0-x6qm9.mongodb.net/travelBlog?retryWrites=true'
 // mongoose.connect(uri);
 console.log(process.env.USERNAME)
-=======
-    User        = require("./models/user"),
-    //GithubStrategy = require('passport-github').Strategy,
-    dotenvConfig = require('dotenv').config();
-
-//requiring routes
-var commentRoutes    = require("./routes/comments"),
-    blogRoutes = require("./routes/blogs"),
-    indexRoutes      = require("./routes/index"),
-    userRoutes      = require("./routes/user")
-
-// connect mongo
->>>>>>> 782cf0c457c20d5814beb0cd145ad6e9b519a845
 const mongoDB = ("mongodb+srv://"+
                  process.env.USERNAME+
                  ":"
@@ -44,35 +29,14 @@ const mongoDB = ("mongodb+srv://"+
                  +process.env.HOST+
                  "/"
                  +process.env.DATABASE);
-<<<<<<< HEAD
-=======
-
->>>>>>> 782cf0c457c20d5814beb0cd145ad6e9b519a845
 mongoose.connect(mongoDB, {useNewUrlParser: true, retryWrites: true});
 
-// middleware used
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
-
-// github
-// passport.use(new GithubStrategy({
-//     clientID: process.env.GITHUB_CLIENT_ID,
-//     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-//     callbackURL: 'https://'+process.env.PROJECT_DOMAIN+'.glitch.me/login/github/return',
-// },
-// function(token, tokenSecret, profile, cb) {
-//     return cb(null, profile);
-// }));
-// passport.serializeUser(function(user, done) {
-//     done(null, user);
-// });
-// passport.deserializeUser(function(obj, done) {
-//     done(null, obj);
-// });
-
+// seedDB(); //seed the database
 
 // PASSPORT CONFIGURATION
 app.use(require("express-session")({
@@ -83,7 +47,6 @@ app.use(require("express-session")({
 
 app.use(passport.initialize());
 app.use(passport.session());
-<<<<<<< HEAD
 
 passport.use(new LocalStrategy(
     User.authenticate()
@@ -109,11 +72,6 @@ passport.use(new LocalStrategy(
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-=======
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
->>>>>>> 782cf0c457c20d5814beb0cd145ad6e9b519a845
 
 app.use(function(req, res, next){
    res.locals.currentUser = req.user;
@@ -123,7 +81,6 @@ app.use(function(req, res, next){
 });
 
 app.use("/", indexRoutes);
-<<<<<<< HEAD
 app.use("/student", studentRoutes);
 app.use("/faculty", facultyRoutes);
 
@@ -132,12 +89,5 @@ app.use("/faculty", facultyRoutes);
 // });
 
 const listener = app.listen(3000, function() {
-=======
-app.use("/user", userRoutes);
-app.use("/blogs", blogRoutes);
-app.use("/blogs/:id/comments", commentRoutes);
-
-const listener = app.listen(process.env.PORT, function() {
->>>>>>> 782cf0c457c20d5814beb0cd145ad6e9b519a845
    console.log('Your app is listening on port ' + listener.address().port);
 })

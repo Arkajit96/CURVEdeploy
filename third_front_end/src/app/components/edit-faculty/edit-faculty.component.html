@@ -1,8 +1,7 @@
 <app-header></app-header>
 
-
-<!-- <body>
-    <div class="container-fluid">
+<body>
+    <form ngNativeValidate #EditForm="ngForm" (ngSubmit)="editFaculty(EditForm.value)" class="container-fluid">
         <div class="row pt-3">
             <div class="col-lg-3 col-md-2"></div>
             <div class="col-lg-3 col-md-4 p-md-3 pt-2 px-5 pb-5">
@@ -11,7 +10,7 @@
                         <li>
                             <b>Profile Picture</b>
                             <br />
-                            <input type="text" id="profile-pic" name="profile-pic" placeholder="enter image url">
+                            <input type="text" id="profile-pic" [(ngModel)]="image" name="image" placeholder="enter image url">
                         </li>
                         <li>
                             <b>First Name</b>
@@ -75,22 +74,20 @@
                 <div class="edit-container mb-3" id="summary">
                     <h2>Research Summary</h2>
                     <textarea [(ngModel)]="research_summary" name="research_summary" placeholder="Sum up your research in a paragraph or two."></textarea>
-                    <input type="submit" class="mt-2">
                 </div>
                 <div class="edit-container" id="summary">
                     <h2>Current Projects</h2>
                     <textarea [(ngModel)]="current_projects" name="current_projects" placeholder="What are you working on?"></textarea>
-                    <input type="submit" class="mt-2">
                 </div>
+            </div>
+            <div>
+            <button type="submit" class="myButton" >Save </button>
             </div>
             <div class="col-lg-3 col-md-1"></div>
         </div>
-    </div>
-
-    </div>
-    </div>
-</body>     -->
-<body>
+    </form>
+</body>    
+<!-- <body>
     <form ngNativeValidate #EditForm="ngForm" (ngSubmit)="editFaculty(EditForm.value)" class="container-fluid">
 
         <div class="row pt-3">
@@ -144,12 +141,11 @@
                 <div class="edit-container mb-3" id="summary">
                     <h2>Research Summary</h2>
                     <textarea [(ngModel)]="research_summary" name="research_summary" placeholder="Sum up your research in a paragraph or two."></textarea>
-                    <!-- <input type="submit" class="mt-2"> -->
+                    
                 </div>
                 <div class="edit-container" id="summary">
                     <h2>Current Projects</h2>
                     <textarea [(ngModel)]="current_projects" name="current_projects" placeholder="What are you working on?"></textarea>
-                    <!-- <input type="submit" class="mt-2"> -->
                 </div>
         
             </div>
@@ -161,5 +157,5 @@
     </div>
 </form>
 
-</body>
+</body> -->
 

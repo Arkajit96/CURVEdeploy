@@ -9,42 +9,51 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
   styleUrls: ['./edit-student.component.scss']
 })
 export class EditStudentComponent implements OnInit {
+  student_id:any;
   student:any;
   id: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
   major: string;
   minor: string;
   email: any;
   phone: string;
-  research_summary: string;
+  address: string;
+  graduation_class: number;
+  gender: string;
+  date_of_birth: string;
+  date_of_joining: string;
+  summary: string;
+  image: string;
   constructor(public route:ActivatedRoute, public http: HttpClient, public router: Router) { }
 
   ngOnInit() {
-    this.id = this.route.snapshot.queryParamMap.get('student_id');
-    this.major = this.route.snapshot.queryParamMap.get('major');
-    this.minor = this.route.snapshot.queryParamMap.get('minor');
-    this.email = this.route.snapshot.queryParamMap.get('email');
-    this.phone = this.route.snapshot.queryParamMap.get('phone');
-    this.research_summary = this.route.snapshot.queryParamMap.get('summary');
-    // this.route.params.subscribe((data) => {
-    //   console.log(data);a
-      // this.student = data.id;
-      // console.log(this.faculty_id);
-      // console.log("route successfully" + JSON.stringify(this.faculty_id));
-      // // const params = new HttpParams({fromObject: {id: this.student_id}});
-      // // const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
-      // this.http.get("/api/faculty/" + this.faculty_id).subscribe((res:any) => {
-      //   console.log(res)
-      //   this.faculty = res;
-      
-    // })
-  // });
+    this.student_id = this.route.snapshot.queryParamMap.get('student_id');
+    this.http.get("/api/student/" + this.student_id).subscribe((res:any) => {
+      console.log(res);
+      this.student = res;
+      this.id = this.student['_id'];
+      this.first_name = this.student['first_name'];
+      this.middle_name = this.student['middle_name'];
+      this.last_name = this.student['last_name'];
+      this.email = this.student['email'];
+      this.gender = this.student['gender'];
+      this.date_of_birth = this.student['date_of_birth'];
+      this.date_of_joining = this.student['date_of_joining'];
+      this.address = this.student['address'];
+      this.phone = this.student['phone'];
+      this.summary = this.student['summary'];
+      this.image = this.student['image'];
+    })
+    
   }
   editStudent(student: any) {
     console.log(student)
     const params = new HttpParams({fromObject: student});
     
     const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
-    this.http.put("/api/student/edit/" + this.id, params, {headers:reqHeader, observe: "response"}).subscribe((res:any) => {
+    this.http.put("/api/student/edit/" + this.student_id, params, {headers:reqHeader, observe: "response"}).subscribe((res:any) => {
       console.log(res)
       if (res.body.message == 'successful') {
         this.router.navigate(['/studentProfile/', res.body.id]);

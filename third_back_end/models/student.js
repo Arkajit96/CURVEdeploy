@@ -11,21 +11,17 @@ var StudentSchema = new mongoose.Schema({
 	last_name: String,
 	gender: String,
 	email: String,
-	date_of_joining: Date,
-	date_of_birth: Date,
+	date_of_joining: String,
+	date_of_birth: String,
     address: String,
     major: String,
-    minor: String,
-	profile_id: 
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "FacultyProfile"
-		},
-	institution_id: 
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Institution"
-		}
+	minor: String,
+	phone: String,
+	summary: String,
+	department: String,
+	education: String,
+	image: String,
+	graduation_class: Number,
 
 });
 
