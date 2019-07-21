@@ -1,0 +1,12 @@
+
+.admin {
+    float: right;
+}
+.login-header {
+    text-align: center;
+    margin-top: 50px;
+}
+.login-div {
+    width: 320px;
+    margin: 25px auto;
+}

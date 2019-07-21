@@ -1,0 +1,110 @@
+body {
+    background-color: #eee;
+    min-height: 100%;
+}
+
+.thumbnail .caption-full {
+    padding: 9px;
+}
+
+.nav {
+    font-size: 19px;
+}
+
+/* a:hover {
+    text-decoration: none;
+}
+a {
+    color: #000;
+} */
+
+.jumbotron {
+    background: url(http://i.imgur.com/TVGe0Ef.jpg);
+    background-position: center;
+    background-size: cover;
+    margin-bottom: 0;
+    height: 20%;
+    text-align: center;
+    color: white;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.jumbotron div {
+    margin-top: 15%;
+    margin-bottom: 10%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    background: rgba(10, 130, 4, .6);
+}
+
+.row.text-center {
+    margin-top: 5%;
+}
+
+.thumbnail {
+    display: block;
+    padding: 0;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    padding-bottom: 5px;
+    border: none;
+    box-shadow: 0 16px 38px -12px rgba(0, 0, 0, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.thumbnail .caption {
+    padding: 9px;
+    color: #333;
+}
+
+.gallery img {
+    height: 240px;
+    width: 100%;
+}
+
+#footer {
+    margin-top: 5%;
+}
+
+.newBlog-header {
+    margin-top: 40px;
+    margin-left: 35px;
+}
+
+@media (max-width: 500px) {
+    .newBlog-div {
+        width: 320px;
+        margin: 25px auto;
+    }
+}
+@media (min-width: 500px) {
+    .newBlog-div {
+        width: 90%;
+        margin: 25px auto;
+    }
+    .caption-full {
+        margin-top: -40px;
+    }
+}
+
+.showBlog {
+    margin-top: 40px;
+}
+
+.img-user {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+}
+
+.user-profile {
+    text-align: center;
+    padding-top: 100px;
+}
+
+.blog-btn {
+    width: 80px;
+}
