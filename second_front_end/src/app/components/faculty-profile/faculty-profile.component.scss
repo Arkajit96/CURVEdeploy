@@ -1,0 +1,29 @@
+.myButton {
+	-moz-box-shadow: 0px 0px 9px 0px #b3b3b3;
+	-webkit-box-shadow: 0px 0px 9px 0px #b3b3b3;
+	box-shadow: 0px 0px 9px 0px #b3b3b3;
+	background-color:rgb(12, 174, 214);
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:21px;
+	padding:9px 23px;
+    text-decoration:none;
+    transition: .3s;
+    margin: 18px;
+}
+.myButton:hover {
+    background-color: rgb(19, 175, 199);
+    text-decoration: none;
+    transform: scale(1.05);
+    transition: .3s;
+}
+.myButton:active {
+	position:relative;
+    top:1px;
+    transition: .3s;
+}

@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css?family=Exo+2:300,400&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans+SC:300,400&display=swap');
+
+
+html, body { width:100vw; height:100vh;}
+
+:root{
+    --theme-blue: rgb(12, 174, 214);
+    --theme-yellow: rgb(252, 247, 204);
+    --font-color: #373D3F;
+}
+
+
+#signin-parent{
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+#wave-canvas{
+    overflow: hidden;
+}
+
+#signin-container{
+    background-color: white; 
+    -webkit-box-shadow: 0px 0px 12px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.75);
+    color: #373D3F;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    position: relative;
+}
+
+
+#signin-container > h1{
+    font-size: 70px;
+    font-family: 'Times New Roman', Times, serif;
+    letter-spacing: 8px;
+    font-weight: 800;
+    color: #04CEEC;
+    
+}
+
+input[type="text"], input[type="password"]{ 
+    border: none;
+    border-bottom: solid 1px rgba(128, 128, 128, 0.238);
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+.options{
+    display: flex;
+    justify-content: space-between;
+    width: 310px;
+
+}
+
+
+.options a{
+    color: #373D3F;
+}
+
+.options + .options{
+        padding-bottom: 200px;
+        margin-top: 30px;
+        justify-content: center;
+}
+
+#legal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    position: absolute;
+    bottom: 20px;
+}
+
+.options .myButton {
+	-moz-box-shadow: 0px 0px 9px 0px #b3b3b3;
+	-webkit-box-shadow: 0px 0px 9px 0px #b3b3b3;
+	box-shadow: 0px 0px 9px 0px #b3b3b3;
+	background-color:rgb(12, 174, 214);
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:21px;
+	padding:9px 23px;
+    text-decoration:none;
+    transition: .3s;
+    margin: 18px;
+}
+.myButton:hover {
+    background-color: rgb(19, 175, 199);
+    text-decoration: none;
+    transform: scale(1.05);
+    transition: .3s;
+}
+.myButton:active {
+	position:relative;
+    top:1px;
+    transition: .3s;
+}

@@ -1,0 +1,75 @@
+<% include ../partials/header %>
+<div class="container showBlog">
+    <div>
+        <div class="thumbnail" style="padding:0 30px;">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="user-profile">
+                        <div><img class="img-user" src="<%=  blog.author.image %>"></div>
+                        <div style="font-weight: bold; margin-top: 20px;"><%=  blog.author.username %></div>
+                    </div>
+                </div>
+                <div class="col-md-9" style="padding-top: 20px;"><img class="img-responsive" style="width: 100%" src="<%= blog.image %>"></div>
+            </div>
+            <div class="row">
+                <div class="caption-full col-md-12">
+                    <!-- <h4 class="pull-right">$9.00/night</h4> -->
+                    <h4><a><%= blog.name%></a></h4>
+                    <p style="margin-top: 20px;"><%=  blog.description %></p>
+                    <p>
+                        <em>Submitted By <%= blog.author.username %> at <%= blog.time %></em>
+                    </p>
+                    <% if(currentUser &&  blog.author.id.equals(currentUser._id)){ %>
+                        <div class="row">
+                            <div class="col-md-1 col-3"><a class="btn btn-xs btn-warning blog-btn" href="/blogs/<%= blog._id %>/edit">Edit</a></div>
+                            <div class="col-md-1 col-3"><form id="delete-form" action="/blogs/<%= blog._id %>?_method=DELETE" method="POST">
+                                <button class="btn btn-xs btn-danger blog-btn">Delete</button>
+                            </form></div>
+                        </div>
+                    <% }%>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-12">
+            
+            <div class="well">
+                <div class="text-right">
+                    <a class="btn btn-success" href="/blogs/<%= blog._id %>/comments/new">Add New Comment</a>
+                </div>
+                <hr>
+                <% blog.comments.forEach(function(comment){ %>
+                    <div class="row" style="padding-top: 5px">
+                        <div class="col-md-12">
+                            <strong style="font-style:italic;"><%= comment.author.username %></strong>
+                            <span style="font-style:italic;" class="pull-right"><%= comment.time %></span>
+                            <div class="row">
+                                <p style="font-size: 20px; line-height: 45px; margin-top: 10px;" class="col-md-10">
+                                    <%= comment.text %> 
+                                </p>
+                                <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+                                <div class="col-md-1">
+                                    <a style="width: 80px; margin-top: 8px;" class="btn btn-xs btn-warning" 
+                                    href="/blogs/<%=blog._id %>/comments/<%=comment._id %>/edit">Edit</a>
+                                </div>
+                                <div class="col-md-1">
+                                    <form id="delete-form" action="/blogs/<%=blog._id %>/comments/<%=comment._id %>?_method=DELETE" method="POST">
+                                        <input style="width: 80px; margin-top: 8px;" type="submit" class="btn btn-xs btn-danger" value="Delete">
+                                    </form>
+                                </div>
+                                <% } %>
+                            </div>
+                            
+                        
+                            
+                            
+                        
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>

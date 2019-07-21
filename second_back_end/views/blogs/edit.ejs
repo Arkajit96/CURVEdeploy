@@ -1,0 +1,29 @@
+<% include ../partials/header %>
+<div class="container">
+    <h1 class="newBlog-header">Edit <%= blog.name %></h1>
+    <div class="row">    
+        <div class="newBlog-div">
+            <form action="/blogs/<%= blog._id %>?_method=PUT" method="POST">
+                <div class="form-group">
+                    <label for="title">Blog Title</label>
+                    <input type="text" class="form-control" id="title" value="<%= blog.name %>" name="blog[name]">
+                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                </div>
+                <div class="form-group">
+                    <label for="image">Blog Image</label>
+                    <input type="text" class="form-control" id="image" value="<%= blog.image %>" name="blog[image]">
+                </div>
+                <div class="form-group">
+                    <label for="description">Blog Description</label>
+                    <textarea class="form-control" id="description" name="blog[description]" style="height: 200px;"><%= blog.description %></textarea>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                </div>
+            </form>
+            <a href="/blogs/<%= blog._id %>">Go Back</a>
+        </div>
+    </div>
+</div>
+<% include ../partials/footer %>
+
