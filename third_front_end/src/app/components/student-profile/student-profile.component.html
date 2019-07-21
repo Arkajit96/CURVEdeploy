@@ -5,9 +5,9 @@
         <div class = "row justify-content-lg-center">
             <div class = "col-lg-3 col-sm-4">
                 <div class = "profile-card">
-                    <img src = "student.image" class = "pro-pic">
+                    <img [src] = "student.image" class = "pro-pic">
                     <h4 id = "name">{{student.first_name}} {{student.last_name}}</h4>
-                    <div class = "caption-text">Class of 2020</div>
+                    <div class = "caption-text">Class of {{student.graduation_class}}</div>
                     
                     <div class = "profile-item">
                         <h6>Majors</h6>

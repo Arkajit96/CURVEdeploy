@@ -30,8 +30,7 @@ export class StudentProfileComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['/editStudentProfile/'], {queryParams : {student_id: this.student._id, major: this.student.major,
-    minor: this.student.minor, email: this.student.email, phone: this.student.phone, summary: this.student.student_summary
-    }});
+    console.log(this.student_id);
+    this.router.navigate(['/editStudentProfile/'], {queryParams : {student_id: this.student._id}});
   }
 }
