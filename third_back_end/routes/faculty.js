@@ -31,7 +31,6 @@ router.get("/institution/:id", middlewareObj.isLoggedIn, function(req, res, next
 })
 
 
-
 router.put("/edit/:id", middlewareObj.isLoggedIn, function(req, res) {
     console.log(req.body);
     

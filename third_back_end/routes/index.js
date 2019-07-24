@@ -80,11 +80,11 @@ router.post("/login", function(req, res, next) {
   });
 
 // logout route
-// router.get("/logout", function(req, res){
-//    req.logout();
-//    req.flash("success", "Logged you out!");
-//    res.redirect("/blogs");
-// });
+router.get("/logout", function(req, res){
+  console.log("1111")
+  req.logout();
+  res.send({'message':'log out successfully'});
+});
 
 
 module.exports = router;
