@@ -2,114 +2,153 @@
 
 <body>    
     <form ngNativeValidate #EditForm="ngForm" class="container-fluid" (ngSubmit)="editStudent(EditForm.value)">
-        <div class="row pt-3">
-            <div class="col-lg-3 col-md-2"></div>
-            <div class="col-lg-3 col-md-4 p-md-3 pt-2 px-5 pb-4">
-                <div class="edit-container" id="info">
-                    <ul class="ml-5" style="list-style: none;">
-                        <li>
-                            <b>Profile Picture</b>
-                            <br />
-                            <input type="text" [(ngModel)]="image" id="profile-pic" name="image" placeholder="enter image url">
-                        </li>
-                        <li>
-                            <b>First Name</b>
-                            <br />
-                            <input type="text" [(ngModel)]="first_name" name="first_name">
-                        </li>
-                        <li>
-                            <b>Middle Name</b>
-                            <br />
-                            <input type="text" [(ngModel)]="middle_name" name="middle_name">
-                        </li>
-                        <li>
-                            <b>Last Name</b>
-                            <br />
-                            <input type="text" [(ngModel)]="last_name" name="last_name">
-                        </li>
-                        <li>
-                            <b>Majors</b>
-                            <br />
-                            <input type="text" [(ngModel)]="major" name="major">
-                        </li>
-                        <li>
-                            <b>Minors</b>
-                            <br /> 
-                            <input type="text" [(ngModel)]="minor" name="minor">
-                        </li>
-                        <li>
-                            <b>Email</b>
-                            <br /> 
-                            <input type="text" [(ngModel)]="email" name="email"></li>
-                        <li>
-                            <b>Phone</b>
-                            <br />
-                            <input type="text" [(ngModel)]="phone" name="phone">                                   
-                        </li>
-                        <li>
-                            <b>Address</b>
-                            <br />
-                            <input type="text" [(ngModel)]="address" name="address">
-                        </li>
-                        <li>
-                            <b>Gender</b>
-                            <br />
-                            <input type="text" [(ngModel)]="gender" name="gender">
-                        </li>
-                    </ul>
-                </div>
-                    
-                <div class="edit-container mt-3" id="files">
-                    <ul class="ml-5" style="list-style: none;">
-                        <li>
-                            <b>Resume</b>
-                            <br />
-                            <input type="file" id="profile-pic" name="profile-pic">
-                        </li>
-                        <li>
-                        <!-- <form [formGroup]="form" (ngSubmit)="editTranscript()">
-                                <div class="form-group">
-                                    <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" placeholder="Bob" formControlName="name">
-                                </div>
-                                <div class = "form-group">
-                                    <label for="avatar"><h6>Transcript</h6></label>
-                                    <input type="file" id="avatar" (change) = "onFileChange($event)" #fileInput>
-                                </div>
-                                <div>
-                                    <button type="submit" class="myButton" > Upload </button>
-                                </div>
-        
-                            </form> -->
-                            <b>Transcript</b>
-                            <br />
-                            <input type="file" id="profile-pic" name="profile-pic">
-                        </li>
-                        <li>
-                            <b>Cover Letter</b>
-                            <br /> 
-                            <input type="file" name="minors">
-                        </li>
-                        <li>
-                            <b>Letter of Recommendation</b>
-                            <br />
-                            <input type="file" id="profile-pic" name="profile-pic">
-                        </li>
-                    </ul>
-                </div>
-            </div>
-                        
-                <div class="col-lg-3 col-md-5 p-md-3 px-5 pb-5">
-                    <div class="edit-container" id="summary">
-                        <h2>Summary</h2>
-                        <textarea [(ngModel)]="student_summary" name="student_summary" placeholder="Say something about yourself."></textarea>
-                        
+        <div class="row pt-5">
+            <div class = "container-fiuled ml-lg-5"></div>
+            <!-- <div class="col-lg-3 col-md-2"></div> -->
+            <div class="col-lg-8 col-md-4 p-md-3 pt-2 px-5 pb-4 ml-lg-5">
+            <!-- <div class="col-lg-3 col-md-4 p-md-3 pt-2 px-5 pb-4"> -->
+                <div class="edit-container ml-lg-5" id="info">
+                    <div class = "ml-5">
+                        <div class="ml-5">
+                            <ul class="ml-5" style="list-style: none;">
+                                <li class = "fontstyle">
+                                    <b>Profile Picture</b>
+                                    <br />
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="image" id="profile-pic" name="image" placeholder="enter image url">
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>First Name</b>
+                                    <br />
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="first_name" name="first_name">
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Middle Name</b>
+                                    <br />
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="middle_name" name="middle_name">
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Last Name</b>
+                                    <br />
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="last_name" name="last_name">
+                                </li>
+                                <li class = "fontstyle"> 
+                                    <b>Majors</b>
+                                    <br />
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="major" name="major">
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Minors</b>
+                                    <br /> 
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="minor" name="minor">
+                                </li>
+                                <li class = "fontstyle">
+                                        <b>Interests</b>
+                                        <br /> 
+                                        <select class = "form-control input-style" [(ngModel)] = "interstes" name = "interstes">
+                                            <option>--Interests--</option>
+                                            <option>coding</option>
+                                            <option>reading</option>
+                                            <option>traveling</option>
+                                        </select>
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Email</b>
+                                    <br /> 
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="email" name="email">
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Phone</b>
+                                    <br />
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="phone" name="phone">                                   
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Address</b>
+                                    <br />
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="address" name="address">
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Gender</b>
+                                    <br />
+                                    <input type="text" class = "form-control input-style" [(ngModel)]="gender" name="gender">
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <button type="submit" class="myButton" >Save </button>
+                <!-- <upload>   -->
+                <div class="edit-container mt-3 ml-lg-5" id="files">
+                    <div class = "ml-5">
+                        <div class = "ml-5">
+                            <ul class="ml-lg-5" style="list-style: none;">
+                                <li class = "fontstyle">
+                                    <b>Resume</b>
+                                    <br />
+                                    <input type="file" class="change" id="profile-pic1" name="profile-pic">
+                                    <label for="profile-pic1" class="label_style">Choose your file</label>
+                                </li>
+                                <li class = "fontstyle">
+                                <!-- <form [formGroup]="form" (ngSubmit)="editTranscript()">
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                                <input type="text" class="form-control" id="name" placeholder="Bob" formControlName="name">
+                                        </div>
+                                        <div class = "form-group">
+                                            <label for="avatar"><h6>Transcript</h6></label>
+                                            <input type="file" id="avatar" (change) = "onFileChange($event)" #fileInput>
+                                        </div>
+                                        <div>
+                                            <button type="submit" class="myButton" > Upload </button>
+                                        </div>
+                
+                                    </form> -->
+                                    <b>Transcript</b>
+                                    <br />
+                                    <input type="file" id="profile-pic2" name="profile-pic" class = "change">
+                                    <label for="profile-pic2" class="label_style">Choose your file</label>
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Cover Letter</b>
+                                    <br /> 
+                                    <input type="file" name="minors" id = "profile-pic3" class = "change">
+                                    <label for="profile-pic3" class="label_style">Choose your file</label>
+                                </li>
+                                <li class = "fontstyle">
+                                    <b>Letter of Recommendation</b>
+                                    <br />
+                                    <input type="file" id="profile-pic4"  name="profile-pic" class = "change">
+                                    <label for="profile-pic4" class="label_style">Choose your file</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            <div class="col-lg-3 col-md-1"></div>
+            </div>
+            <div class = "col-lg-6 col-md-5 p-md-3 px-5 pb-5 ml-lg-5">
+                <div class = "ml-5">
+                    <div class = "ml-5">            
+                        <div class="ml-5">
+                            <div class="edit-container ml-5" id="summary">
+                                <ul class ="ml-5" style="list-style: none;">
+                                        <li class = "fontstyle">
+                                                Summary
+                                        </li>
+                                    
+                                        <textarea [(ngModel)]="student_summary" class = "summary-control input-style" name="student_summary" placeholder="Say something about yourself."></textarea>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 p-md-3 px-5 pb-5 col-ml-5">
+                            <div class="ml-5">
+                                <ul class ="ml-5" style="list-style: none;">
+                                    <button type="submit" class="myButton ml-4" >Save </button>
+                                </ul>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-10 col-md-1"></div>
         </div>
     
     </form>
