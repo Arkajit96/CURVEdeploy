@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     const params = new HttpParams({fromObject: user});
     console.log(user);
     const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
-    this.http.post("/api/login", params, {headers:reqHeader, observe: "response"}).subscribe((res:any) => {
+    this.http.post("/api/login", params).subscribe((res:any) => {
       console.log(res)
       if (res.body) {
         //console.log(res.body);

@@ -75,4 +75,8 @@ export class StudentProfileComponent implements OnInit {
       console.log(res);
     })
   }
+
+  search() {
+    
+  }
 }

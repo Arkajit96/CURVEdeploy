@@ -9,10 +9,11 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { StudentProfileComponent } from './components/student-profile/student-profile.component';
 import { FacultyProfileComponent } from './components/faculty-profile/faculty-profile.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HeaderComponent } from './components/header/header.component';
 import { EditStudentComponent } from './components/edit-student/edit-student.component';
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
+import { RequestInterceptor } from './services/request-interceptor';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,13 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
     NgbModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
