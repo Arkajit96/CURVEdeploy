@@ -72,7 +72,7 @@ router.post("/login", function(req, res, next) {
         if (err) { return next(err); }
         return user;
       });
-      res.send(user);
+      res.send({'body': user});
       //res.redirect('/profile/');
   
     })(req, res, next);

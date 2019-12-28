@@ -28,12 +28,13 @@ export class LoginComponent implements OnInit {
     this.storage.set('rememberMe', user.rememberMe);
     this.storage.set('password', user.password);
     const params = new HttpParams({fromObject: user});
+    console.log(user);
     const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
     this.http.post("/api/login", params, {headers:reqHeader, observe: "response"}).subscribe((res:any) => {
-      //console.log(res)
+      console.log(res)
       if (res.body) {
         //console.log(res.body);
-        this.person = res.body;
+        this.person = res.body.body;
         if (this.person.message) {
           alert(this.person.message);
           //this.router.navigate()
@@ -54,7 +55,8 @@ export class LoginComponent implements OnInit {
       } else {
         alert("Username or Password is wrong!")
       }
-    })
+    },
+    error => {console.log(error)});
   }
   
 }
