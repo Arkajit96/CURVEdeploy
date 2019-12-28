@@ -126,4 +126,36 @@ router.put("/edit/:id", middlewareObj.isLoggedIn, function(req, res) {
     });
 })
 
+router.get("/search/:query", middlewareObj.isLoggedIn, async function(req, res) {
+  let query = req.params.query.split(' ');
+  let names = []
+  if(query[1]) {
+    names = await Faculty.find(
+      {
+        "first_name": {"$regex": `${query[0]}`, "$options": "i"},
+        "last_name": {"$regex": `${query[1]}`, "$options": "i"}
+      }, (err, docs) => {
+        console.log(docs);
+      }
+    );
+  } else {
+    names = await Faculty.find(
+      {$or:[
+        {"first_name": {"$regex": `${query[0]}`, "$options": "i"}},
+        {"last_name": {"$regex": `${query[0]}`, "$options": "i"}}
+      ]}, (err, docs) => {
+        console.log(docs);
+      }
+    );
+  }
+
+  let departments = await Faculty.find(
+    {"department": {"$regex": `${req.params.query}`, "$options": "i"}}, (err, docs) => {
+      console.log("departments" + docs);
+    }
+  );
+
+  res.send({"names": names, "department": departments});
+})
+
 module.exports = router;

@@ -1,5 +1,5 @@
-require('dotenv').config();
-var express     = require("express"),
+let config = require('dotenv').config().parsed;
+let express     = require("express"),
     app         = express(),
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose"),
@@ -13,23 +13,35 @@ var express     = require("express"),
    //  port        = 9292;
     
 //requiring routes
-var indexRoutes = require("./routes/index"),
+let indexRoutes = require("./routes/index"),
    studentRoutes = require("./routes/student"),
    facultyRoutes = require("./routes/faculty")
  
-// var url = process.env.DATABASEURL || "mongodb://localhost/yelp_camp_v10";
-// var uri = 'mongodb://JamesLin:<Lin!960605>@cluster0-x6qm9.mongodb.net/travelBlog?retryWrites=true'
-// mongoose.connect(uri);
-console.log(process.env.USERNAME)
+// let uri = "mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve?retryWrites=true";
+
 const mongoDB = ("mongodb+srv://"+
-                 process.env.USERNAME+
+                 config.USERNAME+
                  ":"
-                 +process.env.PASSWORD+
+                 +config.PASSWORD+
                  "@"
-                 +process.env.HOST+
+                 +config.HOST+
                  "/"
-                 +process.env.DATABASE);
-mongoose.connect(mongoDB, {useNewUrlParser: true, retryWrites: true});
+                 +config.DATABASE);
+console.log(mongoDB);
+mongoose.connect(mongoDB, 
+   {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false
+   })
+   .then((data) => {
+      console.log('CONNECTED TO MONGODB');
+   })
+   .catch((e) => {
+      console.log('ERROR');
+      console.log(e);
+   });
 
 
 app.use(bodyParser.json({limit: '50mb'}));
@@ -86,10 +98,6 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/student", studentRoutes);
 app.use("/faculty", facultyRoutes);
-
-// app.listen(process.env.PORT, process.env.IP, function(){
-//    console.log("The Travel Blog Server Has Started!");
-// });
 
 const listener = app.listen(3000, function() {
    console.log('Your app is listening on port ' + listener.address().port);

@@ -24,7 +24,7 @@ export class FacultyProfileComponent implements OnInit {
       // const params = new HttpParams({fromObject: {id: this.student_id}});
       // const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
       this.http.get("/api/faculty/" + this.faculty_id).subscribe((res:any) => {
-        //console.log(res)
+        console.log(res)
         this.faculty = res;
       })
     });

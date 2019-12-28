@@ -21,9 +21,13 @@ export class RegisterComponent implements OnInit {
     
     const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
     this.http.post("/api/register", params, {headers:reqHeader, observe: "response"}).subscribe((res:any) => {
+      console.log(res);
       console.log(res.body);
       this.storage.set('username', res.body.username);
       this.router.navigate(['/login']);
+    },
+    error => {
+      console.log(error);
     })
 
   }
