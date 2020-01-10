@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { AvatarModule } from 'ngx-avatar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,10 +10,13 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { StudentProfileComponent } from './components/student-profile/student-profile.component';
 import { FacultyProfileComponent } from './components/faculty-profile/faculty-profile.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HeaderComponent } from './components/header/header.component';
 import { EditStudentComponent } from './components/edit-student/edit-student.component';
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
+import { RequestInterceptor } from './services/request-interceptor';
+import { SearchResultsComponent } from './components/search-results/search-results.component';
+import { ResearchComponent } from './components/research/research.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +27,9 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
     FacultyProfileComponent,
     HeaderComponent,
     EditStudentComponent,
-    EditFacultyComponent
+    EditFacultyComponent,
+    SearchResultsComponent,
+    ResearchComponent
   ],
   imports: [
     BrowserModule,
@@ -31,9 +37,16 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
     FormsModule,
     HttpClientModule,
     NgbModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AvatarModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

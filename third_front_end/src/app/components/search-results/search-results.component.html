@@ -1,0 +1,109 @@
+<app-header></app-header>
+<section *ngIf="!loadingPage">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <div class="dropdown">
+                        <button class="btn btn-outline dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          {{filter}}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" (click)="filterBy('People')">People</a>
+                          <a class="dropdown-item" (click)="filterBy('Department')">Department</a>
+                        </div>
+                      </div>
+                </li>
+                <li>
+                    <button class="btn btn-outline" type="button" (click)="filterBy('People')">People</button>
+                </li>
+                <li>
+                    <button class="btn btn-outline" type="button" (click)="filterBy('Department')">Department</button>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="newSearchQuery" [ngModelOptions]="{standalone: true}">
+                <button class="btn btn-primary my-2 my-sm-0" type="submit" (click)="newSearch()">Search</button>
+            </form>
+        </div>
+    </nav>
+    <!-- MAIN STUFF -->
+    <div class="container people-card">
+        <div class="row">
+            <div class="col col-md-1 col-lg-2"></div>
+            <div class="col col-sm-12 col-md-10 col-lg-8">
+                <div class="card" *ngIf="filter==='People' && results.names.length > 0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let person of results.names">
+                            <div class="row">
+                                <div class="col col-2">
+                                    <!-- <ngx-avatar name="{{person.first_name}} {{person.last_name}}" size="75"></ngx-avatar> -->
+                                    <ngx-avatar src="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578428133276.jpg"></ngx-avatar>
+                                </div>
+                                <div class="col col-8">
+                                    <div class="row">
+                                        {{person.first_name}} {{person.last_name}}
+                                    </div>
+                                    <div class="row">
+                                        {{person.department}}
+                                    </div>
+                                    <div class="row">
+                                        {{person.address}}
+                                    </div>
+                                </div>
+                                <div class="col col-2">
+                                    <a><i class="fas fa-plus"></i></a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card" *ngIf="filter==='People' && results.names.length == 0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            No people match your search
+                        </li>
+                    </ul>
+                </div>
+                <div class="card" *ngIf="filter==='Department'">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let person of results.department">
+                            <div class="row">
+                                <div class="col col-2">
+                                    <ngx-avatar name="{{person.first_name}} {{person.last_name}}"></ngx-avatar>
+                                </div>
+                                <div class="col col-8">
+                                    <div class="row">
+                                        {{person.first_name}} {{person.last_name}}
+                                    </div>
+                                    <div class="row">
+                                        {{person.department}}
+                                    </div>
+                                    <div class="row">
+                                        {{person.address}}
+                                    </div>
+                                </div>
+                                <div class="col col-2">
+                                    <a><i class="fas fa-plus"></i></a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card" *ngIf="filter==='Department' && results.department.length == 0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            No departments match your search
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col col-md-1 col-lg-2"></div>
+        </div>
+    </div>
+</section>

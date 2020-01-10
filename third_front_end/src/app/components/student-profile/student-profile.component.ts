@@ -14,6 +14,7 @@ export class StudentProfileComponent implements OnInit {
   student:any
   form: FormGroup
   fileToUpload: File = null;
+  searchQuery: String = ""
   constructor(public route:ActivatedRoute, public http: HttpClient, public router: Router, private fb: FormBuilder) {
     this.createForm();
    }
@@ -74,5 +75,10 @@ export class StudentProfileComponent implements OnInit {
     this.http.post("/api/student/edit/resumes/" + this.student_id, formData, {headers: reqHeader, observe: "response"}).subscribe((res:any)=> {
       console.log(res);
     })
+  }
+
+  search() {
+    console.log(this.searchQuery);
+    this.router.navigate([`/searchResults/${this.searchQuery}`]);
   }
 }

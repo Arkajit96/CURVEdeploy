@@ -26,7 +26,7 @@ router.post("/register", function(req, res){
         if (user.entity == "faculty") {
           faculty = new Faculty({first_name:'', middle_name:'', last_name:'', email:user.username, gender: '', date_of_birth:'', date_of_joining:'',
                                 address:'', phone: '', research_summary:'', current_projects:'', department:'', education:'',
-                                experience:'', image:'',user_id:user._id });
+                                experience:'', image:'',user_id:user._id, interests:[] });
           Faculty.create(faculty, function(err, newlyCreated) {
             if (err) {
               console.log(err);
@@ -38,7 +38,7 @@ router.post("/register", function(req, res){
         if (user.entity == "student") {
           student = new Student({first_name:'', middle_name:'', last_name:'', email:user.username, gender: '', date_of_birth:'', date_of_joining:'',
                                 address:'', phone: '', summary:'', department:'', education:'', major:'', minor:'',
-                                experience:'', image:'',user_id:user._id, graduation_class:null});
+                                experience:'', image:'',user_id:user._id, graduation_class:null, interests: []});
           Student.create(student, function(err, newlyCreated) {
             if (err) {
               console.log(err);
