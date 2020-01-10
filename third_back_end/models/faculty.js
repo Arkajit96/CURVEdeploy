@@ -21,6 +21,7 @@ var FacultySchema = new mongoose.Schema({
 	education: String,
 	experience: String,
 	image: String,
+	interests: [String]
 });
 
 

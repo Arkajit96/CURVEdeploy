@@ -133,7 +133,7 @@ router.get("/search/:query", middlewareObj.isLoggedIn, async function(req, res) 
     names = await Faculty.find(
       {
         "first_name": {"$regex": `${query[0]}`, "$options": "i"},
-        "last_name": {"$regex": `${query[1]}`, "$options": "i"}
+        "last_name": {"$regex": `${query[query.length-1]}`, "$options": "i"}
       }, (err, docs) => {
         console.log(docs);
       }
@@ -151,11 +151,18 @@ router.get("/search/:query", middlewareObj.isLoggedIn, async function(req, res) 
 
   let departments = await Faculty.find(
     {"department": {"$regex": `${req.params.query}`, "$options": "i"}}, (err, docs) => {
-      console.log("departments" + docs);
+      
     }
   );
 
   res.send({"names": names, "department": departments});
+})
+
+router.get('/updateModel', async function(req, res) {
+  let students = await Student.find({"first_name": {"$regex": 'b', "$options": "i"}}, (err, docs) => {
+    console.log(docs);
+    res.send('OK');
+  })
 })
 
 module.exports = router;

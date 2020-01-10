@@ -32,7 +32,7 @@
 
                 <div class = "documents">
                     <div class = "resume">
-                        <a href=""><h6>Resume</h6></a>
+                        <a href="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578510041728.pdf"><h6>Resume</h6></a>
                     </div>   
                     <div class = "transcript">
                         <a href=""><h6>Transcripts</h6></a>
@@ -49,8 +49,8 @@
             <div class = "col-sm-8">           
                 <div class="d-flex flex-column align-items-center">
                     <div class="searchbar">
-                        <input class="search_input" type="text" name="" placeholder="Search...">
-                        <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
+                        <input class="search_input" [(ngModel)]="searchQuery" type="text" name="" placeholder="Search...">
+                        <a class="search_icon" (click)="search()"><i class="fas fa-search"></i></a>
                     </div>
                     <div class = "interests-container">
                         <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Space Flight</div>                            

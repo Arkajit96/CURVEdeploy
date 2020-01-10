@@ -6,6 +6,8 @@ import { FacultyProfileComponent } from './components/faculty-profile/faculty-pr
 import { RegisterComponent } from './components/register/register.component';
 import { EditStudentComponent } from './components/edit-student/edit-student.component';
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
+import { SearchResultsComponent } from './components/search-results/search-results.component';
+import { ResearchComponent } from './components/research/research.component';
 
 const routes: Routes = [
   {
@@ -25,6 +27,12 @@ const routes: Routes = [
   },
   {
     path: 'editFacultyProfile', component: EditFacultyComponent
+  },
+  {
+    path: 'searchResults/:query', component: SearchResultsComponent
+  },
+  {
+    path: 'research', component: ResearchComponent
   },
   {
     path: '', redirectTo: 'login', pathMatch: 'full'

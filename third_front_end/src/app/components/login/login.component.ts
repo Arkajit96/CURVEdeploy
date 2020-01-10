@@ -33,8 +33,8 @@ export class LoginComponent implements OnInit {
     this.http.post("/api/login", params).subscribe((res:any) => {
       console.log(res)
       if (res.body) {
-        //console.log(res.body);
-        this.person = res.body.body;
+        // console.log(res.body);
+        this.person = res.body;
         if (this.person.message) {
           alert(this.person.message);
           //this.router.navigate()

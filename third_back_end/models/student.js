@@ -22,6 +22,7 @@ var StudentSchema = new mongoose.Schema({
 	education: String,
 	image: String,
 	graduation_class: Number,
+	interests: [String]
 
 });
 
