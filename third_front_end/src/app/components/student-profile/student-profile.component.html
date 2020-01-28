@@ -15,11 +15,11 @@
                     <img [src] = "student.image" class = "pro-pic" (click)="test()">
                     <h4 id = "name">{{student.first_name}} {{student.last_name}}</h4>
                     <div class = "caption-text">Class of {{student.graduation_class}}</div>
-                    
+
                     <div class = "profile-item">
                         <h6>Majors</h6>
                         {{student.major}}
-                    </div> 
+                    </div>
                     <div class = "profile-item">
                         <h6>Minors</h6>
                         {{student.minor}}
@@ -40,10 +40,10 @@
                 <div class = "documents">
                     <div class = "resume">
                         <a href="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578510041728.pdf"><h6>Resume</h6></a>
-                    </div>   
+                    </div>
                     <div class = "transcript">
                         <a href=""><h6>Transcripts</h6></a>
-                    </div>                 
+                    </div>
                     <div class = "cover-letter">
                         <a href=""><h6>Cover Letters</h6></a>
                     </div>
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class = "col-sm-8">           
                 <div class="d-flex flex-column align-items-center student-content">
                     <!-- <div class="searchbar">
@@ -76,7 +76,7 @@
 
                 </div>
             </div>
-        </div>
+      </div>
     </div> 
     
     <app-add-interests #interestsModal [User]="student" (Response)="updateInterests($event)"></app-add-interests>

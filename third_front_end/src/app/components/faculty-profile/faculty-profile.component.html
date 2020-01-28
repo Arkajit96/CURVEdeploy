@@ -1,5 +1,4 @@
 <app-header></app-header>
-
 <body>
     <div class = "container-fluid">
         <div class = "row justify-content-lg-center">
@@ -8,16 +7,16 @@
                         <img src = "{{faculty.image}}" class = "pro-pic">
                         <h4 id = "name">{{faculty.first_name}} {{faculty.last_name}}</h4>
                         <div class = "caption-text">PhD Associate Professor</div>
-                        
+
                         <div class = "profile-item">
                             <h6>Department</h6>
                             {{faculty.department}}
-                        </div> 
+                        </div>
                         <div class = "profile-item">
                             <h6>Education</h6>
                             <ul>
                                 <li>{{faculty.education}}</li>
-                            </ul>         
+                            </ul>
                         </div>
                         <div class = "profile-item">
                             <h6>Experience</h6>
@@ -42,8 +41,8 @@
                     <button class="myButton" (click)="edit()" >Edit</button>
                 </div>
             </div>
-            <div class = "col-sm-8">           
-                <div class="d-flex flex-column align-items-center">                     
+            <div class = "col-sm-8">
+                <div class="d-flex flex-column align-items-center">
                     <div class = "research-summary">
                         <h1>RESEARCH SUMMARY</h1> {{faculty.research_summary}}
                     </div>

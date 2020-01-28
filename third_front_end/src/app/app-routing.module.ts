@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
+import { AuthGuard } from './components/auth/auth.guard';
+
+import { LoginComponent } from './components/auth/login/login.component';
 import { StudentProfileComponent } from './components/student-profile/student-profile.component';
 import { FacultyProfileComponent } from './components/faculty-profile/faculty-profile.component';
-import { RegisterComponent } from './components/register/register.component';
+import { RegisterComponent } from './components/auth/register/register.component';
 import { EditStudentComponent } from './components/edit-student/edit-student.component';
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
@@ -15,22 +17,25 @@ const routes: Routes = [
     path: 'login', component: LoginComponent
   },
   {
-    path: 'studentProfile/:id', component: StudentProfileComponent
+    path: 'studentProfile/:id', component: StudentProfileComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'facultyProfile/:id', component: FacultyProfileComponent
+    path: 'facultyProfile/:id', component: FacultyProfileComponent, canActivate: [AuthGuard]
   },
   {
     path: 'register', component: RegisterComponent
-  }, 
-  {
-    path: 'editStudentProfile', component: EditStudentComponent
   },
   {
-    path: 'editFacultyProfile', component: EditFacultyComponent
+    path: 'editStudentProfile', component: EditStudentComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'research', component: ResearchComponent
+    path: 'editFacultyProfile', component: EditFacultyComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'searchResults/:query', component: SearchResultsComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'research', component: ResearchComponent, canActivate: [AuthGuard]
   },
   {
     path: 'candidate/:id', component: CandidateComponent
@@ -42,6 +47,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard]
 })
 export class AppRoutingModule { }

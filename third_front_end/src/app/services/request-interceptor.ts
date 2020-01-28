@@ -14,10 +14,10 @@ export class RequestInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         request = request.clone({
             setHeaders: {
-                content: "application/x-www-form-urlencoded" 
+              'content-type': 'application/x-www-form-urlencoded'
             }
         });
 
         return next.handle(request);
     }
-} 
+}
