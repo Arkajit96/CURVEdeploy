@@ -8,11 +8,11 @@
                     <img [src] = "student.image" class = "pro-pic">
                     <h4 id = "name">{{student.first_name}} {{student.last_name}}</h4>
                     <div class = "caption-text">Class of {{student.graduation_class}}</div>
-                    
+
                     <div class = "profile-item">
                         <h6>Majors</h6>
                         {{student.major}}
-                    </div> 
+                    </div>
                     <div class = "profile-item">
                         <h6>Minors</h6>
                         {{student.minor}}
@@ -33,10 +33,10 @@
                 <div class = "documents">
                     <div class = "resume">
                         <a href="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578510041728.pdf"><h6>Resume</h6></a>
-                    </div>   
+                    </div>
                     <div class = "transcript">
                         <a href=""><h6>Transcripts</h6></a>
-                    </div>                 
+                    </div>
                     <div class = "cover-letter">
                         <a href=""><h6>Cover Letters</h6></a>
                     </div>
@@ -45,22 +45,22 @@
                     </div>
                 </div>
             </div>
-            
-            <div class = "col-sm-8">           
+
+            <div class = "col-sm-8">
                 <div class="d-flex flex-column align-items-center">
                     <div class="searchbar">
                         <input class="search_input" [(ngModel)]="searchQuery" type="text" name="" placeholder="Search...">
                         <a class="search_icon" (click)="search()"><i class="fas fa-search"></i></a>
                     </div>
                     <div class = "interests-container">
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Space Flight</div>                            
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>SpaceX</div>   
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Neurology</div>  
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Calculus</div> 
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Astrophysics</div>      
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Chesmitry</div>                      
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Space Flight</div>
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>SpaceX</div>
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Neurology</div>
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Calculus</div>
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Astrophysics</div>
+                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Chesmitry</div>
                     </div>
-                        
+
                     <div class = "student-summary">
                         <h1>STUDENT SUMMARY </h1>
                         {{student.student_summary}}
@@ -69,6 +69,6 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </body>
 

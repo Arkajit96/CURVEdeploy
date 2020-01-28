@@ -4,8 +4,9 @@ var passport = require("passport");
 var User = require("../models/User");
 var Faculty = require("../models/faculty");
 var Student = require("../models/student");
-var Blog = require("../models/blog");
-var middlewareObj = require("../middleware");
+// var Blog = require("../models/blog");
+const checkAuth = require("../middleware/check-auth");
+// var middlewareObj = require("../middleware");
 var mongoose = require("mongoose");
 var Institution = require("../models/institution");
 const GridFsStorage = require('multer-gridfs-storage');
@@ -15,7 +16,7 @@ const path = require('path');
 const Grid = require('gridfs-stream');
 
 // when user login, according to the userid to get the information of this student
-router.get("/:id", middlewareObj.isLoggedIn, function(req, res, next) {
+router.get("/:id", checkAuth, function(req, res, next) {
     console.log("back end req" + req.params.id);
     var id = mongoose.Types.ObjectId(req.params.id);
     Student.findOne({"user_id": id}, function(err, student){
@@ -29,7 +30,7 @@ router.get("/:id", middlewareObj.isLoggedIn, function(req, res, next) {
 })
 
 // get the institution information of this student
-router.get("/institution/:id", middlewareObj.isLoggedIn, function(req, res, next) {
+router.get("/institution/:id", checkAuth, function(req, res, next) {
     console.log("institution id:" + req.params.id);
     Institution.findById(req.params.id, function(err, foundInstitution) {
         res.send(foundInstitution);
@@ -111,7 +112,7 @@ router.get("/transcript/:filename/:id", (req, res) => {
 
 
 
-router.put("/edit/:id", middlewareObj.isLoggedIn, function(req, res) {
+router.put("/edit/:id", checkAuth, function(req, res) {
     console.log(typeof req.body);
     console.log(req.body);
     console.log(req.params.id);
@@ -126,7 +127,7 @@ router.put("/edit/:id", middlewareObj.isLoggedIn, function(req, res) {
     });
 })
 
-router.get("/search/:query", middlewareObj.isLoggedIn, async function(req, res) {
+router.get("/search/:query", checkAuth, async function(req, res) {
   let query = req.params.query.split(' ');
   let names = []
   if(query[1]) {

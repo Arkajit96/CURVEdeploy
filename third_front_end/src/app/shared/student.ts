@@ -1,12 +1,12 @@
-export class student {
-    student_id: number;
+export interface Student {
+    studentId: number;
     username: string;
-    fisrt_name: string;
-    middle_name: string;
-    last_name: string;
-    institution_id: number;
+    fisrtName: string;
+    middleName: string;
+    lastName: string;
+    institutionId: number;
     birthday: Date;
-    join_date: Date;
+    joinDate: Date;
     address: string;
     email: string;
     major: string;
