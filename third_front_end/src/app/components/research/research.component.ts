@@ -10,6 +10,7 @@ export class ResearchComponent implements OnInit {
   searchQuery: String = '';
   searchResults = [];
   filter = "People";
+  loadingSearch = false;
 
   constructor(
     private studentService: StudentService
@@ -29,17 +30,19 @@ export class ResearchComponent implements OnInit {
 
   search() {
     if(this.searchQuery.trim() !== ''){
+      this.loadingSearch = true;
       this.studentService.search(this.searchQuery)
       .then((res) => {
         this.searchResults = res;
         this.searchQuery = ''
         this.filter = 'People';
         console.log(this.searchResults);
+        this.loadingSearch = false;
       })
       .catch((e) => {
         console.log(e);
       })
-      }
+    }
   }
 
   filterBy(filter: string) {

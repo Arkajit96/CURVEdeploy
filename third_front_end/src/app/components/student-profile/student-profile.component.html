@@ -1,11 +1,18 @@
 
 <app-header></app-header>
-<body>
+
+<div class="row justify-content-sm-center" *ngIf="loadingPage">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<body *ngIf="!loadingPage">
     <div class = "container-fluid">
         <div class = "row justify-content-lg-center">
             <div class = "col-lg-3 col-sm-4">
                 <div class = "profile-card">
-                    <img [src] = "student.image" class = "pro-pic">
+                    <img [src] = "student.image" class = "pro-pic" (click)="test()">
                     <h4 id = "name">{{student.first_name}} {{student.last_name}}</h4>
                     <div class = "caption-text">Class of {{student.graduation_class}}</div>
                     
@@ -47,19 +54,20 @@
             </div>
             
             <div class = "col-sm-8">           
-                <div class="d-flex flex-column align-items-center">
-                    <div class="searchbar">
+                <div class="d-flex flex-column align-items-center student-content">
+                    <!-- <div class="searchbar">
                         <input class="search_input" [(ngModel)]="searchQuery" type="text" name="" placeholder="Search...">
                         <a class="search_icon" (click)="search()"><i class="fas fa-search"></i></a>
-                    </div>
+                    </div> -->
+                    <h1 style="margin-bottom: 1rem;">Interests</h1>
                     <div class = "interests-container">
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Space Flight</div>                            
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>SpaceX</div>   
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Neurology</div>  
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Calculus</div> 
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Astrophysics</div>      
-                        <div class = "interest"><i class="fas fa-plus-circle fa-xs"></i>Chesmitry</div>                      
+                        <div class = "interest" *ngFor="let interest of student.interests">
+                            {{interest}}
+                            <!-- <i class="fas fa-plus-circle fa-xs"></i> -->
+                        </div>                                                 
                     </div>
+
+                    <button class="myButton modal-btn" data-toggle="modal" data-target="#interestsModal">Edit interests</button>
                         
                     <div class = "student-summary">
                         <h1>STUDENT SUMMARY </h1>
@@ -69,6 +77,8 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div> 
+    
+    <app-add-interests #interestsModal [User]="student" (Response)="updateInterests($event)"></app-add-interests>
 </body>
 

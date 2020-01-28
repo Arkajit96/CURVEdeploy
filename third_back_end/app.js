@@ -27,7 +27,7 @@ const mongoDB = ("mongodb+srv://"+
                  +config.HOST+
                  "/"
                  +config.DATABASE);
-console.log(mongoDB);
+                 
 mongoose.connect(mongoDB, 
    {
       useNewUrlParser: true,

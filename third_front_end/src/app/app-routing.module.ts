@@ -8,6 +8,7 @@ import { EditStudentComponent } from './components/edit-student/edit-student.com
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
+import { CandidateComponent } from './components/candidate/candidate.component';
 
 const routes: Routes = [
   {
@@ -29,10 +30,10 @@ const routes: Routes = [
     path: 'editFacultyProfile', component: EditFacultyComponent
   },
   {
-    path: 'searchResults/:query', component: SearchResultsComponent
+    path: 'research', component: ResearchComponent
   },
   {
-    path: 'research', component: ResearchComponent
+    path: 'candidate/:id', component: CandidateComponent
   },
   {
     path: '', redirectTo: 'login', pathMatch: 'full'

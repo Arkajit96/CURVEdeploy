@@ -23,7 +23,6 @@ var StudentSchema = new mongoose.Schema({
 	image: String,
 	graduation_class: Number,
 	interests: [String]
-
 });
 
 //StudentSchema.plugin(passportLocalMongoose);

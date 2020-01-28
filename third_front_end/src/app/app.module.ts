@@ -17,6 +17,9 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
 import { RequestInterceptor } from './services/request-interceptor';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
+import { CandidateComponent } from './components/candidate/candidate.component';
+import { CanidateSearchComponent } from './components/canidate-search/canidate-search.component';
+import { AddInterestsComponent } from './components/modals/add-interests/add-interests.component'
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { ResearchComponent } from './components/research/research.component';
     EditStudentComponent,
     EditFacultyComponent,
     SearchResultsComponent,
-    ResearchComponent
+    ResearchComponent,
+    CandidateComponent,
+    CanidateSearchComponent,
+    AddInterestsComponent
   ],
   imports: [
     BrowserModule,

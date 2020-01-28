@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div class="row justify-content-sm-center" *ngIf="loadingSearch">
+
+    </div>
+    
+    <div class="row justify-content-sm-center" *ngIf="candidates.length == 0 && !showSearch">
+        <div class="card">
+            You currently have no applicants
+        </div>
+    </div>
+
+    <section *ngIf="showSearch">
+        <div class="row justify-content-sm-center">
+            <div class="col col-12">
+                Filter by: 
+                <button class="btn btn-outline-primary" type="button" (click)="changeFilter('People')">People</button>
+                <button class="btn btn-outline-primary" type="button" (click)="changeFilter('Department')">Department</button>
+            </div>
+            <div class="card" *ngFor="let person of showPeople">
+                <div class="row">
+                    <div class="col col-2 img-col" style="text-align: center;">
+                        <ngx-avatar name="{{person.first_name}} {{person.last_name}}" *ngIf="!person.image || person.image.substring(7,12) == 'dummy'"></ngx-avatar>
+                        <ngx-avatar src="person.image" *ngIf="person.image && person.image.substring(7,12) != 'dummy'"></ngx-avatar>
+                    </div>
+                    <div class="col col-8">
+                        <div class="row">
+                            {{person.first_name}} {{person.last_name}}
+                        </div>
+                        <div class="row">
+                            {{person.department}}
+                        </div>
+                        <div class="row">
+                            {{person.address}}
+                        </div>
+                    </div>
+                    <div class="col col-1">
+                        <div class="row"><a><i class="fas fa-plus"></i></a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" *ngIf="showPeople.length == 0">
+                No matches for your search
+            </div>
+        </div>
+    </section>
+</div>
