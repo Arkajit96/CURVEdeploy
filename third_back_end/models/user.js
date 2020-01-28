@@ -12,4 +12,4 @@ var UserSchema = new mongoose.Schema({
 // UserSchema.plugin(passportLocalMongoose);
 UserSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model("User_test", UserSchema);
+module.exports = mongoose.model("User", UserSchema);
