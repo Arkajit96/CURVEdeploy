@@ -21,6 +21,9 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CandidateComponent } from './components/candidate/candidate.component';
+import { CanidateSearchComponent } from './components/canidate-search/canidate-search.component';
+import { AddInterestsComponent } from './components/modals/add-interests/add-interests.component'
 
 @NgModule({
   declarations: [
@@ -33,7 +36,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     EditStudentComponent,
     EditFacultyComponent,
     SearchResultsComponent,
-    ResearchComponent
+    ResearchComponent,
+    CandidateComponent,
+    CanidateSearchComponent,
+    AddInterestsComponent
   ],
   imports: [
     BrowserModule,

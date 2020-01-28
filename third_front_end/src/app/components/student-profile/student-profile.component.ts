@@ -10,6 +10,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./student-profile.component.scss']
 })
 export class StudentProfileComponent implements OnInit {
+  loadingPage = true;
   student_id:any
   student:any
   form: FormGroup
@@ -17,6 +18,10 @@ export class StudentProfileComponent implements OnInit {
   searchQuery: String = ""
   constructor(public route:ActivatedRoute, public http: HttpClient, public router: Router, private fb: FormBuilder) {
     this.createForm();
+   }
+
+   test() {
+     console.log('HERE');
    }
   
   ngOnInit() {
@@ -31,6 +36,7 @@ export class StudentProfileComponent implements OnInit {
       this.http.get("/api/student/" + this.student_id).subscribe((res:any) => {
         console.log(res)
         this.student = res;
+        this.loadingPage = false;
       });
     });
   }
@@ -79,6 +85,11 @@ export class StudentProfileComponent implements OnInit {
 
   search() {
     console.log(this.searchQuery);
-    this.router.navigate([`/searchResults/${this.searchQuery}`]);
   }
+
+  updateInterests(event) {
+    console.log(event);
+    this.student.interests = event.newInterests;
+  }
+
 }

@@ -4,9 +4,15 @@ var passport = require("passport");
 var User = require("../models/User");
 var Faculty = require("../models/faculty");
 var Student = require("../models/student");
+
 // var Blog = require("../models/blog");
 const checkAuth = require("../middleware/check-auth");
 // var middlewareObj = require("../middleware");
+
+var Blog = require("../models/blog");
+var middlewareObj = require("../middleware").middlewareObj;
+const uploadImage = require("../middleware").upload;
+
 var mongoose = require("mongoose");
 var Institution = require("../models/institution");
 const GridFsStorage = require('multer-gridfs-storage');
@@ -14,6 +20,9 @@ const multer = require('multer');
 const crypto = require('crypto');
 const path = require('path');
 const Grid = require('gridfs-stream');
+const Helper = require('../helpers/index');
+const mongodb = require('mongodb');
+
 
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {
@@ -127,43 +136,44 @@ router.put("/edit/:id", checkAuth, function(req, res) {
     });
 })
 
-router.get("/search/:query", checkAuth, async function(req, res) {
-  let query = req.params.query.split(' ');
-  let names = []
-  if(query[1]) {
-    names = await Faculty.find(
-      {
-        "first_name": {"$regex": `${query[0]}`, "$options": "i"},
-        "last_name": {"$regex": `${query[query.length-1]}`, "$options": "i"}
-      }, (err, docs) => {
-        console.log(docs);
-      }
-    );
-  } else {
-    names = await Faculty.find(
-      {$or:[
-        {"first_name": {"$regex": `${query[0]}`, "$options": "i"}},
-        {"last_name": {"$regex": `${query[0]}`, "$options": "i"}}
-      ]}, (err, docs) => {
-        console.log(docs);
-      }
-    );
+
+router.put("/editInterest", middlewareObj.isLoggedIn, async function(req, res) {
+  console.log(req.body.id);
+  try {
+    let student = await Student.findOneAndUpdate({user_id: req.body.id}, {interests: req.body.interests});
+    student.interests = req.body.interests;
+    res.send(student);
+  } catch(e) {
+    console.log(e);
+    res.send(e);
   }
-
-  let departments = await Faculty.find(
-    {"department": {"$regex": `${req.params.query}`, "$options": "i"}}, (err, docs) => {
-      
-    }
-  );
-
-  res.send({"names": names, "department": departments});
+  // res.send('OK');
 })
 
-router.get('/updateModel', async function(req, res) {
-  let students = await Student.find({"first_name": {"$regex": 'b', "$options": "i"}}, (err, docs) => {
-    console.log(docs);
-    res.send('OK');
+router.get("/search/:query", middlewareObj.isLoggedIn, async function(req, res) {
+  let query = req.params.query.split(' ');
+  Helper.SearchHelper(query, req.params.query)
+  .then((result) => {
+    res.send(result);
   })
+  .catch((e) => {
+    res.status(400).send();
+  })
+});
+
+router.post("/upload/profilePic", middlewareObj.isLoggedIn, uploadImage.single('image'), async function(req, res) {
+    console.log(req.body.id);
+    let id = mongoose.Types.ObjectId(req.body.id);
+    console.log(id);
+    try{
+      let student = await Student.findOneAndUpdate({user_id: id}, {image: req.file.location});
+      console.log(student);
+      res.send(student);
+    } catch(e) {
+      console.log(e);
+      res.send(e);
+    }
 })
+
 
 module.exports = router;

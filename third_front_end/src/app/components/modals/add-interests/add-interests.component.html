@@ -1,0 +1,39 @@
+<div class="modal fade" id="interestsModal" role="dialog" aria-labelledby="interestsModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Interests</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                   <div class="row">
+                            <!-- <input class="search_input form" [(ngModel)]="searchQuery" type="text" name="" placeholder="Search...">
+                            <a class="search_icon" (click)="search()"><i class="fas fa-search"></i></a> -->
+                        <form class="form-inline" [formGroup]="searchForm" (ngSubmit)="addInterest()" style="width: 100%">
+                            <div class="form-group" style="width: 80%">
+                                <input type="text" class="form-control" formControlName="query" placeholder="Enter an interest to save" style="width:100%">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-right: 0 !important; margin-left: auto">Add</button>
+                        </form>
+                   </div> 
+                   <div class="row interest-row">
+                       <div class="card" style="width:100%">
+                           <ul class="list-group list-group-flush">
+                               <li class="list-group-item" *ngFor="let interest of interests" style="width:100%">{{interest}} 
+                                  <button class="btn trash-btn" (click)="deleteInterest(interest)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </li>
+                           </ul>
+                       </div>
+                   </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="saveInterests()" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-danger" (click)="close()" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

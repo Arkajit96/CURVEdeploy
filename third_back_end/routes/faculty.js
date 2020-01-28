@@ -3,10 +3,11 @@ var router  = express.Router();
 var passport = require("passport");
 var User = require("../models/User");
 var Faculty = require("../models/faculty");
-var middlewareObj = require("../middleware");
+var middlewareObj = require("../middleware").middlewareObj;
 var mongoose = require("mongoose");
 var Institution = require("../models/institution");
 var FacultyProfile = require("../models/facultyProfile");
+const Helper = require('../helpers/index');
 
 // when user login, according to the userid to get the information of this faculty
 router.get("/:id", middlewareObj.isLoggedIn, function(req, res, next) {
@@ -31,6 +32,18 @@ router.get("/institution/:id", middlewareObj.isLoggedIn, function(req, res, next
 })
 
 
+// Search for faculty by name, major, interests
+router.get("/search/:query", middlewareObj.isLoggedIn, async (req,res) => {
+    let query = req.params.query.split(' ');
+    Helper.SearchHelper(query, req.params.query)
+    .then((results) => {
+        res.status(200).send({"names": results.names, "departments": results.departments, "interests": results.interests});
+    })
+    .catch((e) => {
+        res.status(500).send("ERROR");
+    })
+})
+
 router.put("/edit/:id", middlewareObj.isLoggedIn, function(req, res) {
     console.log(req.body);
     
@@ -44,4 +57,6 @@ router.put("/edit/:id", middlewareObj.isLoggedIn, function(req, res) {
         }
     });
 })
+
+
 module.exports = router;

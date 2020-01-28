@@ -20,4 +20,24 @@ export class StudentService {
       )
     })
   }
+
+  editInterests(id: any, interests: any): Promise<any> {
+    return new Promise((res, rej) => {
+      let form = {
+        id: `${id}`,
+        interests: interests
+      }
+      console.log(id, interests);
+      this.http.put('/api/student/editInterest', form).subscribe(
+        data => {
+          console.log(data);
+          res(data);
+        },
+        error => {
+          rej("Error updating interests")
+        }
+      )
+    })
+  }
+
 }

@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-md-center" *ngIf="searchResults.length != 0" style="margin-bottom: 1rem;">
+    <div class="row justify-content-md-center" *ngIf="searchResults.length != 0 && !loadingSearch" style="margin-bottom: 1rem;">
         <div class="col col-12" style="text-align: center; margin-bottom: 1rem;">
             Filter by:
             <button class="btn btn-outline-primary" type="button" (click)="filterBy('People')">People</button>
@@ -74,9 +74,9 @@
                 </li>
             </ul>
         </div>
-        <div class="card" *ngIf="filter == 'Department' && searchResults.department.length > 0">
+        <div class="card" *ngIf="filter == 'Department' && searchResults.departments.length > 0">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item" *ngFor="let person of searchResults.department">
+                <li class="list-group-item" *ngFor="let person of searchResults.departments">
                     <div class="row">
                         <div class="col col-2">
                             <!-- <ngx-avatar name="{{person.first_name}} {{person.last_name}}" size="75"></ngx-avatar> -->
@@ -107,12 +107,18 @@
                 </li>
             </ul>
         </div>
-        <div class="card" *ngIf="filter=='Department' && searchResults.department.length == 0">
+        <div class="card" *ngIf="filter=='Department' && searchResults.departments.length == 0">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     No departments match your search
                 </li>
             </ul>
+        </div>
+    </div>
+    
+    <div class="row justify-content-md-center">
+        <div class="spinner-border" role="status" *ngIf="loadingSearch">
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
 

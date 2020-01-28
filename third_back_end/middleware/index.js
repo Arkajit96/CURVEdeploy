@@ -1,5 +1,6 @@
 var Blog = require("../models/blog");
 var Comment = require("../models/comment");
+const upload = require("./upload");
 // var User = require("../models/user");
 
 // all the middleare goes here
@@ -49,7 +50,6 @@ middlewareObj.checkCommentOwnership = function(req, res, next) {
 }
 
 middlewareObj.isLoggedIn = function(req, res, next){
-    console.log(req.isAuthenticated());
     if(req.isAuthenticated()){
         return next();
     }
@@ -65,4 +65,4 @@ middlewareObj.isAdmin = function(req, res, next){
     res.redirect("/login");
 }
 
-module.exports = middlewareObj;
+module.exports = {middlewareObj, upload};

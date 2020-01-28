@@ -1,0 +1,29 @@
+<app-header></app-header>
+
+<div class="row justify-content-sm-center" *ngIf="loadingPage">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<div class="container-fluid" *ngIf="!loadingPage">
+    <div class="row justify-content-sm-center">
+        <div class="col col-lg-3 col-xs-0">
+            <div class="profile-card">
+                <img src = "{{faculty.image}}" class = "pro-pic">
+                <h4 id = "name">{{faculty.first_name}} {{faculty.last_name}}</h4>
+                <div class = "caption-text">{{faculty.department}}</div>
+                <hr>
+            </div>
+        </div>
+        <div class="col col-lg-9 col-xs-12">
+            <div class="searchbar">
+                <input class="search_input" [(ngModel)]="searchQuery" type="text" name="" 
+                    placeholder="Search for other faculty members by name, department, or interest" id="search_bar" autocomplete="off">
+                <a class="search_icon" (click)="search()" id="searchLink"><i class="fas fa-search"></i></a>
+            </div>
+            <app-canidate-search [searchQuery]="query"></app-canidate-search>
+        </div>
+    </div>
+
+</div>
