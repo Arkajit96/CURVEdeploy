@@ -7,4 +7,5 @@ package-lock.json
 *.swp
 *.DS_Store
 *.spec.ts
+.env
 
