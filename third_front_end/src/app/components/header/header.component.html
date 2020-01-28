@@ -1,4 +1,3 @@
-
 <div>
 <nav id = "curve-navbar" class="navbar navbar-expand-md navbar-dark py-0 sticky-top">
     <a class="navbar-brand" href="https://www.curve-research.com/">CURVE</a>
@@ -9,13 +8,14 @@
     <div class="collapse navbar-collapse justify-content-end" id = "nav-collapse">
         <div class="navbar-nav">
             <a class="nav-item nav-link" routerLink="/mycurve" routerLinkActive="active">myCURVE</a>
-            <div *ngIf="val">
-            <a class="nav-item nav-link"  [routerLink]="['/studentProfile/', id]"  routerLinkActive="active">PROFILE</a>
+            <div *ngIf="entity == 'student'">
+            <a class="nav-item nav-link"  [routerLink]="['/studentProfile/', userId]"  routerLinkActive="active">PROFILE</a>
             </div>
-            <div *ngIf="!val">
-            <a class="nav-item nav-link"  [routerLink]="['/facultyProfile/', id]" routerLinkActive="active">PROFILE</a>
+            <div *ngIf="entity == 'faculty'">
+            <a class="nav-item nav-link"  [routerLink]="['/facultyProfile/', userId]" routerLinkActive="active">PROFILE</a>
             </div>
-            <a class="nav-item nav-link" routerLink="/research" routerLinkActive="active">RESEARCH</a>
+            <a class="nav-item nav-link" routerLink="/research" routerLinkActive="active" *ngIf="identity == 'student'">RESEARCH</a>
+            <a class="nav-item nav-link" routerLink="/candidate/{{id}}" routerLinkActive="active" *ngIf="identity == 'faculty'">CANDIDATES</a>
 
             <!-- <a class="nav-item nav-link" href="mycurve.html">myCURVE<span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="profile.html">PROFILE</a>

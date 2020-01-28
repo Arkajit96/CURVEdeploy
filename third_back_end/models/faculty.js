@@ -21,7 +21,14 @@ var FacultySchema = new mongoose.Schema({
 	education: String,
 	experience: String,
 	image: String,
-	interests: [String]
+	interests: [String],
+	available: Boolean,
+	candidates: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Student"
+		}
+	] 
 });
 
 
