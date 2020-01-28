@@ -22,7 +22,13 @@ var StudentSchema = new mongoose.Schema({
 	education: String,
 	image: String,
 	graduation_class: Number,
-	interests: [String]
+	interests: [String],
+	shopping_cart: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Faculty"
+		}
+	]
 });
 
 //StudentSchema.plugin(passportLocalMongoose);
