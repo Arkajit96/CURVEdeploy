@@ -1,4 +1,4 @@
-<div class="modal fade" id="interestsModal" role="dialog" aria-labelledby="interestsModal" aria-hidden="true">
+<!-- <div class="modal fade" id="interestsModal" role="dialog" aria-labelledby="interestsModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,13 +10,15 @@
             <div class="modal-body">
                 <div class="container">
                    <div class="row">
-                            <!-- <input class="search_input form" [(ngModel)]="searchQuery" type="text" name="" placeholder="Search...">
-                            <a class="search_icon" (click)="search()"><i class="fas fa-search"></i></a> -->
-                        <form class="form-inline" [formGroup]="searchForm" (ngSubmit)="addInterest()" style="width: 100%">
-                            <div class="form-group" style="width: 80%">
-                                <input type="text" class="form-control" formControlName="query" placeholder="Enter an interest to save" style="width:100%">
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="margin-right: 0 !important; margin-left: auto">Add</button>
+                        <form>
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Add interest" [formControl]="interestControl" [matAutocomplete]="auto">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                        {{option}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
                         </form>
                    </div> 
                    <div class="row interest-row">
@@ -34,6 +36,26 @@
                 <button type="button" class="btn btn-primary" (click)="saveInterests()" data-dismiss="modal">Save</button>
                 <button type="button" class="btn btn-danger" (click)="close()" data-dismiss="modal">Close</button>
             </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="container">
+    <div class="row" style="width: 100%;">
+        <div class="col-9">
+            <form style="width: 100%;">
+                <mat-form-field style="width: 100%;">
+                    <input type="text" matInput class="searchBar" placeholder="Add interest" [formControl]="interestControl" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </form>
+        </div>
+        <div class="col-3" style="width: 100%;">
+            <button mat-raised-button class="add-btn" color="primary">Add</button>
         </div>
     </div>
 </div>
