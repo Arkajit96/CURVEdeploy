@@ -44,7 +44,7 @@ saveProfile = (user, id) => {
     if(user.entity == 'faculty') {
       let faculty = new Faculty({first_name:'', middle_name:'', last_name:'', email:user.email, gender: '', date_of_birth:'', date_of_joining:'',
                               address:'', phone: '', research_summary:'', current_projects:'', department:'', education:'',
-                              experience:'', image:'',user_id:id, interests:[] });
+                              experience:'', image:'',user_id:id, interests:[], available: false, candidates: [] });
       Faculty.create(faculty, function(err, newlyCreated) {
         if (err) {
           console.log(err);
@@ -57,7 +57,7 @@ saveProfile = (user, id) => {
     } else {
       let student = new Student({first_name:'', middle_name:'', last_name:'', email:user.email, gender: '', date_of_birth:'', date_of_joining:'',
                             address:'', phone: '', summary:'', department:'', education:'', major:'', minor:'',
-                            experience:'', image:'',user_id:id, graduation_class:null, interests: []});
+                            experience:'', image:'',user_id:id, graduation_class:null, interests: [], shopping_cart: []});
       Student.create(student, function(err, newlyCreated) {
         if (err) {
           console.log(err);
