@@ -67,8 +67,9 @@
                         </div>                                                 
                     </div>
 
-                    <button class="myButton modal-btn" data-toggle="modal" data-target="#interestsModal">Edit interests</button>
-                        
+                    <!-- <button class="myButton modal-btn" data-toggle="modal" data-target="#interestsModal">Edit interests</button> -->
+                    <button class="myButton" (click)="openInterestsDialog()">Edit Interests</button>
+
                     <div class = "student-summary">
                         <h1>STUDENT SUMMARY </h1>
                         {{student.student_summary}}
@@ -79,6 +80,6 @@
       </div>
     </div> 
     
-    <app-add-interests #interestsModal [User]="student" (Response)="updateInterests($event)"></app-add-interests>
+    <!-- <app-add-interests #interestsModal [User]="student" (Response)="updateInterests($event)"></app-add-interests> -->
 </body>
 

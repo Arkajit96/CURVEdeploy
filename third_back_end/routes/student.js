@@ -27,12 +27,12 @@ const mongodb = require('mongodb');
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {
     console.log("back end req" + req.params.id);
-    var id = mongoose.Types.ObjectId(req.params.id);
-    Student.findOne({"user_id": id}, function(err, student){
+    Student.findOne({"user_id": req.params.id}, function(err, student){
         if(err){
             console.log(err);
         } else {
-        res.send(student);
+          console.log(student);
+          res.send(student);
         }
      });
 
@@ -137,7 +137,7 @@ router.put("/edit/:id", checkAuth, function(req, res) {
 })
 
 
-router.put("/editInterest", middlewareObj.isLoggedIn, async function(req, res) {
+router.put("/editInterest", checkAuth, async function(req, res) {
   console.log(req.body.id);
   try {
     let student = await Student.findOneAndUpdate({user_id: req.body.id}, {interests: req.body.interests});
@@ -150,7 +150,7 @@ router.put("/editInterest", middlewareObj.isLoggedIn, async function(req, res) {
   // res.send('OK');
 })
 
-router.get("/search/:query", middlewareObj.isLoggedIn, async function(req, res) {
+router.get("/search/:query", checkAuth, async function(req, res) {
   let query = req.params.query.split(' ');
   Helper.SearchHelper(query, req.params.query)
   .then((result) => {
@@ -161,13 +161,15 @@ router.get("/search/:query", middlewareObj.isLoggedIn, async function(req, res) 
   })
 });
 
-router.post("/upload/profilePic", middlewareObj.isLoggedIn, uploadImage.single('image'), async function(req, res) {
-    console.log(req.body.id);
+router.post("/upload/profilePic", checkAuth, uploadImage.single('image'), async function(req, res) {
+    // console.log(req.body.id);
     let id = mongoose.Types.ObjectId(req.body.id);
-    console.log(id);
+    // console.log(id);
     try{
+      console.log(req.file.location);
       let student = await Student.findOneAndUpdate({user_id: id}, {image: req.file.location});
-      console.log(student);
+      // console.log(student);
+      student.image = req.file.location;
       res.send(student);
     } catch(e) {
       console.log(e);

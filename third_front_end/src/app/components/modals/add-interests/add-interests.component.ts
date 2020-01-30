@@ -1,6 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { OnInit, Input, Output, EventEmitter, Inject, Component } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { StudentService } from 'src/app/services/student.service';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import { InterestList } from 'src/app/services/interest-list';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-add-interests',
@@ -8,25 +13,37 @@ import { StudentService } from 'src/app/services/student.service';
   styleUrls: ['./add-interests.component.scss']
 })
 export class AddInterestsComponent implements OnInit {
+  User: any;
   searchQuery = '';
   interests = [];
+  interestControl = new FormControl();
+  options = this.list.list;
+  filteredOptions: Observable<any>;
   
   searchForm = this.fb.group({
     query: ['']
   });
 
-  @Input() User: any;
-  @Output() Response: EventEmitter<any> = new EventEmitter()
+  // @Input() User: any;
+  // @Output() Response: EventEmitter<any> = new EventEmitter()
 
   constructor(
     private fb: FormBuilder,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private list: InterestList,
+    public dialogRef: MatDialogRef<AddInterestsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
-    console.log(this.User);
+    this.User = this.data.User;
     let int = this.User.interests;
     this.interests = JSON.parse(JSON.stringify(this.User.interests));
+    this.filteredOptions = this.interestControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
   addInterest() {
@@ -42,23 +59,32 @@ export class AddInterestsComponent implements OnInit {
     })
   }
 
-  saveInterests() {
-    this.studentService.editInterests(this.User.user_id, this.interests)
-    .then((res) => {
-      console.log(res);
-      this.Response.emit({newInterests: res.interests});
-    })
-    .catch((e) => {
-      console.log(e);
-    })
+  // saveInterests() {
+  //   this.studentService.editInterests(this.User.user_id, this.interests)
+  //   .then((res) => {
+  //     console.log(res);
+  //     // this.Response.emit({newInterests: res.interests});
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   })
 
-    // this.Response.emit({newInterests: this.interests});
-    this.searchForm.reset();
-  }
+  //   // this.Response.emit({newInterests: this.interests});
+  //   this.searchForm.reset();
+  // }
 
-  close() {
-    this.interests = JSON.parse(JSON.stringify(this.User.interests));
-    this.searchForm.reset();
+  // close() {
+  //   this.interests = JSON.parse(JSON.stringify(this.User.interests));
+  //   this.searchForm.reset();
+  // }
+
+  _filter(value) {
+    const filterValue = value.toLowerCase();
+    if(value.trim() == '') {
+      return []
+    } else {
+      return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    }
   }
 
 }

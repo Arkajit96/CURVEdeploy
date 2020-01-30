@@ -26,6 +26,7 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
+    "jwt-decode": "^2.2.0",
     "ngx-avatar": "^3.7.0",
     "popper": "^1.0.1",
     "rxjs": "~6.4.0",

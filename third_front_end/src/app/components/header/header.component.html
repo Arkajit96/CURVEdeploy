@@ -14,8 +14,8 @@
             <div *ngIf="entity == 'faculty'">
             <a class="nav-item nav-link"  [routerLink]="['/facultyProfile/', userId]" routerLinkActive="active">PROFILE</a>
             </div>
-            <a class="nav-item nav-link" routerLink="/research" routerLinkActive="active" *ngIf="identity == 'student'">RESEARCH</a>
-            <a class="nav-item nav-link" routerLink="/candidate/{{id}}" routerLinkActive="active" *ngIf="identity == 'faculty'">CANDIDATES</a>
+            <a class="nav-item nav-link" routerLink="/research" routerLinkActive="active" *ngIf="entity == 'student'">RESEARCH</a>
+            <a class="nav-item nav-link" routerLink="/candidate/{{id}}" routerLinkActive="active" *ngIf="entity == 'faculty'">CANDIDATES</a>
 
             <!-- <a class="nav-item nav-link" href="mycurve.html">myCURVE<span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="profile.html">PROFILE</a>

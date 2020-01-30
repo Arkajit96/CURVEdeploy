@@ -70,6 +70,7 @@ export class AuthService {
       )
       .subscribe(
         response => {
+          console.log(response);
           const token = response.token;
           this.token = token;
           if (token) {
