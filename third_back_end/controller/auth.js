@@ -2,7 +2,9 @@ let config = require('dotenv').config().parsed;
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
-var User = require('../models/User');
+const User = require('../models/User');
+const Student = require('../models/student');
+const Faculty = require('../models/faculty');
 
 exports.register = (req, res) => {
   // hash password
@@ -16,19 +18,46 @@ exports.register = (req, res) => {
         });
         console.log(user);
 
+        let model;
+
         // save user data
         user
           .save()
           .then(result => {
             // implement this function when models are defined
-            // saveProfile()
-            res.status(201).json({
-              message: "User created!"
-            });
+            if (user.entity === 'student') {
+              model = new Student({
+                // user_id : user._id,
+                email: req.body.email,
+                date_of_joining: new Date().Format("yyyy-MM-dd hh:mm:ss")
+              });
+            } else if (user.entity === 'faculty') {
+              model = new Faculty({
+                // user_id : user._id,
+                email: req.body.email,
+                date_of_joining: new Date().Format("yyyy-MM-dd hh:mm:ss")
+              });
+            }
+
+            console.log(model);
+
+            model
+              .save()
+              .then(result => {
+                res.status(201).json({
+                  message: "User created!"
+                });
+              })
+              .catch(err =>{
+                res.status(500).json({
+                  message: "User profile create failed!"
+                });
+              })
+
           })
           .catch(err => {
             res.status(500).json({
-              message: "Invalid authentication credentials!"
+              message: "Email address is used!"
             });
           });
         })

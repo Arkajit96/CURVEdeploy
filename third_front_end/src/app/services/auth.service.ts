@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ErrorHandler } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -52,7 +52,7 @@ export class AuthService {
         this.router.navigate(['/']);
       },
       error => {
-        this.flashMessage.show(error, {
+        this.flashMessage.show(error.error.message, {
           cssClass: 'alert-danger',
           timeout: 2000
         });
@@ -93,7 +93,7 @@ export class AuthService {
             }
           }
         },
-        error => {
+        reserror => {
           this.flashMessage.show('Authentication failed', {
             cssClass: 'alert-danger',
             timeout: 2000
