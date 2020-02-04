@@ -28,6 +28,8 @@ export class HeaderComponent implements OnInit, OnDestroy{
   //   }
   // }
   ngOnInit() {
+    this.entity = this.authService.getEntity();
+    console.log(this.entity);
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.userId = this.authService.getUserId();
     this.entity = this.authService.getEntity();

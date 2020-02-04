@@ -24,6 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CandidateComponent } from './components/candidate/candidate.component';
 import { CanidateSearchComponent } from './components/canidate-search/canidate-search.component';
 import { AddInterestsComponent } from './components/modals/add-interests/add-interests.component'
+import { InterestList } from './services/interest-list';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,7 @@ import { AddInterestsComponent } from './components/modals/add-interests/add-int
     ResearchComponent,
     CandidateComponent,
     CanidateSearchComponent,
-    AddInterestsComponent
+    AddInterestsComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,15 +53,19 @@ import { AddInterestsComponent } from './components/modals/add-interests/add-int
     AvatarModule,
     AngularMaterialModule,
     FlashMessagesModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
+    InterestList
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    AddInterestsComponent
+  ]
 })
 export class AppModule { }

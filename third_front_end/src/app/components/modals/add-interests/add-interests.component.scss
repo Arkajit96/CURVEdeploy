@@ -1,5 +1,5 @@
 .searchbar {
-    border: 5px;
+    width: 100%;
 }
 
 .interest-row {
@@ -10,4 +10,9 @@
 .trash-btn {
     margin-right: 0!important;
     margin-left: auto!important;
+}
+
+.add-btn {
+    margin-top: 1rem;
+    width: 100%!important;
 }

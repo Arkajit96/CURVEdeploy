@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { AddInterestsComponent } from '../modals/add-interests/add-interests.component';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-student-profile',
@@ -16,7 +18,13 @@ export class StudentProfileComponent implements OnInit {
   form: FormGroup
   fileToUpload: File = null;
   searchQuery: String = ""
-  constructor(public route:ActivatedRoute, public http: HttpClient, public router: Router, private fb: FormBuilder) {
+  constructor(
+    public route:ActivatedRoute, 
+    public http: HttpClient, 
+    public router: Router, 
+    private fb: FormBuilder,
+    private dialog: MatDialog
+  ) {
     this.createForm();
    }
 
@@ -37,6 +45,9 @@ export class StudentProfileComponent implements OnInit {
         console.log(res)
         this.student = res;
         this.loadingPage = false;
+      },
+      error => {
+        console.log(error);
       });
     });
   }
@@ -90,6 +101,17 @@ export class StudentProfileComponent implements OnInit {
   updateInterests(event) {
     console.log(event);
     this.student.interests = event.newInterests;
+  }
+
+  openInterestsDialog() {
+    const dialogRef = this.dialog.open(AddInterestsComponent, {
+      width: '500px',
+      data: {User: this.student}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    })
   }
 
 }
