@@ -19,8 +19,6 @@ exports.register = (req, res) => {
         });
         console.log(user);
 
-        let model;
-
         // save user data
         user
           .save()
@@ -28,13 +26,13 @@ exports.register = (req, res) => {
             // implement this function when models are defined
             // if (user.entity === 'student') {
             //   model = new Student({
-            //     // user_id : user._id,
+            //     user_id : user._id,
             //     email: req.body.email,
             //     date_of_joining: new Date().Format("yyyy-MM-dd hh:mm:ss")
             //   });
             // } else if (user.entity === 'faculty') {
             //   model = new Faculty({
-            //     // user_id : user._id,
+            //     user_id : user._id,
             //     email: req.body.email,
             //     date_of_joining: new Date().Format("yyyy-MM-dd hh:mm:ss")
             //   });
@@ -54,7 +52,7 @@ exports.register = (req, res) => {
             //       message: "User profile create failed!"
             //     });
             //   })
-            saveProfile(req.body, result.id).then((newlyCreated) => {
+            saveProfile(user).then((newlyCreated) => {
               console.log(newlyCreated);
               res.status(201).json({
                 message: "User created!"
@@ -70,12 +68,16 @@ exports.register = (req, res) => {
     )
 }
 
-saveProfile = (user, id) => {
+saveProfile = (user) => {
   return new Promise((res, rej) => {
     if(user.entity == 'faculty') {
-      let faculty = new Faculty({first_name:'', middle_name:'', last_name:'', email:user.email, gender: '', date_of_birth:'', date_of_joining:'',
-                              address:'', phone: '', research_summary:'', current_projects:'', department:'', education:'',
-                              experience:'', image:'',user_id:id, interests:[], available: false, candidates: [] });
+
+      let faculty = new Faculty({ 
+        user_id : user._id,
+        email: user.email,
+        date_of_joining: new Date().toLocaleString()
+      });
+
       Faculty.create(faculty, function(err, newlyCreated) {
         if (err) {
           console.log(err);
@@ -86,9 +88,13 @@ saveProfile = (user, id) => {
         }
       });
     } else {
-      let student = new Student({first_name:'', middle_name:'', last_name:'', email:user.email, gender: '', date_of_birth:'', date_of_joining:'',
-                            address:'', phone: '', summary:'', department:'', education:'', major:'', minor:'',
-                            experience:'', image:'',user_id:id, graduation_class:null, interests: [], shopping_cart: []});
+      
+      let student = new Student({ 
+            user_id : user._id,
+            email: user.email,
+            date_of_joining: new Date().toLocaleString()
+      });
+
       Student.create(student, function(err, newlyCreated) {
         if (err) {
           console.log(err);

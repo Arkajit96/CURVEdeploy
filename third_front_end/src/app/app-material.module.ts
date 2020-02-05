@@ -1,26 +1,28 @@
 import { NgModule } from '@angular/core';
 import {
   MatInputModule,
-  MatCardModule,
   MatSelectModule,
   MatCheckboxModule,
   MatButtonModule,
-  MatToolbarModule,
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatPaginatorModule,
   MatDialogModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatIconModule,
+  MatMenuModule,
+  MatBadgeModule
 } from '@angular/material';
 
 @NgModule({
   exports: [
     MatInputModule,
-    MatCardModule,
+    MatMenuModule,
+    MatIconModule,
+    MatBadgeModule,
     MatSelectModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatToolbarModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,

@@ -38,7 +38,7 @@ const routes: Routes = [
     path: 'research', component: ResearchComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'candidate/:id', component: CandidateComponent
+    path: 'candidate/:id', component: CandidateComponent, canActivate: [AuthGuard]
   },
   {
     path: '', redirectTo: 'login', pathMatch: 'full'

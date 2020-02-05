@@ -26,12 +26,12 @@ const mongodb = require('mongodb');
 
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {
-    console.log("back end req" + req.params.id);
-    Student.findOne({"user_id": req.params.id}, function(err, student){
+    console.log("backend fatched user: " + req.userData.email)
+    Student.findOne({"email": req.userData.email}, function(err, student){
         if(err){
             console.log(err);
         } else {
-          console.log(student);
+          // console.log(student);
           res.send(student);
         }
      });

@@ -1,4 +1,4 @@
-import { Injectable, ErrorHandler } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -47,14 +47,14 @@ export class AuthService {
        res => {
         this.flashMessage.show(res.message, {
           cssClass: 'alert-success',
-          timeout: 2000
+          timeout: 5000
         });
         this.router.navigate(['/']);
       },
       error => {
         this.flashMessage.show(error.error.message, {
           cssClass: 'alert-danger',
-          timeout: 2000
+          timeout: 5000
         });
         this.authStatusListener.next(false);
       }
@@ -70,7 +70,6 @@ export class AuthService {
       )
       .subscribe(
         response => {
-          console.log(response);
           const token = response.token;
           this.token = token;
           if (token) {
@@ -97,7 +96,7 @@ export class AuthService {
         reserror => {
           this.flashMessage.show('Authentication failed', {
             cssClass: 'alert-danger',
-            timeout: 2000
+            timeout: 5000
           });
           this.authStatusListener.next(false);
         }
@@ -107,7 +106,7 @@ export class AuthService {
   autoAuthUser() {
     const authInformation = this.getAuthData();
     if (!authInformation) {
-      return;
+      return ;
     }
     const now = new Date();
     const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
@@ -126,6 +125,7 @@ export class AuthService {
     this.isAuthenticated = false;
     this.authStatusListener.next(false);
     this.userId = null;
+    this.entity = null;
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
     this.router.navigate(['/']);
