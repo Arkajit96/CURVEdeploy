@@ -21,6 +21,7 @@ var StudentSchema = new mongoose.Schema({
 	department: String,
 	education: String,
 	image: String,
+	resume: String,
 	graduation_class: Number,
 	interests: [String],
 	shopping_cart: [

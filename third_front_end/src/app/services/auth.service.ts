@@ -21,18 +21,28 @@ export class AuthService {
               private flashMessage: FlashMessagesService) {}
 
   getToken() {
+    return localStorage.getItem("token");
     return this.token;
   }
 
   getIsAuth() {
-    return this.isAuthenticated;
+    console.log(localStorage.getItem("expiration"));
+    let expirationTime = new Date(localStorage.getItem("expiration"));
+    console.log(expirationTime);
+    if(expirationTime < new Date()){
+      return false;
+    } else {
+      return true;
+    }
   }
 
   getUserId() {
+    return localStorage.getItem("userId")
     return this.userId;
   }
 
   getEntity() {
+    return localStorage.getItem("entity");
     return this.entity;
   }
 
@@ -142,6 +152,7 @@ export class AuthService {
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('entity', entity);
+    localStorage.setItem('isAuth', "1");
   }
 
   private clearAuthData() {
@@ -149,6 +160,7 @@ export class AuthService {
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
     localStorage.removeItem('entity');
+    localStorage.clear();
   }
 
   private getAuthData() {

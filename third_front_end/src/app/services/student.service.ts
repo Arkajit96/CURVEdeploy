@@ -27,14 +27,89 @@ export class StudentService {
         id: `${id}`,
         interests: interests
       }
-      console.log(id, interests);
       this.http.put('/api/student/editInterest', form).subscribe(
         data => {
-          console.log(data);
           res(data);
         },
         error => {
           rej("Error updating interests")
+        }
+      )
+    })
+  }
+
+  updateSummary(id: any, summary: String): Promise<any> {
+    return new Promise((res, rej) => {
+      let form = {
+        user_id: id,
+        summary: summary
+      }
+      this.http.post('/api/student/update/summary', form).subscribe(
+        data => {
+          res(data);
+        },
+        error => {
+          rej("Error updating summary")
+        }
+      )
+    })
+  }
+
+  updateStudent(id: string, form: any): Promise<any> {
+    return new Promise((res, rej) => {
+      let updates = {
+        user_id: id,
+        first_name: form.first_name.value,
+        last_name: form.last_name.value,
+        gender: form.gender.value,
+        date_of_birth: form.dob.value,
+        major: form.major.value,
+        minor: form.minor.value,
+        phone: form.phone.value,
+        email: form.email.value
+      }
+
+      this.http.post('/api/student/update', updates).subscribe(
+        data => {
+          res(data);
+        },
+        error => {
+          console.log(error);
+          res({error: 'Error saving changes'});
+        }
+      )
+    })
+  }
+
+  uploadProfilePicture(id: any, imageData: any): Promise<any> {
+    return new Promise((res, rej) => {
+      const formData = new FormData();
+      formData.append('image', imageData);
+      formData.append('id', id);
+      this.http.post('/api/student/upload/profilePic', formData).subscribe(
+        data => {
+          res(data);
+        },
+        error => {
+          console.log(error);
+          rej({error: 'Error uploading profile picture'});
+        }
+      )
+    })
+  }
+
+  uploadResume(id: any, resumeData: any): Promise<any> {
+    return new Promise((res, rej) => {
+      const formData = new FormData();
+      formData.append('file', resumeData);
+      formData.append('id', id);
+      this.http.post('/api/student/upload/resume', formData).subscribe(
+        data => {
+          res(data);
+        },
+        error => {
+          console.log(error);
+          rej({error: 'Error uploading resume'});
         }
       )
     })

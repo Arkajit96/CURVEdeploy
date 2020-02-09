@@ -26,6 +26,9 @@ import { CanidateSearchComponent } from './components/canidate-search/canidate-s
 import { AddInterestsComponent } from './components/modals/add-interests/add-interests.component'
 import { InterestList } from './services/interest-list';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {TextFieldModule} from '@angular/cdk/text-field';
+import { CloseConfirmComponent } from './components/modals/close-confirm/close-confirm.component';
+import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,8 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
     CandidateComponent,
     CanidateSearchComponent,
     AddInterestsComponent,
+    CloseConfirmComponent,
+    EditStudentProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +59,7 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
     AngularMaterialModule,
     FlashMessagesModule.forRoot(),
     BrowserAnimationsModule,
+    TextFieldModule
   ],
   providers: [
     {
@@ -65,7 +71,9 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    AddInterestsComponent
+    AddInterestsComponent,
+    CloseConfirmComponent,
+    EditStudentProfileComponent
   ]
 })
 export class AppModule { }

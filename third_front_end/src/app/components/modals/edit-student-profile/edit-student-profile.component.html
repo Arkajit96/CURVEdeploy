@@ -1,0 +1,90 @@
+<div class="container" *ngIf="!loading">
+    <form [formGroup]="studentForm" autocomplete="off" (change)="setChanged()">
+        <mat-tab-group class="mat-tabs">
+            <mat-tab label="Personal Info">
+                <div class="row first-row">
+                    <div class="col-6 col-12-xs">
+                        <mat-form-field>
+                            <input matInput formControlName="first_name" placeholder="First Name"> 
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6 col-12-xs">
+                        <mat-form-field>
+                            <input matInput formControlName="last_name" placeholder="Last Name"> 
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 col-12-xs">
+                        <mat-form-field>
+                            <input matInput formControlName="gender" placeholder="Gender">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6 col-12-xs">
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker" formControlName="dob" placeholder="Date of birth">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Account Info">
+                <div class="row first-row">
+                    <div class="col-6 col-12-xs">
+                        <mat-form-field>
+                            <input matInput formControlName="major" placeholder="Major">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6 col-12-xs">
+                        <mat-form-field>
+                            <input matInput formControlName="minor" placeholder="Minor">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field>
+                            <input matInput formControlName="email" placeholder="Email">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field>
+                            <input matInput formControlName="phone" placeholder="Phone">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Documents">
+                <div class="row first-row">
+                    <div class="col-12">
+                        <label for="profilePicInput">Profile Picture:</label>
+                        <input type="file" class="profile-pic" id="profilePicInput"
+                               (change)="newPicture($event)" 
+                               placeholder="Profile Picture" 
+                               formControlName="profilePic" 
+                               accept="image/x-png,image/jpeg">
+                    </div>
+                </div>
+                <div class="row" *ngIf="previewImg">
+                    <img *ngIf="previewImg" [src]="previewImg" class="preview-img">
+                </div>
+                <div class="row">
+                    <label for="resumeInput">Resume</label>
+                    <input type="file" id="resumeInput"
+                            (change)="newResume($event)"
+                            formControlName="resume"
+                            accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </form>
+    <div class="row first-row">
+        <button mat-raised-button color="primary" (click)="submit()">Save</button>
+        <button mat-raised-button color="warn" (click)="close()">Close</button>
+    </div>
+</div>
+
+<div class="container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>

@@ -4,7 +4,10 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { AddInterestsComponent } from '../modals/add-interests/add-interests.component';
+import { EditStudentProfileComponent } from '../modals/edit-student-profile/edit-student-profile.component';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { StudentService } from 'src/app/services/student.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-student-profile',
@@ -18,18 +21,23 @@ export class StudentProfileComponent implements OnInit {
   form: FormGroup
   fileToUpload: File = null;
   searchQuery: String = ""
+  newSummary: String;
+  loadingImg = true;
+
   constructor(
     public route:ActivatedRoute, 
     public http: HttpClient, 
     public router: Router, 
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private studentService: StudentService,
+    private snackbar: MatSnackBar
   ) {
     this.createForm();
    }
 
    test() {
-     console.log('HERE');
+     this.loadingImg = false;
    }
   
   ngOnInit() {
@@ -44,6 +52,7 @@ export class StudentProfileComponent implements OnInit {
       this.http.get("/api/student/" + this.student_id).subscribe((res:any) => {
         console.log(res)
         this.student = res;
+        this.newSummary = res.summary;
         this.loadingPage = false;
       },
       error => {
@@ -65,42 +74,47 @@ export class StudentProfileComponent implements OnInit {
       this.form.get('avatar').setValue(file);
     }
   }
-  private prepareSave(): any {
-    let input = new FormData();
-    input.append('name', this.form.get('name').value);
-    input.append('avatar', this.form.get('avatar').value);
-    console.log(input['avatar']);
-    return input;
-  }
 
-  edit() {
-    console.log(this.student_id);
-    this.router.navigate(['/editStudentProfile/'], {queryParams : {student_id: this.student._id}});
-  }
-  
-
-  editTranscript() {
-    
-    // const formModel = this.prepareSave();
-    // console.log(formModel);
-    //const params = new HttpParams({fromObject: formModel});
-    // const params = new HttpParams({fromObject: this.fileToUpload});
-    const formData: FormData = new FormData();
-    formData.append('fileKey', this.fileToUpload, this.fileToUpload.name);
-    const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
-    // this.http.put("/api/student/edit/" + this.student_id, params, {headers:reqHeader, observe: "response"}
-    this.http.post("/api/student/edit/resumes/" + this.student_id, formData, {headers: reqHeader, observe: "response"}).subscribe((res:any)=> {
-      console.log(res);
+  saveSummary() {
+    this.studentService.updateSummary(this.student.user_id, this.newSummary)
+    .then((data) => {
+      this.student.summary = data.summary;
+      this.newSummary = data.summary;
+      this.snackbar.open("Summary Updated", "Close", {
+        duration: 3000,
+        panelClass: "success-snackbar"
+      });
+    })
+    .catch((e) => {
+      console.log(e);
     })
   }
 
-  search() {
-    console.log(this.searchQuery);
-  }
+  edit() {
+    const dialogRef = this.dialog.open(EditStudentProfileComponent, {
+      width: '550px',
+      data: {User: this.student}
+    });
 
-  updateInterests(event) {
-    console.log(event);
-    this.student.interests = event.newInterests;
+    dialogRef.afterClosed().subscribe(
+      data => {
+        if(data && !data.error){
+          this.student = data.student;
+          this.snackbar.open('Student info updated', 'Close', {
+            duration: 3000,
+            panelClass: 'success-snackbar'
+          })
+        } else {
+          if(data.error){
+            this.snackbar.open(data.error, 'Close', {
+              duration: 3000,
+              panelClass: 'error-snackbar'
+            })
+          }
+        }
+        // this.student = data;
+      }
+    )
   }
 
   openInterestsDialog() {
@@ -110,7 +124,13 @@ export class StudentProfileComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+      if(result) {
+        this.student = result;
+        this.snackbar.open('Interests saved', 'Close', {
+          duration: 3000,
+          panelClass: 'success-snackbar'
+        });
+      }
     })
   }
 

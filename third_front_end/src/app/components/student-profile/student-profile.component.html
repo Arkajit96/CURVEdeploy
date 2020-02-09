@@ -2,9 +2,7 @@
 <app-header></app-header>
 
 <div class="row justify-content-sm-center" *ngIf="loadingPage">
-    <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
+    <mat-spinner></mat-spinner>
 </div>
 
 <body *ngIf="!loadingPage">
@@ -12,7 +10,10 @@
         <div class = "row justify-content-lg-center">
             <div class = "col-lg-3 col-sm-4">
                 <div class = "profile-card">
-                    <img [src] = "student.image" class = "pro-pic" (click)="test()">
+                    <img [src] = "student.image" class = "pro-pic" (click)="test()" (load)="test()">
+                    <div class="profile-item" *ngIf="loadingImg && student.image != ''">
+                        <mat-spinner></mat-spinner>
+                    </div>
                     <h4 id = "name">{{student.first_name}} {{student.last_name}}</h4>
                     <div class = "caption-text">Class of {{student.graduation_class}}</div>
 
@@ -32,12 +33,16 @@
                         <h6>Phone</h6>
                         {{student.phone}}
                     </div>
+                    <div class = "profile-item" *ngIf="student.resume && student.resume != ''">
+                        <a href="{{student.resume}}"><h6 class="resume-link">Resume</h6></a>
+                    </div>
                 </div>
                 <div>
-                    <button class="myButton" (click)="edit()" >Edit</button>
+                    <!-- <button class="myButton" (click)="edit()" >Edit</button> -->
+                    <button mat-raised-button color="primary" (click)="edit()">Edit</button>
                 </div>
 
-                <div class = "documents">
+                <!-- <div class = "documents">
                     <div class = "resume">
                         <a href="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578510041728.pdf"><h6>Resume</h6></a>
                     </div>
@@ -50,36 +55,40 @@
                     <div class = "rec-letter">
                         <a href=""><h6>Letters of Recommendation</h6></a>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <div class = "col-sm-8">           
                 <div class="d-flex flex-column align-items-center student-content">
-                    <!-- <div class="searchbar">
-                        <input class="search_input" [(ngModel)]="searchQuery" type="text" name="" placeholder="Search...">
-                        <a class="search_icon" (click)="search()"><i class="fas fa-search"></i></a>
-                    </div> -->
                     <h1 style="margin-bottom: 1rem;">Interests</h1>
                     <div class = "interests-container">
                         <div class = "interest" *ngFor="let interest of student.interests">
                             {{interest}}
-                            <!-- <i class="fas fa-plus-circle fa-xs"></i> -->
                         </div>                                                 
                     </div>
-
-                    <!-- <button class="myButton modal-btn" data-toggle="modal" data-target="#interestsModal">Edit interests</button> -->
-                    <button class="myButton" (click)="openInterestsDialog()">Edit Interests</button>
-
+                    <!-- <button class="myButton" (click)="openInterestsDialog()">Edit Interests</button> -->
+                    <button mat-raised-button color="primary" class="interests-btn" (click)="openInterestsDialog()">Edit Interests</button>
                     <div class = "student-summary">
                         <h1>STUDENT SUMMARY </h1>
-                        {{student.student_summary}}
+                        <div class="row" style="width:100%">
+                            <mat-form-field style="width:100%" class="summary-text">
+                                <mat-label>Edit summary:</mat-label>
+                                <textarea matInput cdkTextareaAutosize
+                                        #autosize="cdkTextareaAutosize"
+                                        cdkAutosizeMinRows="5"
+                                        cdkAutosizeMaxRows="10" 
+                                        [(ngModel)]="newSummary"
+                                        >{{newSummary}}</textarea>
+                            </mat-form-field>
+                        </div>
+                        <div class="row justify-content-lg-center" style="width:100%">
+                            <button mat-raised-button color="primary" class="sum-btn" (click)="saveSummary()">Save summary</button>
+                        </div>
                     </div>
 
                 </div>
             </div>
       </div>
     </div> 
-    
-    <!-- <app-add-interests #interestsModal [User]="student" (Response)="updateInterests($event)"></app-add-interests> -->
 </body>
 
