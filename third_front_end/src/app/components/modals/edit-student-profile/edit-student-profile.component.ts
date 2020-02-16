@@ -76,7 +76,15 @@ export class EditStudentProfileComponent implements OnInit {
         this.snackBar.open(e.error, 'Close', {duration: 3000, panelClass: 'error-snackbar'});
       });
     } else {
-      this.saveUpdates();
+        if(this.uploadResume) {
+          this.studentService.uploadResume(this.student.user_id, this.resumeData)
+          .then((res) => {
+            this.student = res;
+            this.saveUpdates();
+          }).catch((e) => {this.snackBar.open(e.error, 'Close', {duration:3000, panelClass:'error-snackbar'})});
+        } else {
+          this.saveUpdates();
+        }
     }
 
   }

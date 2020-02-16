@@ -43,18 +43,6 @@ export class StudentProfileComponent implements OnInit {
    }
   
   ngOnInit() {
-    // this.route.params.subscribe((data) => {
-    //   this.student_id = data.id;
-    //   this.studentService.getStudent(this.student_id)
-    //   .then((res) => {
-    //     this.student = res;
-    //     this.newSummary = res.summary;
-    //   }
-    //   .catch((e) => {
-    //       console.log(e);
-    //       this.snackbar.open('Error loading student.', 'Close', {panelClass: 'error-snackbar'});
-    //     })
-    // });
     this.route.params.subscribe((data) => {
       this.student_id = data.id;
       this.studentService.getStudent(this.student_id)

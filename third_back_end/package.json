@@ -20,6 +20,7 @@
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "gridfs-stream": "^1.1.1",
+    "http": "0.0.0",
     "jsonwebtoken": "^8.5.1",
     "method-override": "^2.3.5",
     "mime-types": "^2.1.26",
@@ -34,6 +35,7 @@
     "passport-local-mongoose": "^3.1.0",
     "path": "^0.12.7",
     "request": "^2.88.0",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "socket.io": "^2.3.0"
   }
 }
