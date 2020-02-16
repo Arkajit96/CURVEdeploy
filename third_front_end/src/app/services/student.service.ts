@@ -137,41 +137,43 @@ export class StudentService {
       )
     })
 
-  // functions for fetching the opportunities
-    getOppurtunities(numPerPage: number, currentPage: number){
-      // this.opportunities= [
-      //   {name:'lab 1',school:'pitt',summary:'test summary',expireTime:'2/5/2020',icon:'https://material.angular.io/assets/img/examples/shiba2.jpg'},
-      //   {name:'lab 2',school:'pitt',summary:'test summary 2',expireTime:'2/10/2020',icon:'https://material.angular.io/assets/img/examples/shiba2.jpg'}
-      // ];
+}
 
-      const queryParams = `?pagesize=${numPerPage}&page=${currentPage}`;
-      this.http.get<{ message: string; opportunities: any; maxOpp: number }>(
-        '/api/student/getOpportunities/' + queryParams
-        ).pipe(
-          map(optData =>{
-          return {
-            opportunities : optData.opportunities.map(opt => {
-                return {
-                  id: opt._id,
-                  name:  opt.name,
-                  school:opt.school,
-                  summary:opt.summary,
-                  expireTime:opt.expireTime,
-                  icon:opt.icon
-                  };
-              }),
-              count: optData.maxOpp
-          };
-        })
-      )
-      .subscribe(newOppData => {
-        this.opportunities = newOppData.opportunities;
-        this.opportunitiesUpdated.next({
-          opportunities: [...this.opportunities],
-          count: newOppData.count
-        });
+  // functions for fetching the opportunities
+  getOppurtunities(numPerPage: number, currentPage: number){
+    // this.opportunities= [
+    //   {name:'lab 1',school:'pitt',summary:'test summary',expireTime:'2/5/2020',icon:'https://material.angular.io/assets/img/examples/shiba2.jpg'},
+    //   {name:'lab 2',school:'pitt',summary:'test summary 2',expireTime:'2/10/2020',icon:'https://material.angular.io/assets/img/examples/shiba2.jpg'}
+    // ];
+
+    const queryParams = `?pagesize=${numPerPage}&page=${currentPage}`;
+    this.http.get<{ message: string; opportunities: any; maxOpp: number }>(
+      '/api/student/getOpportunities/' + queryParams
+      ).pipe(
+        map(optData =>{
+        return {
+          opportunities : optData.opportunities.map(opt => {
+              return {
+                id: opt._id,
+                name:  opt.name,
+                school:opt.school,
+                summary:opt.summary,
+                expireTime:opt.expireTime,
+                icon:opt.icon
+                };
+            }),
+            count: optData.maxOpp
+        };
+      })
+    )
+    .subscribe(newOppData => {
+      this.opportunities = newOppData.opportunities;
+      this.opportunitiesUpdated.next({
+        opportunities: [...this.opportunities],
+        count: newOppData.count
       });
-  }
+    });
+}
 
   getopportunitiesUpdatedListener() {
     return this.opportunitiesUpdated.asObservable();
@@ -201,5 +203,4 @@ export class StudentService {
   addToShoppingCart(application:Application){
     console.log(application);
   }
-
 }

@@ -10,7 +10,6 @@ import {
   MatPaginatorModule,
   MatDialogModule,
   MatAutocompleteModule,
-  MatDividerModule,
   MatListModule,
   MatSnackBarModule,
   MatTabsModule,

@@ -78,7 +78,7 @@ import { ViewStudentProfileComponent } from './components/modals/view-student-pr
     AddInterestsComponent,
     CloseConfirmComponent,
     EditStudentProfileComponent,
-    ViewStudentProfileComponent
+    ViewStudentProfileComponent,
     submitApplicationComponent
   ]
 })
