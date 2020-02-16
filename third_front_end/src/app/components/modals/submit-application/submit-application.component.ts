@@ -21,6 +21,8 @@ import {StudentService} from '../../../services/student.service';
     private student:any;
     // form control for submit application
     private application:Application;
+    private resume: string;
+    private coverLetter:string;
 
     isLoading = false;
     form: FormGroup;
@@ -34,28 +36,23 @@ import {StudentService} from '../../../services/student.service';
 
       ngOnInit(){
         this.isLoading = true;
-        // const userId = this.authService.getUserId();
         this.form = new FormGroup({
           transcripts:new FormControl(null, {
             validators: [Validators.required]
           })
         });
-        // this.studentService.getStudentByUserId(userId)
-        // .then((res) => {
-        //   this.student = res;
-        //   this.isLoading = false;
-        // });
 
+        // init new appliction
         this.application = {
           studentID: this.data.student._id,
           opptunityID: this.data.opt.id,
-          transcripts: [],
-          letterOfRecommendations:[],
-          statementOfInterests:[],
-          otherDocs:[],
+          resume:this.data.student.resume,
+          coverLetter: '',
           createTime:''
         }
-
+        this.resume = this.data.student.resume;
+        this.coverLetter = '';
+        
         this.isLoading = false;
       }
 
@@ -71,6 +68,10 @@ import {StudentService} from '../../../services/student.service';
       // onNoClick(): void {
       //   this.dialogRef.close();
       // }
+
+      deleteFile(target:string){
+        
+      }
 
       onSubmitApplication(){
         // if(this.form.invalid){

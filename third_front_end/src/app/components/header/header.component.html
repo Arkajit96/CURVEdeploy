@@ -37,7 +37,9 @@
             </button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item>
-                  <mat-icon [matBadge]="notifications.length" matBadgeColor="warn" >notifications_active</mat-icon>
+                  <mat-icon [matBadge]="notifications.length" 
+                  [matBadgeHidden]= "notifications.length <= 0"
+                  matBadgeColor="warn" > notifications_active</mat-icon>
                   <span>notifications</span>
                 </button>
                 <button mat-menu-item>

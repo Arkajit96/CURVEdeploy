@@ -17,4 +17,5 @@ export interface Student {
     summary:string;
     interest:[];
     shopping_cart:[];
+    resume:string;
 }

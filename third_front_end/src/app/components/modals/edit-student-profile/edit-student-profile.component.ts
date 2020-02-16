@@ -57,6 +57,8 @@ export class EditStudentProfileComponent implements OnInit {
       .then((res) => {
         this.imgChanged = true;
 
+        console.log('upload resume');
+
         if(this.uploadResume) {
           this.studentService.uploadResume(this.student.user_id, this.resumeData)
           .then((res) => {

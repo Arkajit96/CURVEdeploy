@@ -41,6 +41,7 @@
     [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
     *ngIf="opportunities.length > 0"></mat-paginator>
 
+
     <div class="row justify-content-md-center">
         <div class="searchbar">
             <input class="search_input" [(ngModel)]="searchQuery" type="text" name=""
