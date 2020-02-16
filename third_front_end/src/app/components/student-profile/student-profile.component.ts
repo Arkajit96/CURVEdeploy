@@ -49,8 +49,6 @@ export class StudentProfileComponent implements OnInit {
       .then((res) => {
         this.student = res;
         this.newSummary = res.summary;
-        this.loadingPage = false;
-      })
       .catch((e) => {
           console.log(e);
           this.snackbar.open('Error loading student.', 'Close', {panelClass: 'error-snackbar'});

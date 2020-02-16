@@ -55,14 +55,14 @@ export class AuthService {
        res => {
         this.flashMessage.show(res.message, {
           cssClass: 'alert-success',
-          timeout: 2000
+          timeout: 5000
         });
         this.router.navigate(['/']);
       },
       error => {
-        this.flashMessage.show(error, {
+        this.flashMessage.show(error.error.message, {
           cssClass: 'alert-danger',
-          timeout: 2000
+          timeout: 5000
         });
         this.authStatusListener.next(false);
       }
@@ -101,10 +101,10 @@ export class AuthService {
             }
           }
         },
-        error => {
+        reserror => {
           this.flashMessage.show('Authentication failed', {
             cssClass: 'alert-danger',
-            timeout: 2000
+            timeout: 5000
           });
           this.authStatusListener.next(false);
         }
@@ -114,7 +114,7 @@ export class AuthService {
   autoAuthUser() {
     const authInformation = this.getAuthData();
     if (!authInformation) {
-      return;
+      return ;
     }
     const now = new Date();
     const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
@@ -133,6 +133,7 @@ export class AuthService {
     this.isAuthenticated = false;
     this.authStatusListener.next(false);
     this.userId = null;
+    this.entity = null;
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
     this.router.navigate(['/']);

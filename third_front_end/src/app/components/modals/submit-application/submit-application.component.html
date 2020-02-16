@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>Submit application</h2>
+<flash-messages></flash-messages>
+<mat-spinner style="display:block;margin:0 auto;" *ngIf="isLoading"></mat-spinner>
+<mat-dialog-content class="mat-typography" *ngIf="!isLoading">
+  <p>The<strong> {{data.opt.name}} </strong>requires applicants to submit their
+    <b>project proposal, statement of interest, transcript</b> and <b>letter of recommendations</b>
+    the rest of application along with details can be accessed by the link at the bottom.</p>
+
+
+
+  <form [formGroup]="form">
+    <h3>1. Transcript</h3>
+    <!-- <div class="row" *ngif="transcripts.length > 0">
+
+    </div> -->
+    <div class="row">
+      <button mat-stroked-button color='primary' type="button" (click)="filePicker.click()">
+        <mat-icon>add_circle</mat-icon>
+        <span> upload new document</span>
+      </button>
+      <input type="file" #filePicker style="display: none;" (change)="onFilePicked($event)">
+    </div>
+    <h3>2. statement of interest</h3>
+    <div class="row">
+      <button mat-stroked-button color='primary' type="button" (click)="filePicker.click()">
+        <mat-icon>add_circle</mat-icon>
+        <span> upload new document</span>
+      </button>
+      <input type="file" #filePicker style="display: none;" (change)="onFilePicked($event)">
+    </div>
+    <h3>3. letter of recommendation</h3>
+    <div class="row">
+      <button mat-stroked-button color='primary' type="button" (click)="filePicker.click()">
+        <mat-icon>add_circle</mat-icon>
+        <span> upload new document</span>
+      </button>
+      <input type="file" #filePicker style="display: none;" (change)="onFilePicked($event)">
+    </div>
+    <h3>4. Other documents</h3>
+    <div class="row">
+      <button mat-stroked-button color='primary' type="button" (click)="filePicker.click()">
+        <mat-icon>add_circle</mat-icon>
+        <span> upload new document</span>
+      </button>
+      <input type="file" #filePicker style="display: none;" (change)="onFilePicked($event)">
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [mat-dialog-close]="true" color="primary" (click)="onSubmitApplication()" >submit</button>
+</mat-dialog-actions>

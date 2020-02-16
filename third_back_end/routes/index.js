@@ -11,8 +11,7 @@ var UserController = require("../controller/auth");
 
 
 //handle sign up logic
-router.post("/register", 
-UserController.register) 
+router.post("/register", UserController.register) 
 // function(req, res){
 
   // hash password
@@ -117,8 +116,7 @@ UserController.register)
 // });
 
 
-router.post("/login", 
-UserController.userLogin)
+router.post("/login", UserController.userLogin)
 // function(req, res, next) {
   // res.send({'body': req.body})
     // passport.authenticate('local', function(err, user, info) {

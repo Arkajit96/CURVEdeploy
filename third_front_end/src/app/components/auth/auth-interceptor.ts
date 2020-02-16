@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { AuthService } from '../../services/auth.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 

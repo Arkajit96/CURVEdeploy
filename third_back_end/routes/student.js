@@ -1,16 +1,20 @@
-var express = require("express");
-var router  = express.Router();
-var passport = require("passport");
-var User = require("../models/User");
-var Faculty = require("../models/faculty");
-var Student = require("../models/student");
+const express = require("express");
+const router  = express.Router();
+const passport = require("passport");
 
-// var Blog = require("../models/blog");
+// Model
+const User = require("../models/User");
+const Faculty = require("../models/faculty");
+const Student = require("../models/student");
+
+//Controllor
+const StudentControllor = require('../controller/student');
+
+//middleware
 const checkAuth = require("../middleware/check-auth");
 // var middlewareObj = require("../middleware");
 
-var Blog = require("../models/blog");
-var middlewareObj = require("../middleware").middlewareObj;
+
 const uploadImage = require("../middleware").imgUpload;
 const uploadResume = require("../middleware").resumeUpload;
 
@@ -22,21 +26,29 @@ const crypto = require('crypto');
 const path = require('path');
 const Grid = require('gridfs-stream');
 const Helper = require('../helpers/index');
+
 const addEsIndex = Helper.esSearch;
 const mongodb = require('mongodb');
 
 
+// get research opportunies 
+router.get("/getOpportunities/",StudentControllor.getOpportunities)
+
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {
-    console.log("back end req" + req.params.id);
-    Student.findOne({"user_id": req.params.id}, function(err, student){
+    console.log("backend fatched user: " + req.userData.userId)
+    Student.findOne({"user_id": req.userData.userId}, function(err, student){
         if(err){
-            console.log(err);
+          res.status(500).json({
+            message: "Fetching student failed!"
+          });
         } else {
-          res.send(student);
+          res.status(200).json({
+            message: "student fetched successfully",
+            student:student
+          })
         }
      });
-
 })
 
 // get the institution information of this student

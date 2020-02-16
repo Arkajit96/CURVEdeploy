@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 // import { LocalStorageService } from '../../services/local-storage.service';
 import {AuthService} from '../../services/auth.service';
+import {HeaderService} from '../../services/header.service';
 
 @Component({
   selector: 'app-header',
@@ -11,11 +12,13 @@ import {AuthService} from '../../services/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy{
-  userIsAuthenticated = false;
-  userId: string;
-  entity: string;
+  private userIsAuthenticated = false;
+  private userId: string;
+  private entity: string;
+  private notifications = [];
   private authListenerSubs: Subscription;
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, 
+              private headerService: HeaderService) { }
 
   // ngOnInit() {
 
@@ -28,7 +31,6 @@ export class HeaderComponent implements OnInit, OnDestroy{
   //   }
   // }
   ngOnInit() {
-    this.entity = this.authService.getEntity();
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.userId = this.authService.getUserId();
     this.entity = this.authService.getEntity();
@@ -37,7 +39,11 @@ export class HeaderComponent implements OnInit, OnDestroy{
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
       });
+
+    // might modify deponds on how to get notifications
+    this.notifications = this.headerService.getNotifications();
   }
+
 
   onLogout() {
     this.authService.logout();
