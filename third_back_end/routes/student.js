@@ -14,7 +14,9 @@ const StudentControllor = require('../controller/student');
 const checkAuth = require("../middleware/check-auth");
 // var middlewareObj = require("../middleware");
 
-const uploadImage = require("../middleware").upload;
+
+const uploadImage = require("../middleware").imgUpload;
+const uploadResume = require("../middleware").resumeUpload;
 
 var mongoose = require("mongoose");
 var Institution = require("../models/institution");
@@ -24,6 +26,10 @@ const crypto = require('crypto');
 const path = require('path');
 const Grid = require('gridfs-stream');
 const Helper = require('../helpers/index');
+
+const addEsIndex = Helper.esSearch;
+const mongodb = require('mongodb');
+
 
 // get research opportunies 
 router.get("/getOpportunities/",StudentControllor.getOpportunities)
@@ -128,24 +134,52 @@ router.get("/transcript/:filename/:id", (req, res) => {
 
 
 
-router.put("/edit/:id", checkAuth, function(req, res) {
-    console.log(typeof req.body);
-    console.log(req.body);
-    console.log(req.params.id);
+// router.put("/edit/:id", checkAuth, function(req, res) {
+//     console.log(typeof req.body);
+//     console.log(req.body);
+//     console.log(req.params.id);
     
-    Student.findByIdAndUpdate(req.params.id, req.body, function(err, updatedStudent) {
-        if (err) {
-            console.log('error');
-            res.send({'message':'something wrong'});
-        } else {
-            res.send({'message':'successful', 'id': updatedStudent.user_id});
-        }
-    });
+//     Student.findByIdAndUpdate(req.params.id, req.body, function(err, updatedStudent) {
+//         if (err) {
+//             console.log('error');
+//             res.send({'message':'something wrong'});
+//         } else {
+//             res.send({'message':'successful', 'id': updatedStudent.user_id});
+//         }
+//     });
+// })
+
+router.post("/update", checkAuth, async function(req, res) {
+  try {
+    const updates = {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      gender: req.body.gender,
+      date_of_birth: req.body.date_of_birth,
+      major: req.body.major,
+      minor: req.body.minor,
+      email: req.body.email,
+      phone: req.body.phone
+    }
+    const student = await Student.findOneAndUpdate({user_id: req.body.user_id}, updates);
+    
+    student.first_name = req.body.first_name;
+    student.last_name = req.body.last_name;
+    student.gender = req.body.gender;
+    student.date_of_birth = req.body.date_of_birth;
+    student.major = req.body.major;
+    student.minor = req.body.minor;
+    student.email = req.body.email;
+    student.phone = req.body.phone;
+
+    res.send(student); 
+  } catch(e) {
+    res.status(400).send(e);
+  }
 })
 
 
 router.put("/editInterest", checkAuth, async function(req, res) {
-  console.log(req.body.id);
   try {
     let student = await Student.findOneAndUpdate({user_id: req.body.id}, {interests: req.body.interests});
     student.interests = req.body.interests;
@@ -157,6 +191,7 @@ router.put("/editInterest", checkAuth, async function(req, res) {
   // res.send('OK');
 })
 
+// Basic includes search
 router.get("/search/:query", checkAuth, async function(req, res) {
   let query = req.params.query.split(' ');
   Helper.SearchHelper(query, req.params.query)
@@ -168,14 +203,18 @@ router.get("/search/:query", checkAuth, async function(req, res) {
   })
 });
 
+// Uploads a picture to be saved as image field
+// Uploads to aws s3
+// Should take image and id as form-data
 router.post("/upload/profilePic", checkAuth, uploadImage.single('image'), async function(req, res) {
-    // console.log(req.body.id);
     let id = mongoose.Types.ObjectId(req.body.id);
-    // console.log(id);
+
     try{
-      console.log(req.file.location);
       let student = await Student.findOneAndUpdate({user_id: id}, {image: req.file.location});
-      // console.log(student);
+      let oldImg = student.image;
+      if(oldImg && oldImg.trim() != ''){
+        Helper.deleteS3(oldImg);
+      }
       student.image = req.file.location;
       res.send(student);
     } catch(e) {
@@ -184,5 +223,72 @@ router.post("/upload/profilePic", checkAuth, uploadImage.single('image'), async 
     }
 })
 
+router.post("/upload/resume", checkAuth, uploadResume.single('file'), async function(req, res) {
+  let id = mongoose.Types.ObjectId(req.body.id);
+
+  try {
+    let student = await Student.findOneAndUpdate({user_id: id}, {resume: req.file.location});
+    let oldFile = student.resume;
+    if(oldFile && oldFile.trim() != ''){
+      Helper.deleteS3(oldFile);
+    }
+    student.resume = req.file.location;
+    res.send(student);
+  } catch(e) {
+    console.log(e);
+    res.status(400).send({errors: e});
+  }
+});
+
+
+// Update a students summary field
+router.post("/update/summary", checkAuth, async function(req, res) {
+  let id = req.body.user_id
+  let summary = req.body.summary
+
+  try {
+    let student = await Student.findOneAndUpdate({user_id: id}, {summary: summary});
+    if(!student) {
+      res.status(404).send({'error': "Could not find student"});
+    }
+    student.summary = summary;
+    res.status(200).send(student);
+  } catch(e) {
+    res.status(500).send({'error': "Error updating summary"});
+  }
+})
+
+
+// UPDATE DOCUMENTS TO MATCH MODEL
+router.post("/update/model", checkAuth, async function(req, res) {
+  try {
+    await Student.updateMany({}, {$set: {image: ''}});
+    res.status(200).send('Updated');
+  } catch(e) {
+    res.status(400).send(e);
+  }
+})
+
+router.post("/add/index", checkAuth, async function(req, res) {
+  try {
+    const students = await Student.find({});
+    console.log(students.length);
+    let promiseArr = [];
+    students.forEach((s) => {
+      promiseArr.push(addEsIndex(s));
+    });
+    Promise.all(promiseArr)
+    .then((body) => {
+      res.send('ok');
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(400).send('Error');
+    })
+    // res.send('ok');
+  } catch(e) {
+    res.status(400).send("Error");
+  }
+})
 
 module.exports = router;

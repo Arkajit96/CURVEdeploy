@@ -490,3 +490,21 @@ body {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.error-snackbar {
+    color: white !important;
+    background-color: red !important;
+    .mat-simple-snackbar-action {
+        color: white !important;
+    }
+    font: 500 20px/32px Roboto,"Helvetica Neue",sans-serif!important;
+}
+
+.success-snackbar {
+    color: white !important;
+    background-color: green !important;
+    .mat-simple-snackbar-action {
+        color: white !important;
+    }
+    font: 500 20px/32px Roboto,"Helvetica Neue",sans-serif!important;
+}

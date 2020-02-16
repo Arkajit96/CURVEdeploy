@@ -1,7 +1,8 @@
-let config = require('dotenv').config().parsed;
+const config = require('dotenv').config().parsed;
 const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
+const mime = require('mime-types');
 
 aws.config.update(
     {
@@ -13,7 +14,17 @@ aws.config.update(
 
 const s3 = new aws.S3();
 
-let upload = multer({
+
+const imgFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true)
+    } else {
+        cb(new Error('Invalid Mime Type, only JPEG and PNG'), false);
+    }
+  }
+
+let imgUpload = multer({
+    imgFilter,
     storage: multerS3({
         s3: s3,
         bucket: 'curve-public-bucket',
@@ -21,9 +32,22 @@ let upload = multer({
             cb(null, {fieldName: file.fieldname});
         },
         key: function (req, file, cb) {
-            cb(null, Date.now().toString() + '.jpg')
+            cb(null, Date.now().toString() + '.' + mime.extension(file.mimetype));
         }
     })
 });
 
-module.exports = upload;
+let resumeUpload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'curve-public-bucket',
+        metadata: function (req, file, cb) {
+            cb(null, {fieldName: file.fieldname});
+        },
+        key: function (req, file, cb) {
+            cb(null, Date.now().toString() + '.' + mime.extension(file.mimetype));
+        }
+    })
+});
+
+module.exports = {imgUpload, resumeUpload};

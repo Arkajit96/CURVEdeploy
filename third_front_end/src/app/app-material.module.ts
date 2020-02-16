@@ -10,6 +10,12 @@ import {
   MatPaginatorModule,
   MatDialogModule,
   MatAutocompleteModule,
+  MatListModule,
+  MatSnackBarModule,
+  MatTabsModule,
+  MatDatepickerModule,
+  MatNativeDateModule, 
+  MatRippleModule,
   MatIconModule,
   MatMenuModule,
   MatBadgeModule
@@ -30,6 +36,13 @@ import {
     MatPaginatorModule,
     MatDialogModule,
     MatAutocompleteModule,
+    MatDividerModule,
+    MatListModule,
+    MatSnackBarModule,
+    MatTabsModule,
+    MatDatepickerModule,
+    MatNativeDateModule, 
+    MatRippleModule
   ]
 })
 export class AngularMaterialModule {}

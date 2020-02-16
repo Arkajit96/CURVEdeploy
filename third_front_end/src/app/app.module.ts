@@ -27,6 +27,10 @@ import { AddInterestsComponent } from './components/modals/add-interests/add-int
 import { submitApplicationComponent } from './components/modals/submit-application/submit-application.component'
 import { InterestList } from './services/interest-list';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {TextFieldModule} from '@angular/cdk/text-field';
+import { CloseConfirmComponent } from './components/modals/close-confirm/close-confirm.component';
+import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
+import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,9 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
     CandidateComponent,
     CanidateSearchComponent,
     AddInterestsComponent,
+    CloseConfirmComponent,
+    EditStudentProfileComponent,
+    ViewStudentProfileComponent,
     submitApplicationComponent
   ],
   imports: [
@@ -56,6 +63,7 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
     AngularMaterialModule,
     FlashMessagesModule.forRoot(),
     BrowserAnimationsModule,
+    TextFieldModule
   ],
   providers: [
     {
@@ -68,6 +76,9 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
   bootstrap: [AppComponent],
   entryComponents: [
     AddInterestsComponent,
+    CloseConfirmComponent,
+    EditStudentProfileComponent,
+    ViewStudentProfileComponent,
     submitApplicationComponent
   ]
 })
