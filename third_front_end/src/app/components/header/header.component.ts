@@ -34,15 +34,16 @@ export class HeaderComponent implements OnInit, OnDestroy{
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.userId = this.authService.getUserId();
     this.entity = this.authService.getEntity();
-    
-    // might modify deponds on how to get notifications
-    this.notifications = this.headerService.getNotifications();
     this.authListenerSubs = this.authService
       .getAuthStatusListener()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
       });
+
+    // might modify deponds on how to get notifications
+    this.notifications = this.headerService.getNotifications();
   }
+
 
   onLogout() {
     this.authService.logout();

@@ -39,8 +39,10 @@ export class StudentProfileComponent implements OnInit {
       this.student_id = data.id;
       // const params = new HttpParams({fromObject: {id: this.student_id}});
       // const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
-      this.http.get("/api/student/" + this.student_id).subscribe((res:any) => {
-        this.student = res;
+      this.http.get<{ message: string; student: any;}>(
+        "/api/student/" + this.student_id
+        ).subscribe(res => {
+        this.student = res.student;
         this.loadingPage = false;
       },
       error => {

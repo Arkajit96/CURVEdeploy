@@ -1,16 +1,28 @@
 var express = require("express");
 var router  = express.Router();
 var passport = require("passport");
+
+// Model
 var User = require("../models/User");
 var Faculty = require("../models/faculty");
+
+// Controllor
+const FacultyControllor = require('../controller/faculty');
+
+//middleware
+const checkAuth = require("../middleware/check-auth");
+
 var middlewareObj = require("../middleware").middlewareObj;
 var mongoose = require("mongoose");
 var Institution = require("../models/institution");
 var FacultyProfile = require("../models/facultyProfile");
 const Helper = require('../helpers/index');
 
+// Opportunities create
+router.post("/createOpportunies", FacultyControllor.createOpportunities);
+
 // when user login, according to the userid to get the information of this faculty
-router.get("/:id", middlewareObj.isLoggedIn, function(req, res, next) {
+router.get("/:id", checkAuth, function(req, res, next) {
     // console.log("back end req" + req.params.id);
     var id = mongoose.Types.ObjectId(req.params.id);
     Faculty.findOne({"user_id": id}, function(err, faculty){

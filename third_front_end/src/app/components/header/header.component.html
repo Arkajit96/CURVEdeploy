@@ -20,17 +20,17 @@
             <!-- <a class="nav-item nav-link" href="mycurve.html">myCURVE<span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="profile.html">PROFILE</a>
             <a class="nav-item nav-link active" href="research.html">RESEARCH</a> -->
-            <div class="nav-item dropdown">
+            <!-- <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       NOTIFICATIONS
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" >
-                      <a class="dropdown-item" href="#">Notification 1</a>
-                      <a class="dropdown-item" href="#">Notification 2</a>
-                      <a class="dropdown-item" href="#">Notification 3</a>
-                    </div>
-                </div>
-            <a class="nav-item nav-link" routerLink="/calender" routerLinkActive="active">CALENDAR</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" *ngFor="let notification of notifications" href="#">{{notification}}</a> -->
+                      <!-- <a class="dropdown-item" href="#">Notification 2</a>
+                      <a class="dropdown-item" href="#">Notification 3</a> -->
+                    <!-- </div>
+                </div> -->
+            <!-- <a class="nav-item nav-link" routerLink="/calender" routerLinkActive="active">CALENDAR</a> -->
             <button class="nav-item"  mat-button [matMenuTriggerFor]="menu">
                 <mat-icon>person</mat-icon>
                 <span>Me</span>
@@ -46,7 +46,7 @@
                 </button>
                 <button mat-menu-item>
                     <mat-icon>event</mat-icon>
-                    <span>calender</span>
+                    <span>calendar</span>
                   </button>
                 <button mat-menu-item (click)="onLogout()">
                   <mat-icon>logout</mat-icon>

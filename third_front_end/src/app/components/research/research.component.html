@@ -6,33 +6,40 @@
         </div>
         <div class="col col-md-4"></div>
         <div class="col col-md-1">
-            <i class="fas fa-shopping-cart fa-4x"></i>
+            <mat-icon [matBadge]="shopping_cart.length" matBadgeColor="warn" >shopping_cart</mat-icon>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col col-2"></div>
-        <div class="col col-8">
-            <div class="row">
-                <div class="col col-4">
-                    <div class="card">
-                        EXAMPLE CARD
-                    </div>
-                </div>
-                <div class="col col-4">
-                    <div class="card">
-                        EXAMPLE CARD
-                    </div>
-                </div>
-                <div class="col col-4">
-                    <div class="card">
-                        EXAMPLE CARD
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col col-2"></div>
+    
+    <mat-spinner style="display:block;margin:0 auto;" *ngIf="isLoading"></mat-spinner>
+    
+    <div class="row" *ngIf="opportunities.length > 0 && !isLoading" >
+        <mat-card class="col-4" *ngFor="let opportunity of opportunities; index as i">
+            <mat-card-header>
+                <img mat-card-avatar [src]="opportunity.icon" [alt]="opportunity.name">
+                <mat-card-title>{{opportunity.name}}</mat-card-title>
+                <mat-card-subtitle>{{opportunity.school}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                    {{opportunity.summary}}
+                </p>
+                <p>Apply before {{opportunity.expireTime}}</p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-stroked-button color="primary" 
+                style="display:block;margin:0 auto" (click)="openApplicationDialog(i)">
+                    <mat-icon>done</mat-icon>
+                    <span>Quick Apply</span>
+                </button>
+            </mat-card-actions>
+        </mat-card>
     </div>
+    <p class="mat-body-1" style="text-align: center;" *ngIf="opportunities.length <= 0 && !isLoading">No opportunities posted yet!</p>
+    <br>
+    <mat-paginator style="background-color:rgba(255, 255, 255, 0.5);" [length]="totalNum" [pageSize]="numPerPage" 
+    [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
+    *ngIf="opportunities.length > 0"></mat-paginator>
 
     <div class="row justify-content-md-center">
         <div class="searchbar">

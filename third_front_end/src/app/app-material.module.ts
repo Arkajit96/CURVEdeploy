@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import {
   MatInputModule,
+  MatCardModule,
+  MatDividerModule,
   MatSelectModule,
   MatCheckboxModule,
   MatButtonModule,
-  MatExpansionModule,
   MatProgressSpinnerModule,
   MatPaginatorModule,
   MatDialogModule,
@@ -17,13 +18,14 @@ import {
 @NgModule({
   exports: [
     MatInputModule,
+    MatCardModule,
+    MatDividerModule,
     MatMenuModule,
     MatIconModule,
     MatBadgeModule,
     MatSelectModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatExpansionModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatDialogModule,

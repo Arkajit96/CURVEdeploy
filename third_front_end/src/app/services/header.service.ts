@@ -8,10 +8,7 @@ export class HeaderService {
 
     // hardcode this function right now, need to figure out we to get it
     getNotifications(){
-        this.notifications = [];
-        this.notifications.push("test 1");
-        this.notifications.push("test 2");
-        this.notifications.push("test 3");
+        this.notifications = ['test 1','test 2','test 3'];
 
         return this.notifications;
     }

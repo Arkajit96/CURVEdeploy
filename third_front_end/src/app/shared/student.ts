@@ -12,4 +12,9 @@ export interface Student {
     major: string;
     minor: string;
     gender: string;
+    image: string;
+    department:string;
+    summary:string;
+    interest:[];
+    shopping_cart:[];
 }
