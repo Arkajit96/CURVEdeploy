@@ -23,6 +23,7 @@ var StudentSchema = new mongoose.Schema({
 	image: { type: String, default: ''},
 	graduation_class: { type: Number, default: 0},
 	interests: [String],
+	resume: { type: String, default: ''},
 	shopping_cart: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

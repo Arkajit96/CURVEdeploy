@@ -9,7 +9,12 @@ let express     = require("express"),
     methodOverride = require("method-override"),
     Blog  = require("./models/blog"),
     Comment     = require("./models/comment"),
-    User       = require("./models/User")
+    User       = require("./models/User"),
+    http = require('http');
+   
+const server = http.createServer(app);
+const socketio = require('socket.io');
+const io = socketio(server);
    //  port        = 9292;
    
 const PORT = process.env.PORT || 3000;
@@ -55,56 +60,11 @@ app.use(bodyParser.urlencoded({extended: true, limit: '50mb', parameterLimit: 10
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
-// app.use(flash());
-
-// seedDB(); //seed the database
-
-// PASSPORT CONFIGURATION
-// app.use(require("express-session")({
-//     secret: "secret",
-//     resave: false,
-//     saveUninitialized: false
-// }));
-
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// passport.use(new LocalStrategy(
-//     User.authenticate()
-        // function(username, password, done) {
-        //   User.findOne({ username: username }, function(err, user) {
-        //     if (err) { 
-        //         console.log("1");
-        //         return done(err); }
-        //     if (!user) {
-        //         console.log("what happend");
-        //       return done(null, false, { message: 'Incorrect username.' });
-        //     }
-        //     if (!user.validPassword(password)) {
-        //         console.log("what happend");
-        //       return done(null, false, { message: 'Incorrect password.' });
-        //     }
-        //     console.log("what");
-        //     return done(null, user);
-        //   });
-        // })
-    
-// ));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
-
-
-// app.use(function(req, res, next){
-//    res.locals.currentUser = req.user;
-//    res.locals.error = req.flash("error");
-//    res.locals.success = req.flash("success");
-//    next();
-// });
 
 app.use("/", indexRoutes);
 app.use("/student", studentRoutes);
 app.use("/faculty", facultyRoutes);
 
-const listener = app.listen(PORT, function() {
+const listener = server.listen(PORT, function() {
    console.log(`Your app is listening on port ${PORT}`);
 })
