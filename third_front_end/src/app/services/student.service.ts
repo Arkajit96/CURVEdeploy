@@ -8,6 +8,19 @@ export class StudentService {
 
   constructor(private http: HttpClient) { }
 
+  getStudent(id: string): Promise<any> {
+    return new Promise((res, rej) => {
+      this.http.get('/api/student/' + id).subscribe(
+        data => {
+          res(data);
+        },
+        error => {
+          rej(error);
+        }
+      )
+    })
+  }
+
   search(query: String): Promise<any> {
     return new Promise((res, rej) => {
       this.http.get('/api/student/search/' + query).subscribe(

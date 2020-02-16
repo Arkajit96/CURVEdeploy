@@ -26,9 +26,7 @@ export class AuthService {
   }
 
   getIsAuth() {
-    console.log(localStorage.getItem("expiration"));
     let expirationTime = new Date(localStorage.getItem("expiration"));
-    console.log(expirationTime);
     if(expirationTime < new Date()){
       return false;
     } else {
@@ -80,7 +78,6 @@ export class AuthService {
       )
       .subscribe(
         response => {
-          console.log(response);
           const token = response.token;
           this.token = token;
           if (token) {

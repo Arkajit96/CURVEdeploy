@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { AddInterestsComponent } from '../modals/add-interests/add-interests.component';
 import { EditStudentProfileComponent } from '../modals/edit-student-profile/edit-student-profile.component';
+import { ViewStudentProfileComponent } from '../modals/view-student-profile/view-student-profile.component';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { StudentService } from 'src/app/services/student.service';
 import { MatSnackBar } from '@angular/material';
@@ -26,7 +26,6 @@ export class StudentProfileComponent implements OnInit {
 
   constructor(
     public route:ActivatedRoute, 
-    public http: HttpClient, 
     public router: Router, 
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -36,28 +35,26 @@ export class StudentProfileComponent implements OnInit {
     this.createForm();
    }
 
-   test() {
-     this.loadingImg = false;
+   testViewProfile() {
+     this.dialog.open(ViewStudentProfileComponent, {
+       data: {Data: this.student},
+     
+     })
    }
   
   ngOnInit() {
-    //let hrefUrl:any = location.href;
-    //this.student_id = hrefUrl.substring(36);
     this.route.params.subscribe((data) => {
       this.student_id = data.id;
-      console.log(this.student_id);
-      console.log("route successfully" + JSON.stringify(this.student_id));
-      // const params = new HttpParams({fromObject: {id: this.student_id}});
-      // const reqHeader = new HttpHeaders({"content-type": "application/x-www-form-urlencoded"});
-      this.http.get("/api/student/" + this.student_id).subscribe((res:any) => {
-        console.log(res)
+      this.studentService.getStudent(this.student_id)
+      .then((res) => {
         this.student = res;
         this.newSummary = res.summary;
         this.loadingPage = false;
-      },
-      error => {
-        console.log(error);
-      });
+      })
+      .catch((e) => {
+          console.log(e);
+          this.snackbar.open('Error loading student.', 'Close', {panelClass: 'error-snackbar'});
+        })
     });
   }
   createForm() {
@@ -132,6 +129,10 @@ export class StudentProfileComponent implements OnInit {
         });
       }
     })
+  }
+
+  finishLoad() {
+    this.loadingImg = false;
   }
 
 }

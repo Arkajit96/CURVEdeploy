@@ -1,0 +1,38 @@
+.student-content {
+	margin-top: 2rem;
+}
+
+.pro-pic:hover{
+	cursor: pointer;
+}
+
+.summary-text {
+	width: 100%;
+	margin-left:2rem;
+}
+
+.sum-btn {
+	margin-left: 2rem;
+}
+
+.interests-btn {
+	margin: 2rem;
+}
+
+textarea {
+	overflow: auto!important;
+}
+
+* {
+	overflow: hidden;
+}
+
+body {
+	overflow: auto!important;
+	padding-bottom: 1rem;
+}
+
+.resume-link {
+	text-decoration-color: rgb(12, 174, 214);
+	color: rgb(12, 174, 214)!important;
+}

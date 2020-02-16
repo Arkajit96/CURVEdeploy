@@ -1,16 +1,9 @@
-
-<app-header></app-header>
-
-<div class="row justify-content-sm-center" *ngIf="loadingPage">
-    <mat-spinner></mat-spinner>
-</div>
-
 <body *ngIf="!loadingPage">
     <div class = "container-fluid">
         <div class = "row justify-content-lg-center">
             <div class = "col-lg-3 col-sm-4">
                 <div class = "profile-card">
-                    <img [src] = "student.image" class = "pro-pic" (click)="test()" (load)="finishLoad()">
+                    <img [src] = "student.image" class = "pro-pic">
                     <div class="profile-item" *ngIf="loadingImg && student.image != ''">
                         <mat-spinner></mat-spinner>
                     </div>
@@ -39,7 +32,7 @@
                 </div>
                 <div>
                     <!-- <button class="myButton" (click)="edit()" >Edit</button> -->
-                    <button mat-raised-button color="primary" (click)="edit()">Edit</button>
+                    <!-- <button mat-raised-button color="primary" (click)="edit()">Edit</button> -->
                 </div>
 
             </div>
@@ -53,23 +46,17 @@
                         </div>                                                 
                     </div>
                     <!-- <button class="myButton" (click)="openInterestsDialog()">Edit Interests</button> -->
-                    <button mat-raised-button color="primary" class="interests-btn" (click)="openInterestsDialog()">Edit Interests</button>
+                    <!-- <button mat-raised-button color="primary" class="interests-btn" (click)="openInterestsDialog()">Edit Interests</button> -->
                     <div class = "student-summary">
                         <h1>STUDENT SUMMARY </h1>
                         <div class="row" style="width:100%">
-                            <mat-form-field style="width:100%" class="summary-text">
-                                <mat-label>Edit summary:</mat-label>
+                            <div class="summary-text">
                                 <textarea matInput cdkTextareaAutosize
                                         #autosize="cdkTextareaAutosize"
                                         cdkAutosizeMinRows="5"
                                         cdkAutosizeMaxRows="10" 
-                                        [(ngModel)]="newSummary"
-                                        >{{newSummary}}</textarea>
-                            </mat-form-field>
-                        </div>
-                        <div class="row justify-content-lg-center" style="width:100%">
-                            <button mat-raised-button color="primary" class="sum-btn" (click)="saveSummary()">Save summary</button>
-                            <button mat-raised-button color="warn" (click)="testViewProfile()">TEST VIEW MODAL</button>
+                                        >{{student.summary}}</textarea>
+                           </div>
                         </div>
                     </div>
 
@@ -78,4 +65,3 @@
       </div>
     </div> 
 </body>
-

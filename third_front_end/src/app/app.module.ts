@@ -29,6 +29,7 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {TextFieldModule} from '@angular/cdk/text-field';
 import { CloseConfirmComponent } from './components/modals/close-confirm/close-confirm.component';
 import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
+import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { EditStudentProfileComponent } from './components/modals/edit-student-pr
     AddInterestsComponent,
     CloseConfirmComponent,
     EditStudentProfileComponent,
+    ViewStudentProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,7 +75,8 @@ import { EditStudentProfileComponent } from './components/modals/edit-student-pr
   entryComponents: [
     AddInterestsComponent,
     CloseConfirmComponent,
-    EditStudentProfileComponent
+    EditStudentProfileComponent,
+    ViewStudentProfileComponent
   ]
 })
 export class AppModule { }

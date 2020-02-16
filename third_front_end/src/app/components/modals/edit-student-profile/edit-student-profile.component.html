@@ -56,25 +56,25 @@
                 </div>
             </mat-tab>
             <mat-tab label="Documents">
-                <div class="row first-row">
-                    <div class="col-12">
-                        <label for="profilePicInput">Profile Picture:</label>
-                        <input type="file" class="profile-pic" id="profilePicInput"
-                               (change)="newPicture($event)" 
-                               placeholder="Profile Picture" 
-                               formControlName="profilePic" 
-                               accept="image/x-png,image/jpeg">
+                <div class="container">
+                    <div class="row first-row">
+                            <label for="profilePicInput">Profile Picture:</label>
+                            <input type="file" class="profile-pic" id="profilePicInput"
+                                   (change)="newPicture($event)" 
+                                   placeholder="Profile Picture" 
+                                   formControlName="profilePic" 
+                                   accept="image/x-png,image/jpeg">
                     </div>
-                </div>
-                <div class="row" *ngIf="previewImg">
-                    <img *ngIf="previewImg" [src]="previewImg" class="preview-img">
-                </div>
-                <div class="row">
-                    <label for="resumeInput">Resume</label>
-                    <input type="file" id="resumeInput"
-                            (change)="newResume($event)"
-                            formControlName="resume"
-                            accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
+                    <div class="row first-row" *ngIf="previewImg">
+                        <img *ngIf="previewImg" [src]="previewImg" class="preview-img">
+                    </div>
+                    <div class="row first-row">
+                        <label for="resumeInput">Resume</label>
+                        <input type="file" id="resumeInput"
+                                (change)="newResume($event)"
+                                formControlName="resume"
+                                accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
+                    </div>
                 </div>
             </mat-tab>
         </mat-tab-group>
