@@ -15,7 +15,9 @@ let express     = require("express"),
 const server = http.createServer(app);
 const socketio = require('socket.io');
 const io = socketio(server);
+const ioListener = require('./controller/io');
    //  port        = 9292;
+ioListener.setIO(io);
    
 const PORT = process.env.PORT || 3000;
     
@@ -68,3 +70,5 @@ app.use("/faculty", facultyRoutes);
 const listener = server.listen(PORT, function() {
    console.log(`Your app is listening on port ${PORT}`);
 })
+
+module.exports = io;

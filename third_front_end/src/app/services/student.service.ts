@@ -121,18 +121,19 @@ export class StudentService {
     })
   }
 
-  uploadResume(id: any, resumeData: any): Promise<any> {
+  uploadFile(id: any, fileData: any, fileType): Promise<any> {
     return new Promise((res, rej) => {
       const formData = new FormData();
-      formData.append('file', resumeData);
+      formData.append('file', fileData);
       formData.append('id', id);
-      this.http.post('/api/student/upload/resume', formData).subscribe(
+      formData.append('fileType', fileType);
+      this.http.post('/api/student/upload/file', formData).subscribe(
         data => {
           res(data);
         },
         error => {
           console.log(error);
-          rej({error: 'Error uploading resume'});
+          rej({error: 'Error uploading file'});
         }
       )
     })

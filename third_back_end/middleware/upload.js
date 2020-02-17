@@ -37,7 +37,7 @@ let imgUpload = multer({
     })
 });
 
-let resumeUpload = multer({
+let fileUpload = multer({
     storage: multerS3({
         s3: s3,
         bucket: 'curve-public-bucket',
@@ -50,4 +50,4 @@ let resumeUpload = multer({
     })
 });
 
-module.exports = {imgUpload, resumeUpload};
+module.exports = {imgUpload, fileUpload};

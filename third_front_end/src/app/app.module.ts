@@ -31,6 +31,12 @@ import {TextFieldModule} from '@angular/cdk/text-field';
 import { CloseConfirmComponent } from './components/modals/close-confirm/close-confirm.component';
 import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
 import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
+import { ChatService } from './services/chat.service';
+
+// SOCKET
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
   declarations: [
@@ -63,7 +69,8 @@ import { ViewStudentProfileComponent } from './components/modals/view-student-pr
     AngularMaterialModule,
     FlashMessagesModule.forRoot(),
     BrowserAnimationsModule,
-    TextFieldModule
+    TextFieldModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [
     {
@@ -71,7 +78,8 @@ import { ViewStudentProfileComponent } from './components/modals/view-student-pr
       useClass: AuthInterceptor,
       multi: true
     },
-    InterestList
+    InterestList,
+    ChatService
   ],
   bootstrap: [AppComponent],
   entryComponents: [
