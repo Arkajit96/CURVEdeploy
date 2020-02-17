@@ -16,7 +16,7 @@ const checkAuth = require("../middleware/check-auth");
 
 
 const uploadImage = require("../middleware").imgUpload;
-const uploadResume = require("../middleware").resumeUpload;
+const uploadFile = require("../middleware").fileUpload;
 
 var mongoose = require("mongoose");
 var Institution = require("../models/institution");
@@ -36,7 +36,7 @@ router.get("/getOpportunities/",StudentControllor.getOpportunities)
 
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {
-    console.log("backend fatched user: " + req.userData.userId)
+    // console.log("backend fatched user: " + req.userData.userId)
     Student.findOne({"user_id": req.userData.userId}, function(err, student){
         if(err){
           res.status(500).json({
@@ -223,16 +223,25 @@ router.post("/upload/profilePic", checkAuth, uploadImage.single('image'), async 
     }
 })
 
-router.post("/upload/resume", checkAuth, uploadResume.single('file'), async function(req, res) {
+router.post("/upload/file", checkAuth, uploadFile.single('file'), async function(req, res) {
   let id = mongoose.Types.ObjectId(req.body.id);
 
   try {
-    let student = await Student.findOneAndUpdate({user_id: id}, {resume: req.file.location});
-    let oldFile = student.resume;
+    let fileType = req.body.fileType; // Either cv or resume
+    student = {};
+    if (fileType == 'cv') {
+      student = await Student.findOneAndUpdate({user_id: id}, {cv: req.file.location});
+    } else if (fileType == 'resume') {
+      student = await Student.findOneAndUpdate({user_id: id}, {resume: req.file.location});
+    } else {
+      res.status(400).send({message: "Upload only supports cv and resume params"});
+    }
+    
+    let oldFile = student[fileType];
     if(oldFile && oldFile.trim() != ''){
       Helper.deleteS3(oldFile);
     }
-    student.resume = req.file.location;
+    student[fileType] = req.file.location;
     res.send(student);
   } catch(e) {
     console.log(e);
@@ -262,7 +271,7 @@ router.post("/update/summary", checkAuth, async function(req, res) {
 // UPDATE DOCUMENTS TO MATCH MODEL
 router.post("/update/model", checkAuth, async function(req, res) {
   try {
-    await Student.updateMany({}, {$set: {image: ''}});
+    await Student.updateMany({}, {$set: {cv: ''}});
     res.status(200).send('Updated');
   } catch(e) {
     res.status(400).send(e);

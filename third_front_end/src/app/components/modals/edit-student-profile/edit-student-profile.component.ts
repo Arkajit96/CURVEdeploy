@@ -58,7 +58,7 @@ export class EditStudentProfileComponent implements OnInit {
         this.imgChanged = true;
 
         if(this.uploadResume) {
-          this.studentService.uploadResume(this.student.user_id, this.resumeData)
+          this.studentService.uploadFile(this.student.user_id, this.resumeData, 'resume')
           .then((res) => {
             this.student = res;
             this.saveUpdates();
@@ -75,7 +75,7 @@ export class EditStudentProfileComponent implements OnInit {
       });
     } else {
         if(this.uploadResume) {
-          this.studentService.uploadResume(this.student.user_id, this.resumeData)
+          this.studentService.uploadFile(this.student.user_id, this.resumeData, 'resume')
           .then((res) => {
             this.student = res;
             this.saveUpdates();
