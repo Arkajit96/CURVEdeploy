@@ -21,7 +21,6 @@ var StudentSchema = new mongoose.Schema({
 	department: { type: String, default: ''},
 	education: { type: String, default: ''},
 	image: { type: String, default: ''},
-	resume:{ type: String, default: ''},
 	graduation_class: { type: Number, default: 0},
 	interests: [String],
 	resume: { type: String, default: ''},
