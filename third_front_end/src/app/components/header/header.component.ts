@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 // import { LocalStorageService } from '../../services/local-storage.service';
 import {AuthService} from '../../services/auth.service';
 import {HeaderService} from '../../services/header.service';
+import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-header',
@@ -18,7 +19,8 @@ export class HeaderComponent implements OnInit, OnDestroy{
   private notifications = [];
   private authListenerSubs: Subscription;
   constructor(private authService: AuthService, 
-              private headerService: HeaderService) { }
+              private headerService: HeaderService,
+              private chatService: ChatService) { }
 
   // ngOnInit() {
 
@@ -32,6 +34,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
   // }
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
+    if(!this.chatService.getIsConnected()) {
+      this.chatService.connectToSocket();
+    }
     this.userId = this.authService.getUserId();
     this.entity = this.authService.getEntity();
     this.authListenerSubs = this.authService

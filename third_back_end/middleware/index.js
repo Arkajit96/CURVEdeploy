@@ -1,7 +1,7 @@
 var Blog = require("../models/blog");
 var Comment = require("../models/comment");
 const imgUpload = require("./upload").imgUpload;
-const resumeUpload = require("./upload").resumeUpload;
+const fileUpload = require("./upload").fileUpload;
 // var User = require("../models/user");
 
 // all the middleare goes here
@@ -66,4 +66,4 @@ middlewareObj.isAdmin = function(req, res, next){
     res.redirect("/login");
 }
 
-module.exports = {middlewareObj, imgUpload, resumeUpload};
+module.exports = {middlewareObj, imgUpload, fileUpload};

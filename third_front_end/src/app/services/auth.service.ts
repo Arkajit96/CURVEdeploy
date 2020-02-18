@@ -6,6 +6,7 @@ import {FlashMessagesService} from 'angular2-flash-messages';
 
 // user model for auth
 import { User } from '../shared/User';
+import { ChatService } from './chat.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -18,7 +19,9 @@ export class AuthService {
 
   constructor(private http: HttpClient,
               private router: Router,
-              private flashMessage: FlashMessagesService) {}
+              private flashMessage: FlashMessagesService,
+              private chatService: ChatService
+              ) {}
 
   getToken() {
     return localStorage.getItem("token");
@@ -93,7 +96,7 @@ export class AuthService {
             );
             this.saveAuthData(token, expirationDate, this.userId, this.entity);
 
-
+            this.chatService.connectToSocket();
             if (this.entity === 'student') {
               this.router.navigate(['/studentProfile/', this.userId]);
             } else if (this.entity === 'faculty') {
