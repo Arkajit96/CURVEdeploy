@@ -22,7 +22,8 @@ const PORT = process.env.PORT || 3000;
 //requiring routes
 let indexRoutes = require("./routes/index"),
    studentRoutes = require("./routes/student"),
-   facultyRoutes = require("./routes/faculty")
+   facultyRoutes = require("./routes/faculty"),
+   researchRoutes = require("./routes/research")
  
 // let uri = "mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve?retryWrites=true";
 
@@ -64,6 +65,7 @@ app.use(methodOverride("_method"));
 app.use("/", indexRoutes);
 app.use("/student", studentRoutes);
 app.use("/faculty", facultyRoutes);
+app.use("/research", researchRoutes);
 
 const listener = server.listen(PORT, function() {
    console.log(`Your app is listening on port ${PORT}`);

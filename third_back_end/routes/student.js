@@ -7,9 +7,6 @@ const User = require("../models/User");
 const Faculty = require("../models/faculty");
 const Student = require("../models/student");
 
-//Controllor
-const StudentControllor = require('../controller/student');
-
 //middleware
 const checkAuth = require("../middleware/check-auth");
 // var middlewareObj = require("../middleware");
@@ -30,9 +27,6 @@ const Helper = require('../helpers/index');
 const addEsIndex = Helper.esSearch;
 const mongodb = require('mongodb');
 
-
-// get research opportunies 
-router.get("/getOpportunities/",StudentControllor.getOpportunities)
 
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {

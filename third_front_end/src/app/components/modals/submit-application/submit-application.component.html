@@ -10,32 +10,36 @@
 
   <form [formGroup]="form">
     <h3>1. Resume</h3>
-    <div *ngIf="resume != ''">
+    <div *ngIf="application.resume != ''">
       <div class="alert alert-success alert-dismissible">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong> {{resume}} upload Success!</strong> You can <a href="#" class="alert-link">prview this file</a>.
+        <button class="close" data-dismiss="alert" aria-label="close" (click)="deleteFile('resume')">&times;</button>
+        <strong> Resume upload success!</strong> You can <a [href]="resume" class="alert-link">download this file</a>.
       </div>
     </div>
     <div class="row">
-      <button mat-stroked-button color='primary' type="button" (click)="filePicker.click()">
+      <button mat-stroked-button color='primary' type="button" (click)="ResumePicker.click()">
         <mat-icon>add_circle</mat-icon>
         <span> upload resume</span>
       </button>
-      <input type="file" #filePicker style="display: none;" (change)="onFilePicked($event)">
+      <input type="file" #ResumePicker style="display: none;" 
+      (change)="onResumePicked($event)" formControlName="resume"
+      accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
     </div>
     <h3>2. cover of letter</h3>
-    <div *ngIf="coverLetter != ''">
+    <div *ngIf="application.coverLetter != ''">
       <div class="alert alert-success alert-dismissible">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong> {{coverLetter}} upload Success!</strong> You can <a href="#" class="alert-link">prview this file</a>.
+        <button class="close" data-dismiss="alert" aria-label="close" (click)="deleteFile('CV')">&times;</button>
+        <strong> Cover letter upload success!</strong> You can <a [href]="coverLetter" class="alert-link">download this file</a>.
       </div>
     </div>
     <div class="row">
-      <button mat-stroked-button color='primary' type="button" (click)="filePicker.click()">
+      <button mat-stroked-button color='primary' type="button" (click)="CVPicker.click()">
         <mat-icon>add_circle</mat-icon>
         <span> upload cover of letter</span>
       </button>
-      <input type="file" #filePicker style="display: none;" (change)="onFilePicked($event)">
+      <input type="file" #CVPicker style="display: none;" 
+      (change)="onCVPicked($event)" formControlName="CV"
+      accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
     </div>
     <!-- <h3>3. letter of recommendation</h3>
     <div class="row">
@@ -57,5 +61,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button [mat-dialog-close]="true" color="primary" (click)="onSubmitApplication()" >submit</button>
+  <button mat-raised-button color="primary" (click)="onSubmitApplication()" >submit</button>
 </mat-dialog-actions>

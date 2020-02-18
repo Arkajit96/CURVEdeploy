@@ -6,20 +6,14 @@ var passport = require("passport");
 var User = require("../models/User");
 var Faculty = require("../models/faculty");
 
-// Controllor
-const FacultyControllor = require('../controller/faculty');
-
 //middleware
 const checkAuth = require("../middleware/check-auth");
 
 var middlewareObj = require("../middleware").middlewareObj;
 var mongoose = require("mongoose");
 var Institution = require("../models/institution");
-var FacultyProfile = require("../models/facultyProfile");
 const Helper = require('../helpers/index');
 
-// Opportunities create
-router.post("/createOpportunies", FacultyControllor.createOpportunities);
 
 // when user login, according to the userid to get the information of this faculty
 router.get("/:id", checkAuth, function(req, res, next) {

@@ -11,6 +11,7 @@ import{Opportunity} from '../../shared/opportunity';
 //Service
 import {AuthService} from '../../services/auth.service';
 import { StudentService } from '../../services/student.service';
+import { ResearchService} from '../../services/research.service';
 
 @Component({
   selector: 'app-research',
@@ -43,6 +44,7 @@ export class ResearchComponent implements OnInit, OnDestroy{
 
   constructor(
     private authService: AuthService,
+    private researchService: ResearchService,
     private studentService: StudentService,
     private dialog: MatDialog
   ) { }
@@ -59,8 +61,8 @@ export class ResearchComponent implements OnInit, OnDestroy{
         console.log(this.student);
 
         //lab part
-        this.studentService.getOppurtunities(this.numPerPage, this.currentPage);
-        this.opportunitiesSub = this.studentService.getopportunitiesUpdatedListener()
+        this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
+        this.opportunitiesSub = this.researchService.getopportunitiesUpdatedListener()
         .subscribe((data: { opportunities:Opportunity[]; count: number }) => {
             this.totalNum = data.count;
             this.opportunities = data.opportunities;
@@ -108,7 +110,7 @@ export class ResearchComponent implements OnInit, OnDestroy{
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.numPerPage = pageData.pageSize;
-    this.studentService.getOppurtunities(this.numPerPage, this.currentPage);
+    this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
   }
 
   // quick apply dialog

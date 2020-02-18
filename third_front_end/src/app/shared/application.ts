@@ -1,6 +1,6 @@
 export interface Application{
     studentID: string;
-    opptunityID:string;
+    opportunityID:string;
     resume:string;
     coverLetter:string;
     createTime:string;

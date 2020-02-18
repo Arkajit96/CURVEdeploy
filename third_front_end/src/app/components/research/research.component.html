@@ -6,7 +6,9 @@
         </div>
         <div class="col col-md-4"></div>
         <div class="col col-md-1">
-            <mat-icon [matBadge]="shopping_cart.length" matBadgeColor="warn" >shopping_cart</mat-icon>
+            <mat-icon [matBadge]="shopping_cart.length" 
+            [matBadgeHidden]= "shopping_cart.length <= 0"
+            matBadgeColor="warn" >shopping_cart</mat-icon>
         </div>
     </div>
 
