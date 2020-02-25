@@ -2,18 +2,33 @@
 <flash-messages></flash-messages>
 <mat-spinner style="display:block;margin:0 auto;" *ngIf="isLoading"></mat-spinner>
 <mat-dialog-content class="mat-typography" *ngIf="!isLoading">
-  <p>The<strong> {{data.opt.name}} </strong>requires applicants to submit their
-    <b>resume</b> and <b>cover of letter</b>
-    the rest of application along with details can be accessed by the link at the bottom.</p>
-
-
-
+  <mat-list>
+    <mat-list-item>
+      <p> <strong>Opportunity name: </strong>{{data.opt.name}}</p>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+      <p> <strong>School name: </strong>{{data.opt.school}}</p>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+      <p> <strong> Description: </strong>{{data.opt.summary}}</p>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+      <p> <strong> Apply before: </strong>{{data.opt.expireTime}}</p>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+      <p> <strong> Required documents: </strong></p>
+    </mat-list-item>
+  </mat-list>
   <form [formGroup]="form">
     <h3>1. Resume</h3>
-    <div *ngIf="application.resume != ''">
+    <div *ngIf="resumePreview && resumePreview != ''">
       <div class="alert alert-success alert-dismissible">
         <button class="close" data-dismiss="alert" aria-label="close" (click)="deleteFile('resume')">&times;</button>
-        <strong> Resume upload success!</strong> You can <a [href]="resume" class="alert-link">download this file</a>.
+        <strong> Resume upload success!</strong> You can <a [href]="resumePreview" class="alert-link">download this file</a>.
       </div>
     </div>
     <div class="row">
@@ -22,14 +37,14 @@
         <span> upload resume</span>
       </button>
       <input type="file" #ResumePicker style="display: none;" 
-      (change)="onResumePicked($event)" formControlName="resume"
+      (change)="onFilePicked($event, 'resume')" formControlName="resume"
       accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
     </div>
     <h3>2. cover of letter</h3>
-    <div *ngIf="application.coverLetter != ''">
+    <div *ngIf=" CVPreview && CVPreview != '' ">
       <div class="alert alert-success alert-dismissible">
         <button class="close" data-dismiss="alert" aria-label="close" (click)="deleteFile('CV')">&times;</button>
-        <strong> Cover letter upload success!</strong> You can <a [href]="coverLetter" class="alert-link">download this file</a>.
+        <strong> Cover letter upload success!</strong> You can <a [href]="CVPreview" class="alert-link">download this file</a>.
       </div>
     </div>
     <div class="row">
@@ -38,7 +53,7 @@
         <span> upload cover of letter</span>
       </button>
       <input type="file" #CVPicker style="display: none;" 
-      (change)="onCVPicked($event)" formControlName="CV"
+      (change)="onFilePicked($event, 'coverLetter' )" formControlName="CV"
       accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
     </div>
     <!-- <h3>3. letter of recommendation</h3>
@@ -60,6 +75,6 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="close()" >Cancel</button>
   <button mat-raised-button color="primary" (click)="onSubmitApplication()" >submit</button>
 </mat-dialog-actions>

@@ -1,0 +1,50 @@
+<app-header></app-header>
+<div class="container">
+    <div class="row" style="margin-top: 4rem">
+        <div class="col col-md-7 col-sm-12">
+            <h2>Shopping Cart</h2>
+        </div>
+        <div class="col col-md-5"></div>
+    </div>
+    <div class="row" *ngIf="shopping_cart.length <= 0">
+        <h3>No applications have been saved</h3>
+    </div>
+    <div>
+        <table mat-table [dataSource]="dataSource" multiTemplateDataRows
+            class="mat-elevation-z8">
+
+            <!-- defined the columns you want to show -->
+            <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+                <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+            </ng-container>
+
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                    <div class="example-element-detail"
+                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <!-- <div class="example-element-diagram">
+                            <div class="example-element-position"> {{element.position}} </div>
+                            <div class="example-element-symbol"> {{element.symbol}} </div>
+                            <div class="example-element-name"> {{element.name}} </div>
+                            <div class="example-element-weight"> {{element.weight}} </div>
+                        </div> -->
+                        <div class="example-element-description">
+                            {{element.createTime}}
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element"
+                (click)="expandedElement = expandedElement === element ? null : element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+</div>

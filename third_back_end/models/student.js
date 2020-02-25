@@ -28,7 +28,7 @@ var StudentSchema = new mongoose.Schema({
 	shopping_cart: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Faculty"
+			ref: "Application"
 		}
 	]
 });

@@ -7,23 +7,21 @@ const researchControllor = require('../controller/research');
 //middleware
 const checkAuth = require("../middleware/check-auth");
 // change to fileUpload
-const uploadFile = require("../middleware").resumeUpload;
-
+const fileUpload = require("../middleware").fileUpload;
 
 // Opportunities create
 router.post("/createOpportuny", researchControllor.createOpportunity);
 
-
 // get research opportunies 
-router.get("/getOpportunities/",researchControllor.getOpportunities)
+router.get("/getOpportunities/",researchControllor.getOpportunities);
+
+// get opportunty by id 
+router.get("/getOptById/:optId",researchControllor.getOptById);
 
 // create new applications 
-router.post("/createApplication",researchControllor.createApplication)
+router.post("/createApplication",checkAuth, researchControllor.createApplication);
 
-//upload resume to the application
-router.post("/uploadResume", checkAuth, uploadFile.single('file'), researchControllor.uploadResume);
-
-//upload CV to the application
-router.post("/uploadCV", checkAuth, uploadFile.single('file'), researchControllor.uploadCV);
+//upload file to the application
+router.post("/uploadFile", checkAuth, fileUpload.single('file'), researchControllor.uploadFile);
 
 module.exports = router;

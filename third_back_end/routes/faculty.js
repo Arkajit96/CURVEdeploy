@@ -14,6 +14,16 @@ var mongoose = require("mongoose");
 var Institution = require("../models/institution");
 const Helper = require('../helpers/index');
 
+// UPDATE MODEL of faculty
+router.get("/update/model", async function(req, res) {
+    try {
+      await Faculty.updateMany({}, {$set: {opportunity: null}});
+      res.status(200).send('Updated');
+    } catch(e) {
+      res.status(400).send(e);
+    }
+  })
+
 
 // when user login, according to the userid to get the information of this faculty
 router.get("/:id", checkAuth, function(req, res, next) {

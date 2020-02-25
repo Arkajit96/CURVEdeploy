@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy, Inject} from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators} from '@angular/forms';
 import {MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Subscription } from "rxjs";
 import { MatSnackBar } from '@angular/material';
+
+// Components
+import { CloseConfirmComponent } from '../../modals/close-confirm/close-confirm.component';
 
 //Models
 import{Application} from '../../../shared/application';
@@ -22,26 +25,29 @@ import {ResearchService} from '../../../services/research.service';
     private student:any;
     // form control for submit application
     private application:Application;
-    private resume: File  = null;
-    private coverLetter:File = null;
+    resumePreview:String;
+    CVPreview: String;
 
     isLoading = false;
-    form: any;
+    form: FormGroup;
 
     constructor(
+        private closeDialog: MatDialog,
         private authService: AuthService,
         private researchService: ResearchService,
         public dialogRef: MatDialogRef<submitApplicationComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private fb: FormBuilder,
         private snackBar: MatSnackBar,
       ) { }
 
       ngOnInit(){
+
+        console.log(this.data.opt);
+
         this.isLoading = true;
-        this.form = this.fb.group({
-          resume: [],
-          CV:[]
+        this.form = new FormGroup({
+          resume: new FormControl(null),
+          CV:new FormControl(null)
         })
 
         // init new appliction
@@ -49,40 +55,48 @@ import {ResearchService} from '../../../services/research.service';
           studentID: this.data.student._id,
           opportunityID: this.data.opt.id,
           resume: this.data.student.resume,
-          coverLetter: '',
+          coverLetter: this.data.student.CV,
           createTime:''
         }
+        this.resumePreview = this.data.student.resume;
+        this.CVPreview = this.data.student.CV;
         
         this.isLoading = false;
       }
 
-      onResumePicked(event: Event) {
+      onFilePicked(event: Event, fileType:string) {
         const file = (event.target as HTMLInputElement).files[0];
         let mimeType = file.type;
 
         if(mimeType.match(/application\/*/) == null) {
           this.form.patchValue({resume: []})
-          this.snackBar.open('Resume must be a .pdf, .doc, .docx, or google docs', 'Close', {
+          this.snackBar.open( fileType + ' must be a .pdf, .doc, .docx, or google docs', 'Close', {
           duration: 3000,
           panelClass: 'error-snackbar'
           });
         }else{
-          this.resume = file;
-        }
-      }
+          this.researchService.uploadFile(this.application.studentID,
+            this.application.opportunityID,fileType,file)
+            .then(response => {
+              // update the application
+              switch(fileType){
+                case "resume":
+                  this.resumePreview = response.location;
+                  this.application.resume = response.location;
+                  break;
+                case "coverLetter":
+                  this.CVPreview = response.location;
+                  this.application.coverLetter = response.location;
+                  break;
+                }
 
-      onCVPicked(event: Event) {
-        const file = (event.target as HTMLInputElement).files[0];
-        let mimeType = file.type;
 
-        if(mimeType.match(/application\/*/) == null) {
-          this.form.patchValue({coverLetter: []})
-          this.snackBar.open('Resume must be a .pdf, .doc, .docx, or google docs', 'Close', {
-          duration: 3000,
-          panelClass: 'error-snackbar'
-          });
-        }else{
-          this.coverLetter = file;
+              this.snackBar.open( 'File uploaded successful', 'Close', {
+                duration: 3000,
+                panelClass: 'success-snackbar'
+              });
+
+            });
         }
       }
 
@@ -94,25 +108,48 @@ import {ResearchService} from '../../../services/research.service';
         switch(target){
           case "resume":
             this.application.resume = '';
-            this.resume = null;
+            this.resumePreview = '';
+            this.form.patchValue({resume: []})
             break
           case "CV":
             this.application.coverLetter = '';
-            this.coverLetter = null;
+            this.CVPreview = '';
+            this.form.patchValue({CV: []})
             break
         }
       }
 
       onSubmitApplication(){
-        // if(this.form.invalid){
-        //   return;
-        // }
-        this.researchService.createApplication(this.application);
-        // this.researchService.addToShoppingCart(this.application);
-        if(this.resume != null){
-          // this.studentService.uploadResume(this.authService.getUserId(), this.resume)
+        if( !this.application.resume || this.application.resume == '' ||
+        !this.application.coverLetter || this.application.coverLetter == ''){
+          this.snackBar.open( 'All file must be uploaded', 'Close', {
+            duration: 3000,
+            panelClass: 'error-snackbar'
+          });
+          return;
         }
-        
-        // this.isLoading = true;
+        this.researchService.createApplication(this.application)
+        .then(data =>{
+          this.snackBar.open( 'Application create successful', 'Close', {
+            duration: 3000,
+            panelClass: 'success-snackbar'
+          });
+          this.dialogRef.close(data.applicationID);
+        });
       }
-  }
+
+
+    close() {
+      let closeDialogRef = this.closeDialog.open(CloseConfirmComponent, {
+        width: "500px"
+      });
+
+      closeDialogRef.afterClosed().subscribe(
+        res => {
+          if(res) {
+            this.dialogRef.close();
+          }
+        }
+      );
+    }
+}

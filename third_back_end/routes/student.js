@@ -7,9 +7,12 @@ const User = require("../models/User");
 const Faculty = require("../models/faculty");
 const Student = require("../models/student");
 
-//middleware
+// Middleware
 const checkAuth = require("../middleware/check-auth");
 // var middlewareObj = require("../middleware");
+
+// Controllor
+const studentControllor = require('../controller/student');
 
 
 const uploadImage = require("../middleware").imgUpload;
@@ -293,5 +296,11 @@ router.post("/add/index", checkAuth, async function(req, res) {
     res.status(400).send("Error");
   }
 })
+
+// add application to the shopping cart
+router.post("/addToShoppingCart",checkAuth,studentControllor.addToShoppingCart);
+
+// get shopping cart
+router.post("/getShoppingCartItemsByIds",checkAuth,studentControllor.getShoppingCartItemsByIds);
 
 module.exports = router;

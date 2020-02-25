@@ -54,12 +54,16 @@ export class ResearchService {
 
 
 //upload files to application
-uploadFile(id: any, type:string, fileData: any): Promise<any> {
+uploadFile(studentID: string, opportunityID:string, fileType:string, fileData: File): Promise<any> {
+  const formData = new FormData();
+  formData.append('file', fileData);
+  formData.append('studentID', studentID);
+  formData.append('opportunityID', opportunityID);
+  formData.append('fileType', fileType);
     return new Promise((res, rej) => {
-      const formData = new FormData();
-      formData.append('file', fileData);
-      formData.append('id', id);
-      this.http.post('/api/research/upload' + type, formData).subscribe(
+      this.http.post<{message:String; location:String}>(
+        '/api/research/uploadFile', formData)
+      .toPromise().then(
         data => {
           res(data);
         },
@@ -75,20 +79,38 @@ uploadFile(id: any, type:string, fileData: any): Promise<any> {
 // submit the application
 createApplication(application:Application): Promise<any> {
     return new Promise((res, rej) => {
-        this.http.post('/api/research/createApplication', application).subscribe(
+        this.http.post<{message:String; applicationID:String}>(
+          '/api/research/createApplication', application)
+          .toPromise().then(
           data => {
             res(data);
           },
           error => {
             console.log(error);
-            rej({error: 'Error uploading file'});
+            rej({error: 'Application create Error'});
           }
         )
       })
 }
 
-// Shopping cart related
-  addToShoppingCart(application:Application){
-    console.log(application);
+
+getOptById(optId:string){
+  return new Promise((res, rej) =>{
+      this.http.get<{ message: string; opt: any;}>(
+        '/api/research/getOptById/' + optId
+        ).toPromise().then(
+          data => {
+            res(data.opt);
+          },
+          error => {
+            this.flashMessage.show(error.error.message, {
+              cssClass: 'alert-danger',
+              timeout: 5000
+            });
+            rej(error);
+          }
+        )
+    });
   }
+
 }

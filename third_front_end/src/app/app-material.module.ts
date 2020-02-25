@@ -18,7 +18,8 @@ import {
   MatRippleModule,
   MatIconModule,
   MatMenuModule,
-  MatBadgeModule
+  MatBadgeModule,
+  MatTableModule
 } from '@angular/material';
 
 @NgModule({
@@ -42,7 +43,8 @@ import {
     MatTabsModule,
     MatDatepickerModule,
     MatNativeDateModule, 
-    MatRippleModule
+    MatRippleModule,
+    MatTableModule
   ]
 })
 export class AngularMaterialModule {}

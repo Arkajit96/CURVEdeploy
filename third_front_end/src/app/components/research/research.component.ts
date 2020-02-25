@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
 import { PageEvent, MatDialog, MatDialogConfig } from "@angular/material";
-import { Subscription, fromEventPattern } from "rxjs";
+import { Subscription} from "rxjs";
 
 //Modals
-import{submitApplicationComponent} from '../modals/submit-application/submit-application.component'
+import{ submitApplicationComponent } from '../modals/submit-application/submit-application.component'
+import{ViewStudentProfileComponent } from '../modals/view-student-profile/view-student-profile.component'
 
 //Models
-import{Opportunity} from '../../shared/opportunity';
+import{ Opportunity } from '../../shared/opportunity';
 
 //Service
 import {AuthService} from '../../services/auth.service';
@@ -52,13 +53,12 @@ export class ResearchComponent implements OnInit, OnDestroy{
   ngOnInit() {
     this.isLoading = true;
 
-    // shopping cart part
+    // new opt part
     const userId = this.authService.getUserId();
     this.studentService.getStudentByUserId(userId)
     .then((res) => {
         this.student = res;
         this.shopping_cart = this.student.shopping_cart;
-        console.log(this.student);
 
         //lab part
         this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
@@ -113,9 +113,15 @@ export class ResearchComponent implements OnInit, OnDestroy{
     this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
   }
 
-  // quick apply dialog
-     openApplicationDialog(index:number) {
-      const currentOpt = this.opportunities[index];
+  findOptAndOpenDialog(optID:string){
+    let opportunity = this.researchService.getOptById(optID)
+    .then(data => {
+      this.openApplicationDialog(data);
+    });
+  }
+
+  // Handle quick apply dialog
+  openApplicationDialog(currentOpt:any) {
 
       const dialogConfig = new MatDialogConfig();
   
@@ -125,7 +131,25 @@ export class ResearchComponent implements OnInit, OnDestroy{
         student:this.student
       }
   
-      this.dialog.open(submitApplicationComponent, dialogConfig);
+      let dialogRef = this.dialog.open(submitApplicationComponent, dialogConfig);
+      dialogRef.afterClosed().subscribe(res => {
+        if(res){
+          this.shopping_cart.push(res)
+          this.studentService.addToShoppingCart(this.student.user_id, this.shopping_cart)
+          .then(res =>{
+            this.student = res.student;
+            this.shopping_cart = res.student.shopping_cart;
+            console.log(this.student);
+            console.log(this.shopping_cart);
+          });
+        }
+      })
+  }
+
+  ViewProfile() {
+    this.dialog.open(ViewStudentProfileComponent, {
+      data: {Data: this.student},
+    })
   }
 
 

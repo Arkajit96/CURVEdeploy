@@ -1,3 +1,5 @@
+var mongoose = require("mongoose");
+
 // Models
 const Opportunity = require('../models/opportunity');
 const Application = require('../models/application');
@@ -20,12 +22,12 @@ exports.createOpportunity = (req, res) => {
         // modifiy/add middleware for id
         creator: req.body.id
     });
-    Opportunity.create(opportunity,function(err, newOpp) {
+    Opportunity.create(opportunity,function(err, newOpt) {
         if (err) {
             console.log(err);
             rej(error);
           } else {
-            console.log(newOpp);
+            console.log(newOpt);
           }
     });
 }
@@ -57,56 +59,72 @@ exports.getOpportunities = (req, res) => {
     });
 }
 
+// Get opportunity by id
+exports.getOptById= (req, res) => {
+    Opportunity.findOne({"_id": req.params.optId}, function(err, opt){
+        if(err){
+          res.status(500).json({
+            message: "Fetching opportunity failed!"
+          });
+        } else {
+          res.status(200).json({
+            message: "Opportunity fetched successfully",
+            opt:opt
+          })
+        }
+    });
+}
 
-// create the application
+// create new application
 exports.createApplication  = (req, res) => {
-    console.log(req)
-    // const application = new Application({
-    //     studentID: this.data.student._id,
-    //     opportunityID: this.data.opt.id,
-    //     resume: this.data.student.resume,
-    //     coverLetter: '',
-    //     createTime:''
-    // })
-}
-// upload Resume to application
-exports.uploadResume = async (req, res) => {
-    let studentID = mongoose.Types.ObjectId(req.body.studentID);
-    try {
-      let application = await Application.findOneAndUpdate({studentID: studentID}, {resume: req.file.location});
-      let oldFile = application.resume;
-      if(oldFile && oldFile.trim() != ''){
-        Helper.deleteS3(oldFile);
-      }
-      application.resume = req.file.location;
-      res.state(200).json({
-          message: 'Resume upload successful'
-      })
-    } catch(e) {
-      console.log(e);
-      res.status(500).json({
-        message: "Resume upload failed!"
-    });
-    }
+    const application = new Application({
+        studentID: req.body.studentID,
+        opportunityID: req.body.opportunityID,
+        resume: req.body.resume,
+        coverLetter: req.body.coverLetter,
+        createTime: new Date().toLocaleString()
+    })
+
+    console.log(application);
+    Application.create(application,function(err, newApplication) {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Application create failed!",
+                applicationID:''
+            });
+          } else {
+            res.status(200).json({
+                message: 'Application create successful',
+                applicationID: newApplication._id
+            })
+          }
+    })
 }
 
-// upload CV to application
-exports.uploadCV = async (req, res) => {
+// upload file to application
+exports.uploadFile = (req, res) => {
     let studentID = mongoose.Types.ObjectId(req.body.studentID);
-    try {
-      let application = await Application.findOneAndUpdate({studentID: studentID}, {coverLetter: req.file.location});
-      let oldFile = application.coverLetter;
-      if(oldFile && oldFile.trim() != ''){
-        Helper.deleteS3(oldFile);
-      }
-      application.coverLetter = req.file.location;
-      res.state(200).json({
-          message: 'Cover letter upload successful'
-      })
-    } catch(e) {
-      console.log(e);
-      res.status(500).json({
-        message: "Cover letter upload failed!"
+    let opportunityID = mongoose.Types.ObjectId(req.body.opportunityID);
+    Application.findOne({studentID: studentID, opportunityID: opportunityID})
+    .then(application => {
+        // delete old file
+       if ( application ){
+            let oldFile = application.get(req.body.fileType)
+            if(oldFile && oldFile.trim() != ''){
+                Helper.deleteS3(oldFile);
+              }
+        }
+        res.status(200).json({
+            message: 'File upload successful',
+            location: req.file.location
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message: "File upload failed!",
+            location:''
+        });
     });
-    }
 }
+

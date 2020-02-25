@@ -11,7 +11,6 @@
             matBadgeColor="warn" >shopping_cart</mat-icon>
         </div>
     </div>
-
     
     <mat-spinner style="display:block;margin:0 auto;" *ngIf="isLoading"></mat-spinner>
     
@@ -30,7 +29,7 @@
             </mat-card-content>
             <mat-card-actions>
                 <button mat-stroked-button color="primary" 
-                style="display:block;margin:0 auto" (click)="openApplicationDialog(i)">
+                style="display:block;margin:0 auto" (click)="openApplicationDialog(opportunities[i])">
                     <mat-icon>done</mat-icon>
                     <span>Quick Apply</span>
                 </button>
@@ -66,7 +65,7 @@
                             <!-- <ngx-avatar name="{{person.first_name}} {{person.last_name}}" size="75"></ngx-avatar> -->
                             <ngx-avatar src="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578428133276.jpg"></ngx-avatar>
                         </div>
-                        <div class="col col-8">
+                        <div class="col col-6">
                             <div class="row">
                                 {{person.first_name}} {{person.last_name}}
                             </div>
@@ -77,8 +76,11 @@
                                 {{person.address}}
                             </div>
                         </div>
-                        <div class="col col-2">
-                            <a><i class="fas fa-plus"></i></a>
+                        <div class="col col-4">
+                            <button mat-stroked-button color="warn" (click)="ViewProfile()">View profile</button>
+                            <button [disabled]= "!person.opportunity"
+                             mat-stroked-button color="primary" 
+                             (click)="findOptAndOpenDialog(person.opportunity)">Quick Apply</button>
                         </div>
                     </div>
                 </li>

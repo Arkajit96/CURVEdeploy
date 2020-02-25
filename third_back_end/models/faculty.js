@@ -23,6 +23,10 @@ var FacultySchema = new mongoose.Schema({
 	image: { type: String, default: ''},
 	interests: [String],
 	available: { type: Boolean, default: true},
+	opportunity:{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Opportunity"
+	},
 	candidates: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

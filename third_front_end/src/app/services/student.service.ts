@@ -140,41 +140,6 @@ export class StudentService {
 
 }
 
-  // functions for fetching the opportunities
-//   getOppurtunities(numPerPage: number, currentPage: number){
-//     const queryParams = `?pagesize=${numPerPage}&page=${currentPage}`;
-//     this.http.get<{ message: string; opportunities: any; maxOpp: number }>(
-//       '/api/student/getOpportunities/' + queryParams
-//       ).pipe(
-//         map(optData =>{
-//         return {
-//           opportunities : optData.opportunities.map(opt => {
-//               return {
-//                 id: opt._id,
-//                 name:  opt.name,
-//                 school:opt.school,
-//                 summary:opt.summary,
-//                 expireTime:opt.expireTime,
-//                 icon:opt.icon
-//                 };
-//             }),
-//             count: optData.maxOpp
-//         };
-//       })
-//     )
-//     .subscribe(newOppData => {
-//       this.opportunities = newOppData.opportunities;
-//       this.opportunitiesUpdated.next({
-//         opportunities: [...this.opportunities],
-//         count: newOppData.count
-//       });
-//     });
-// }
-
-//   getopportunitiesUpdatedListener() {
-//     return this.opportunitiesUpdated.asObservable();
-// }
-
   getStudentByUserId(userId:string){
   return new Promise((res, rej) =>{
       this.http.get<{ message: string; student: any;}>(
@@ -194,4 +159,42 @@ export class StudentService {
     });
   }
 
+  // Shopping cart related
+  addToShoppingCart(id: string, shopping_cart: any): Promise<any> {
+    console.log(shopping_cart)
+    return new Promise((res, rej) => {
+      let form = {
+        id: `${id}`,
+        shopping_cart: shopping_cart
+      }
+      this.http.post<{ message: string; student: any;}>(
+        '/api/student/addToShoppingCart', form)
+        .subscribe(
+        data => {
+          res(data);
+        },
+        error => {
+          console.log(error);
+          rej({error: 'Add to shopping cart error'});
+        }
+      )
+    })
+  }
+
+  getShoppingCartItemsByIds(ids:any):Promise<any> {
+    return new Promise((res, rej) => {
+      let form = {ids: ids}
+      this.http.post<{ message: string; items: any;}>(
+        '/api/student/getShoppingCartItemsByIds', form)
+        .subscribe(
+        data => {
+          res(data);
+        },
+        error => {
+          console.log(error);
+          rej({error: 'get shopping cart items error'});
+        }
+      )
+    })
+  }
 }
