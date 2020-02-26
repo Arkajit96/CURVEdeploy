@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
-import {FlashMessagesService} from 'angular2-flash-messages';
 
 //Models
 import{ Opportunity } from '../shared/opportunity';
@@ -17,20 +16,35 @@ export class StudentService {
   // private opportunities: Opportunity[] = [];
   // private opportunitiesUpdated = new Subject<{ opportunities:Opportunity[]; count: number }>();
 
-  constructor(private http: HttpClient, private flashMessage: FlashMessagesService) { }
+  constructor(private http: HttpClient) { }
 
-  getStudent(id: string): Promise<any> {
-    return new Promise((res, rej) => {
-      this.http.get('/api/student/' + id).subscribe(
-        data => {
-          res(data);
-        },
-        error => {
-          rej(error);
-        }
-      )
-    })
-  }
+  getStudentByUserId(userId:string){
+    return new Promise((res, rej) =>{
+        this.http.get<{ message: string; student: any;}>(
+          '/api/student/' + userId
+          ).toPromise().then(
+            data => {
+              res(data.student);
+            },
+            error => {
+              rej(error);
+            }
+          )
+      });
+    }
+    
+// getStudent(id: string): Promise<any> {
+//     return new Promise((res, rej) => {
+//       this.http.get('/api/student/' + id).subscribe(
+//         data => {
+//           res(data);
+//         },
+//         error => {
+//           rej(error);
+//         }
+//       )
+//     })
+//   }
 
   search(query: String): Promise<any> {
     return new Promise((res, rej) => {
@@ -139,25 +153,6 @@ export class StudentService {
     })
 
 }
-
-  getStudentByUserId(userId:string){
-  return new Promise((res, rej) =>{
-      this.http.get<{ message: string; student: any;}>(
-        '/api/student/' + userId
-        ).toPromise().then(
-          data => {
-            res(data.student);
-          },
-          error => {
-            this.flashMessage.show(error.error.message, {
-              cssClass: 'alert-danger',
-              timeout: 5000
-            });
-            rej(error);
-          }
-        )
-    });
-  }
 
   // Shopping cart related
   addToShoppingCart(id: string, shopping_cart: any): Promise<any> {

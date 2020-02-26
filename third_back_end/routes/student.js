@@ -34,10 +34,12 @@ const mongodb = require('mongodb');
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {
     // console.log("backend fatched user: " + req.userData.userId)
-    Student.findOne({"user_id": req.userData.userId}, function(err, student){
+    console.log(req.params.id)
+    Student.findOne({"user_id": req.params.id}, function(err, student){
         if(err){
           res.status(500).json({
-            message: "Fetching student failed!"
+            message: "Fetching student failed!",
+            student: null
           });
         } else {
           res.status(200).json({

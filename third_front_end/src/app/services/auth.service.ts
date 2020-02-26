@@ -24,26 +24,18 @@ export class AuthService {
               ) {}
 
   getToken() {
-    return localStorage.getItem("token");
     return this.token;
   }
 
   getIsAuth() {
-    let expirationTime = new Date(localStorage.getItem("expiration"));
-    if(expirationTime < new Date()){
-      return false;
-    } else {
-      return true;
-    }
+    return this.isAuthenticated;
   }
 
   getUserId() {
-    return localStorage.getItem("userId")
     return this.userId;
   }
 
   getEntity() {
-    return localStorage.getItem("entity");
     return this.entity;
   }
 

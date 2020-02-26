@@ -33,7 +33,6 @@ export class HeaderComponent implements OnInit, OnDestroy{
   //   }
   // }
   ngOnInit() {
-    this.userIsAuthenticated = this.authService.getIsAuth();
     if(!this.chatService.getIsConnected()) {
       this.chatService.connectToSocket();
     }
