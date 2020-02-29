@@ -159,10 +159,10 @@ router.post("/update", checkAuth, async function(req, res) {
       major: req.body.major,
       minor: req.body.minor,
       email: req.body.email,
-      phone: req.body.phone
+      phone: req.body.phone,
+      graduation_class: req.body.class
     }
     const student = await Student.findOneAndUpdate({user_id: req.body.user_id}, updates);
-    
     student.first_name = req.body.first_name;
     student.last_name = req.body.last_name;
     student.gender = req.body.gender;
@@ -171,6 +171,7 @@ router.post("/update", checkAuth, async function(req, res) {
     student.minor = req.body.minor;
     student.email = req.body.email;
     student.phone = req.body.phone;
+    student.graduation_class = req.body.class;
 
     res.send(student); 
   } catch(e) {
@@ -225,7 +226,7 @@ router.post("/upload/profilePic", checkAuth, uploadImage.single('image'), async 
 
 router.post("/upload/file", checkAuth, uploadFile.single('file'), async function(req, res) {
   let id = mongoose.Types.ObjectId(req.body.id);
-
+  
   try {
     let fileType = req.body.fileType; // Either cv or resume
     student = {};
@@ -271,7 +272,7 @@ router.post("/update/summary", checkAuth, async function(req, res) {
 // UPDATE DOCUMENTS TO MATCH MODEL
 router.post("/update/model", checkAuth, async function(req, res) {
   try {
-    await Student.updateMany({}, {$set: {cv: ''}});
+    await Student.updateMany({}, {$set: {image: 'https://curve-public-bucket.s3.us-east-2.amazonaws.com/default_profile.png'}});
     res.status(200).send('Updated');
   } catch(e) {
     res.status(400).send(e);

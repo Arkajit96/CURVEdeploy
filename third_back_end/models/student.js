@@ -20,7 +20,7 @@ var StudentSchema = new mongoose.Schema({
 	summary: { type: String, default: ''},
 	department: { type: String, default: ''},
 	education: { type: String, default: ''},
-	image: { type: String, default: ''},
+	image: { type: String, default: 'https://curve-public-bucket.s3.us-east-2.amazonaws.com/default_profile.png'},
 	graduation_class: { type: Number, default: 0},
 	interests: [String],
 	resume: { type: String, default: ''},

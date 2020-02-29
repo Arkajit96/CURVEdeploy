@@ -19,6 +19,10 @@ export class StudentService {
 
   constructor(private http: HttpClient, private flashMessage: FlashMessagesService) { }
 
+  updateLocalStorage(student) {
+    localStorage.setItem('student', JSON.stringify(student));
+  }
+
   getStudent(id: string): Promise<any> {
     return new Promise((res, rej) => {
       this.http.get('/api/student/' + id).subscribe(
@@ -53,6 +57,7 @@ export class StudentService {
       }
       this.http.put('/api/student/editInterest', form).subscribe(
         data => {
+          this.updateLocalStorage(data);
           res(data);
         },
         error => {
@@ -69,6 +74,7 @@ export class StudentService {
       }
       this.http.post('/api/student/update/summary', form).subscribe(
         data => {
+          this.updateLocalStorage(data);
           res(data);
         },
         error => {
@@ -89,11 +95,13 @@ export class StudentService {
         major: form.major.value,
         minor: form.minor.value,
         phone: form.phone.value,
-        email: form.email.value
+        email: form.email.value,
+        class: form.class.value
       }
 
       this.http.post('/api/student/update', updates).subscribe(
         data => {
+          this.updateLocalStorage(data);
           res(data);
         },
         error => {
@@ -111,6 +119,7 @@ export class StudentService {
       formData.append('id', id);
       this.http.post('/api/student/upload/profilePic', formData).subscribe(
         data => {
+          this.updateLocalStorage(data);
           res(data);
         },
         error => {
@@ -129,6 +138,7 @@ export class StudentService {
       formData.append('fileType', fileType);
       this.http.post('/api/student/upload/file', formData).subscribe(
         data => {
+          this.updateLocalStorage(data);
           res(data);
         },
         error => {
@@ -204,4 +214,5 @@ export class StudentService {
   addToShoppingCart(application:Application){
     console.log(application);
   }
+
 }

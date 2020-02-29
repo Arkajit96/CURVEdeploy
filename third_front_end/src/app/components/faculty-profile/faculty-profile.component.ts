@@ -26,6 +26,7 @@ export class FacultyProfileComponent implements OnInit {
       this.http.get("/api/faculty/" + this.faculty_id).subscribe((res:any) => {
         console.log(res)
         this.faculty = res;
+        localStorage.setItem('faculty', JSON.stringify(this.faculty));
       })
     });
   }

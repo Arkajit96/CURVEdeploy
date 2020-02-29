@@ -36,7 +36,7 @@
                 <span>Me</span>
             </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item>
+                <button mat-menu-item (click)="navigateToNotifications()">
                   <mat-icon [matBadge]="notifications.length" matBadgeColor="warn" >notifications_active</mat-icon>
                   <span>notifications</span>
                 </button>

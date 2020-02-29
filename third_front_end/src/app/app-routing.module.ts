@@ -11,6 +11,7 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
 import { CandidateComponent } from './components/candidate/candidate.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
 
 const routes: Routes = [
   {
@@ -26,19 +27,16 @@ const routes: Routes = [
     path: 'register', component: RegisterComponent
   },
   {
-    path: 'editStudentProfile', component: EditStudentComponent, canActivate: [AuthGuard]
-  },
-  {
     path: 'editFacultyProfile', component: EditFacultyComponent, canActivate: [AuthGuard]
-  },
-  {
-    path: 'searchResults/:query', component: SearchResultsComponent, canActivate: [AuthGuard]
   },
   {
     path: 'research', component: ResearchComponent, canActivate: [AuthGuard]
   },
   {
     path: 'candidate/:id', component: CandidateComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'notifications/:id', component: NotificationsComponent, canActivate: [AuthGuard]
   },
   {
     path: '', redirectTo: 'login', pathMatch: 'full'

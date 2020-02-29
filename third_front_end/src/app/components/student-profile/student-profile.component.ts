@@ -37,24 +37,32 @@ export class StudentProfileComponent implements OnInit {
 
    testViewProfile() {
      this.dialog.open(ViewStudentProfileComponent, {
-       data: {Data: this.student},
-     
+       data: {id: this.student.user_id, entity: 'student'},
+       height: '80vh'
      })
    }
   
   ngOnInit() {
     this.route.params.subscribe((data) => {
       this.student_id = data.id;
-      this.studentService.getStudent(this.student_id)
-      .then((res) => {
-        console.log(res);
-        this.student = res.student;
-        this.newSummary = res.student.summary;
+      if(!localStorage.getItem('student')){
+        console.log('calling server');
+        this.studentService.getStudent(this.student_id)
+        .then((res) => {
+          console.log(res);
+          this.student = res.student;
+          localStorage.setItem('student', JSON.stringify(this.student));
+          this.newSummary = res.student.summary;
+          this.loadingPage = false;
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+      } else {
+        this.student = JSON.parse(localStorage.getItem('student'));
         this.loadingPage = false;
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+        this.newSummary = this.student.summary;
+      }
     })
   }
   createForm() {

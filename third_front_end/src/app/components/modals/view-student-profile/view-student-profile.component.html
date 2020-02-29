@@ -1,5 +1,5 @@
 <body *ngIf="!loadingPage">
-    <div class = "container-fluid">
+    <div class = "container-fluid" *ngIf="Data.entity == 'student'">
         <div class = "row justify-content-lg-center">
             <div class = "col-lg-3 col-sm-4">
                 <div class = "profile-card">
@@ -65,3 +65,7 @@
       </div>
     </div> 
 </body>
+
+<div *ngIf="loadingPage">
+    <mat-spinner></mat-spinner>
+</div>

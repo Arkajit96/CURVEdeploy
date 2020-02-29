@@ -97,6 +97,8 @@ export class AuthService {
             this.saveAuthData(token, expirationDate, this.userId, this.entity);
 
             this.chatService.connectToSocket();
+            localStorage.removeItem('student');
+            localStorage.removeItem('faculty');
             if (this.entity === 'student') {
               this.router.navigate(['/studentProfile/', this.userId]);
             } else if (this.entity === 'faculty') {

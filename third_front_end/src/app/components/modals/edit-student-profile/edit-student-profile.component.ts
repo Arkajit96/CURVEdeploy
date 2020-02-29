@@ -43,6 +43,7 @@ export class EditStudentProfileComponent implements OnInit {
       gender: [this.student.gender],
       dob: [this.student.date_of_birth],
       phone: [this.student.phone],
+      class: [this.student.graduation_class],
       profilePic: [],
       resume: []
     })

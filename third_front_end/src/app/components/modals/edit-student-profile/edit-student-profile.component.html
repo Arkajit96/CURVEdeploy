@@ -3,28 +3,35 @@
         <mat-tab-group class="mat-tabs">
             <mat-tab label="Personal Info">
                 <div class="row first-row">
-                    <div class="col-6 col-12-xs">
+                    <div class="col-6 col-xs-12">
                         <mat-form-field>
                             <input matInput formControlName="first_name" placeholder="First Name"> 
                         </mat-form-field>
                     </div>
-                    <div class="col-6 col-12-xs">
+                    <div class="col-6 col-xs-12">
                         <mat-form-field>
                             <input matInput formControlName="last_name" placeholder="Last Name"> 
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6 col-12-xs">
+                    <div class="col-6 col-xs-12">
                         <mat-form-field>
                             <input matInput formControlName="gender" placeholder="Gender">
                         </mat-form-field>
                     </div>
-                    <div class="col-6 col-12-xs">
+                    <div class="col-6 col-xs-12">
                         <mat-form-field>
                             <input matInput [matDatepicker]="picker" formControlName="dob" placeholder="Date of birth">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 col-xs-12">
+                        <mat-form-field>
+                            <input matInput formControlName="class" placeholder="Graduation Class">
                         </mat-form-field>
                     </div>
                 </div>
