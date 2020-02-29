@@ -6,7 +6,36 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FacultyService {
 
+  // Singleton Faculty user
+  private faculty : any;
+
   constructor(private http: HttpClient) { }
+
+  getCurrentFacultyUser(){
+    return this.faculty;
+  }
+
+  clearCurrentUser(){
+    this.faculty = null;
+  }
+
+
+  LogInAsFaculty(userId:string): Promise<boolean> {
+    return new Promise((res, rej) =>{
+      if(this.faculty){ res(true) };
+        this.http.get<{ message: string; faculty: any;}>(
+          '/api/faculty/' + userId
+          ).toPromise().then(
+            data => {
+              this.faculty = data.faculty;
+              res(true);
+            },
+            error => {
+              rej(false);
+            }
+          )
+      });
+    }
 
   loadFaculty(id: String): Promise<any> {
       return new Promise((res, rej) => {

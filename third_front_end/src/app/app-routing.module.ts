@@ -18,10 +18,10 @@ const routes: Routes = [
     path: 'login', component: LoginComponent
   },
   {
-    path: 'studentProfile/:id', component: StudentProfileComponent, canActivate: [AuthGuard]
+    path: 'studentProfile', component: StudentProfileComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'facultyProfile/:id', component: FacultyProfileComponent, canActivate: [AuthGuard]
+    path: 'facultyProfile', component: FacultyProfileComponent, canActivate: [AuthGuard]
   },
   {
     path: 'register', component: RegisterComponent

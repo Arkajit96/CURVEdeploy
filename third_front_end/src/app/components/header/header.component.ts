@@ -14,7 +14,7 @@ import { ChatService } from 'src/app/services/chat.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy{
   private userIsAuthenticated = false;
-  private userId: string;
+  private shoppingCart: string[];
   private entity: string;
   private notifications = [];
   private authListenerSubs: Subscription;
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
     if(!this.chatService.getIsConnected()) {
       this.chatService.connectToSocket();
     }
-    this.userId = this.authService.getUserId();
+    // this.userId = this.authService.getUserId();
     this.entity = this.authService.getEntity();
     this.authListenerSubs = this.authService
       .getAuthStatusListener()
@@ -46,6 +46,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
     // might modify deponds on how to get notifications
     this.notifications = this.headerService.getNotifications();
+
+    // Get shoppingCart
+    this.shoppingCart = this.headerService.getShoppingCartItems();
   }
 
 

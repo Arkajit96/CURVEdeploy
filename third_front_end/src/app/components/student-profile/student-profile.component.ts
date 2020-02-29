@@ -43,22 +43,27 @@ export class StudentProfileComponent implements OnInit {
    }
   
   ngOnInit() {
-    this.route.params.subscribe((data) => {
-      this.student_id = data.id;
-      this.studentService.getStudentByUserId(this.student_id)
-      .then((res) => {
-        this.student = res;
-        this.newSummary = this.student.summary;
-        this.loadingPage = false;
-      })
-      .catch((error) => {
-        this.snackbar.open(error.error.message, 'Close', {
-          duration: 3000,
-          panelClass: 'error-snackbar'
-        })
-      })
-    })
+    this.student = this.studentService.getCurrentStudentUser();
+    this.newSummary = this.student.summary;
+    this.loadingPage = false;
+
+    // this.route.params.subscribe((data) => {
+    //   this.student_id = data.id;
+    //   this.studentService.getStudentByUserId(this.student_id)
+    //   .then((res) => {
+    //     this.student = res;
+    //     this.newSummary = this.student.summary;
+    //     this.loadingPage = false;
+    //   })
+    //   .catch((error) => {
+    //     this.snackbar.open(error.error.message, 'Close', {
+    //       duration: 3000,
+    //       panelClass: 'error-snackbar'
+    //     })
+    //   })
+    // })
   }
+  
   createForm() {
     this.form = this.fb.group({
       name: ['', Validators.required],

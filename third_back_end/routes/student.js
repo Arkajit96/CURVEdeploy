@@ -34,7 +34,6 @@ const mongodb = require('mongodb');
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {
     // console.log("backend fatched user: " + req.userData.userId)
-    console.log(req.params.id)
     Student.findOne({"user_id": req.params.id}, function(err, student){
         if(err){
           res.status(500).json({
@@ -301,6 +300,9 @@ router.post("/add/index", checkAuth, async function(req, res) {
 
 // add application to the shopping cart
 router.post("/addToShoppingCart",checkAuth,studentControllor.addToShoppingCart);
+
+// delete item from the cart
+router.post("/deleteItem",checkAuth,studentControllor.deleteItem);
 
 // get shopping cart
 router.post("/getShoppingCartItemsByIds",checkAuth,studentControllor.getShoppingCartItemsByIds);

@@ -2,12 +2,14 @@ var mongoose = require("mongoose");
 
 // Models
 const Student = require('../models/student');
+const Faculty = require('../models/faculty');
 const Application = require('../models/application');
 
 exports.addToShoppingCart = async (req, res) => {
     try {
-        let student = await Student.findOneAndUpdate({user_id: req.body.id}, {shopping_cart: req.body.shopping_cart});
-        student.shopping_cart = req.body.shopping_cart;
+        let student = await Student.findOneAndUpdate({user_id: req.body.id}, 
+            { $push: {shopping_cart: req.body.newItem}});
+        student.shopping_cart.push(req.body.newItem)
         res.status(200).json({
             message: 'Shopping cart update successful',
             student: student
@@ -21,14 +23,32 @@ exports.addToShoppingCart = async (req, res) => {
     }
 }
 
+exports.deleteItem = async (req, res) => {
+    try {
+        let student = await Student.findOneAndUpdate({user_id: req.body.id}, 
+            { $pull: {shopping_cart: req.body.Itemid}});
+        student.shopping_cart.pull(req.body.Itemid)
+        res.status(200).json({
+            message: 'Item delete successful!',
+            student: student
+        })
+    } catch(e) {
+        console.log(e);
+        res.status(500).json({
+            message: "Item delete failed!",
+            student: null
+        });
+    }
+}
+
 exports.getShoppingCartItemsByIds = async (req, res) => {
     try {
         let ids = req.body.ids
         let obj_ids = ids.map(id => { return mongoose.Types.ObjectId(id); })
-        let items = await Application.find({_id: {$in: obj_ids}});
+        let Faculties = await Faculty.find({_id: {$in: obj_ids}});
         res.status(200).json({
             message: 'Shopping cart items retrive successful',
-            items: items
+            items: Faculties
         })
     } catch(e) {
         console.log(e);

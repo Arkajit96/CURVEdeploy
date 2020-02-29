@@ -28,11 +28,9 @@ var StudentSchema = new mongoose.Schema({
 	shopping_cart: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Application"
+			ref: "Faculty"
 		}
 	]
 });
-
-//StudentSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("Student", StudentSchema);

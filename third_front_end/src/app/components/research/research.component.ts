@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
 import { PageEvent, MatDialog, MatDialogConfig } from "@angular/material";
 import { Subscription} from "rxjs";
+import { MatSnackBar } from '@angular/material';
 
 //Modals
 import{ submitApplicationComponent } from '../modals/submit-application/submit-application.component'
-import{ViewStudentProfileComponent } from '../modals/view-student-profile/view-student-profile.component'
+import{ ViewStudentProfileComponent } from '../modals/view-student-profile/view-student-profile.component'
 
 //Models
 import{ Opportunity } from '../../shared/opportunity';
 
 //Service
-import {AuthService} from '../../services/auth.service';
 import { StudentService } from '../../services/student.service';
 import { ResearchService} from '../../services/research.service';
 
@@ -21,14 +21,14 @@ import { ResearchService} from '../../services/research.service';
 })
 export class ResearchComponent implements OnInit, OnDestroy{
 
-  isLoading = false;
+  isLoading = true;
 
   //Fields for opportunities
   opportunities: Opportunity[] = [];
   private opportunitiesSub: Subscription;
 
   //Fields for shopping cart
-  student:any;
+  student: any;
   private shopping_cart = [];
 
   // Pageinate
@@ -44,32 +44,44 @@ export class ResearchComponent implements OnInit, OnDestroy{
   loadingSearch = false;
 
   constructor(
-    private authService: AuthService,
     private researchService: ResearchService,
     private studentService: StudentService,
+    private snackbar: MatSnackBar,
     private dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
+    // Directlt get student from the service
+    this.student = this.studentService.getCurrentStudentUser();
+    this.shopping_cart = this.student.shopping_cart;
+
+    //lab part
+    this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
+    this.opportunitiesSub = this.researchService.getopportunitiesUpdatedListener()
+    .subscribe((data: { opportunities:Opportunity[]; count: number }) => {
+        this.totalNum = data.count;
+        this.opportunities = data.opportunities;
+    });
+    
+    this.isLoading = false;
 
     // new opt part
-    const userId = this.authService.getUserId();
-    this.studentService.getStudentByUserId(userId)
-    .then((res) => {
-        this.student = res;
-        this.shopping_cart = this.student.shopping_cart;
+    // const userId = this.authService.getUserId();
+    // this.studentService.getStudentByUserId(userId)
+    // .then((res) => {
+    //     this.student = res;
+    //     this.shopping_cart = this.student.shopping_cart;
 
-        //lab part
-        this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
-        this.opportunitiesSub = this.researchService.getopportunitiesUpdatedListener()
-        .subscribe((data: { opportunities:Opportunity[]; count: number }) => {
-            this.totalNum = data.count;
-            this.opportunities = data.opportunities;
-        });
+    //     //lab part
+    //     this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
+    //     this.opportunitiesSub = this.researchService.getopportunitiesUpdatedListener()
+    //     .subscribe((data: { opportunities:Opportunity[]; count: number }) => {
+    //         this.totalNum = data.count;
+    //         this.opportunities = data.opportunities;
+    //     });
         
-        this.isLoading = false;
-    });
+    //     this.isLoading = false;
+    // });
     
 
     //search part
@@ -114,14 +126,16 @@ export class ResearchComponent implements OnInit, OnDestroy{
   }
 
   findOptAndOpenDialog(optID:string){
-    let opportunity = this.researchService.getOptById(optID)
+    this.researchService.getOptById(optID)
     .then(data => {
       this.openApplicationDialog(data);
     });
   }
 
   // Handle quick apply dialog
-  openApplicationDialog(currentOpt:any) {
+  openApplicationDialog(currentOpt:Opportunity) {
+
+    console.log(currentOpt);
 
       const dialogConfig = new MatDialogConfig();
   
@@ -134,16 +148,28 @@ export class ResearchComponent implements OnInit, OnDestroy{
       let dialogRef = this.dialog.open(submitApplicationComponent, dialogConfig);
       dialogRef.afterClosed().subscribe(res => {
         if(res){
-          this.shopping_cart.push(res)
-          this.studentService.addToShoppingCart(this.student.user_id, this.shopping_cart)
-          .then(res =>{
-            this.student = res.student;
-            this.shopping_cart = res.student.shopping_cart;
-            console.log(this.student);
-            console.log(this.shopping_cart);
-          });
+          this.snackbar.open('Application submitted', 'Close', {
+            duration: 3000,
+            panelClass: 'success-snackbar'
+          })
+
+          // Send message to the corresponding faculty
+          // this.researchService.sendMessage();
+
         }
       })
+  }
+
+  addToShoppingCart(person: any){
+    this.studentService.addToShoppingCart(this.student.user_id,person._id)
+    .then(res =>{
+      this.student = res.student;
+      this.shopping_cart = res.student.shopping_cart;
+      this.snackbar.open('Faculty ' + person.first_name +' added to the shopping cart', 'Close', {
+        duration: 3000,
+        panelClass: 'success-snackbar'
+      })
+    });
   }
 
   ViewProfile() {

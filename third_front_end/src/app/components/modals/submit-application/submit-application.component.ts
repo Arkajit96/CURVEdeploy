@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, Inject} from '@angular/core';
+import { Component, OnInit, Inject} from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import {MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { Subscription } from "rxjs";
 import { MatSnackBar } from '@angular/material';
 
 // Components
@@ -11,7 +10,6 @@ import { CloseConfirmComponent } from '../../modals/close-confirm/close-confirm.
 import{Application} from '../../../shared/application';
 
 //Services
-import {AuthService} from '../../../services/auth.service';
 import {ResearchService} from '../../../services/research.service';
 
 @Component({
@@ -33,7 +31,6 @@ import {ResearchService} from '../../../services/research.service';
 
     constructor(
         private closeDialog: MatDialog,
-        private authService: AuthService,
         private researchService: ResearchService,
         public dialogRef: MatDialogRef<submitApplicationComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
@@ -41,9 +38,6 @@ import {ResearchService} from '../../../services/research.service';
       ) { }
 
       ngOnInit(){
-
-        console.log(this.data.opt);
-
         this.isLoading = true;
         this.form = new FormGroup({
           resume: new FormControl(null),
@@ -53,7 +47,7 @@ import {ResearchService} from '../../../services/research.service';
         // init new appliction
         this.application = {
           studentID: this.data.student._id,
-          opportunityID: this.data.opt.id,
+          opportunityID: this.data.opt._id,
           resume: this.data.student.resume,
           coverLetter: this.data.student.CV,
           createTime:''
@@ -69,7 +63,7 @@ import {ResearchService} from '../../../services/research.service';
         let mimeType = file.type;
 
         if(mimeType.match(/application\/*/) == null) {
-          this.form.patchValue({resume: []})
+          this.form.patchValue({fileType: []})
           this.snackBar.open( fileType + ' must be a .pdf, .doc, .docx, or google docs', 'Close', {
           duration: 3000,
           panelClass: 'error-snackbar'

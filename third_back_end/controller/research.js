@@ -22,13 +22,14 @@ exports.createOpportunity = (req, res) => {
         // modifiy/add middleware for id
         creator: req.body.id
     });
-    Opportunity.create(opportunity,function(err, newOpt) {
+    Opportunity.create(opportunity, function (err, newOpt) {
         if (err) {
             console.log(err);
             rej(error);
-          } else {
+        } else {
+            res(newOpt);
             console.log(newOpt);
-          }
+        }
     });
 }
 
@@ -50,7 +51,7 @@ exports.getOpportunities = (req, res) => {
         res.status(200).json({
             message: "Opportunities fetched sucessfully!",
             opportunities: fetchedOpps,
-            maxOpp:count
+            maxOpp: count
         });
     }).catch(error => {
         res.status(500).json({
@@ -60,23 +61,23 @@ exports.getOpportunities = (req, res) => {
 }
 
 // Get opportunity by id
-exports.getOptById= (req, res) => {
-    Opportunity.findOne({"_id": req.params.optId}, function(err, opt){
-        if(err){
-          res.status(500).json({
-            message: "Fetching opportunity failed!"
-          });
+exports.getOptById = (req, res) => {
+    Opportunity.findOne({ "_id": req.params.optId }, function (err, opt) {
+        if (err) {
+            res.status(500).json({
+                message: "Fetching opportunity failed!"
+            });
         } else {
-          res.status(200).json({
-            message: "Opportunity fetched successfully",
-            opt:opt
-          })
+            res.status(200).json({
+                message: "Opportunity fetched successfully",
+                opt: opt
+            })
         }
     });
 }
 
 // create new application
-exports.createApplication  = (req, res) => {
+exports.createApplication = (req, res) => {
     const application = new Application({
         studentID: req.body.studentID,
         opportunityID: req.body.opportunityID,
@@ -86,19 +87,19 @@ exports.createApplication  = (req, res) => {
     })
 
     console.log(application);
-    Application.create(application,function(err, newApplication) {
+    Application.create(application, function (err, newApplication) {
         if (err) {
             console.log(err);
             res.status(500).json({
                 message: "Application create failed!",
-                applicationID:''
+                applicationID: ''
             });
-          } else {
+        } else {
             res.status(200).json({
                 message: 'Application create successful',
                 applicationID: newApplication._id
             })
-          }
+        }
     })
 }
 
@@ -106,25 +107,81 @@ exports.createApplication  = (req, res) => {
 exports.uploadFile = (req, res) => {
     let studentID = mongoose.Types.ObjectId(req.body.studentID);
     let opportunityID = mongoose.Types.ObjectId(req.body.opportunityID);
-    Application.findOne({studentID: studentID, opportunityID: opportunityID})
-    .then(application => {
-        // delete old file
-       if ( application ){
-            let oldFile = application.get(req.body.fileType)
-            if(oldFile && oldFile.trim() != ''){
-                Helper.deleteS3(oldFile);
-              }
-        }
-        res.status(200).json({
-            message: 'File upload successful',
-            location: req.file.location
+    Application.findOne({ studentID: studentID, opportunityID: opportunityID })
+        .then(application => {
+            // delete old file
+            if (application) {
+                let oldFile = application.get(req.body.fileType)
+                if (oldFile && oldFile.trim() != '') {
+                    Helper.deleteS3(oldFile);
+                }
+            }
+            res.status(200).json({
+                message: 'File upload successful',
+                location: req.file.location
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                message: "File upload failed!",
+                location: ''
+            });
+        });
+}
+
+// upload file to multiple applications
+exports.uploadFileMultiApp = (req, res) => {
+    let studentID = mongoose.Types.ObjectId(req.body.studentID);
+    let opportunityIDs = req.body.opportunityIDs;
+    Application.find({ studentID: studentID, opportunityID: { $in: opportunityIDs } })
+        .then(applications => {
+            // delete old file
+            if (applications.length > 0) {
+                let oldFile;
+                applications.forEach(function (item, index, input) {
+                    oldFile = item.get(req.body.fileType)
+                    if (oldFile && oldFile.trim() != '') {
+                        Helper.deleteS3(oldFile);
+                    }
+                })
+            }
+            res.status(200).json({
+                message: 'File upload to multiple applications successful',
+                location: req.file.location
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                message: "File upload to multiple applications failed!",
+                location: ''
+            });
+        });
+}
+
+// create multiple applications
+exports.createMultiApplications = (req, res) => {
+    let opportunityIDs = req.body.opportunityIDs;
+    let applications = opportunityIDs.map(function (item, index, input) {
+        return new Application({
+            studentID: req.body.studentID,
+            opportunityID: mongoose.Types.ObjectId(item),
+            resume: req.body.resume,
+            coverLetter: req.body.coverLetter,
+            createTime: new Date().toLocaleString()
         })
     })
-    .catch(err => {
-        res.status(500).json({
-            message: "File upload failed!",
-            location:''
-        });
-    });
+    console.log(applications);
+    Application.insertMany(applications, function (err, newApplications) {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Applications create failed!",
+            });
+        } else {
+            res.status(200).json({
+                message: 'Applications create successful',
+            })
+        }
+    })
 }
 

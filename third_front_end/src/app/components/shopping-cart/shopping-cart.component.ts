@@ -1,14 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { PageEvent, MatDialog, MatDialogConfig } from "@angular/material";
+import { MatSort } from '@angular/material/sort';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material';
 
-// frontend model
-import { Application } from '../../shared/application';
+// Models
+import { Faculty } from '../../shared/faculty';
+
+// Components
+import { submitApplicationComponent } from '../modals/submit-application/submit-application.component'
+import { submitAllApplicationComponent } from '../modals/submit-all-application/submit-all-application.component'
+import { ViewStudentProfileComponent } from '../modals/view-student-profile/view-student-profile.component'
 
 
-//Service
-import { AuthService } from '../../services/auth.service';
+// Service
 import { StudentService } from '../../services/student.service';
 import { ResearchService } from '../../services/research.service';
 
@@ -17,13 +24,6 @@ import { ResearchService } from '../../services/research.service';
     selector: 'app-shopping-cart',
     templateUrl: './shopping-cart.component.html',
     styleUrls: ['./shopping-cart.component.scss'],
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({ height: '0px', minHeight: '0' })),
-            state('expanded', style({ height: '*' })),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-    ],
 })
 export class ShoppingCartComponent implements OnInit {
     isLoading = false;
@@ -32,137 +32,171 @@ export class ShoppingCartComponent implements OnInit {
     student: any;
     private shopping_cart = [];
 
-    // table control
-    dataSource = new MatTableDataSource<Application>([]);
-    columnsToDisplay = ['opportunityID', 'resume', 'coverLetter', 'createTime'];
-    expandedElement: Application | null;
+    // data control
+    dataSource = new MatTableDataSource<Faculty>([]);
+    selection = new SelectionModel<Faculty>(true, []);
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+
+    // columns that we want to display
+    columnsToDisplay: string[] = ['select', 'name', 'department', 'email', 'actions'];
 
 
     constructor(
-        private authService: AuthService,
         private researchService: ResearchService,
         private studentService: StudentService,
+        private snackbar: MatSnackBar,
+        private dialog: MatDialog
     ) { }
-
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
     ngOnInit() {
         this.isLoading = true;
-
-        const userId = this.authService.getUserId();
-        this.studentService.getStudentByUserId(userId)
-            .then((res) => {
-                this.student = res;
-                this.studentService.getShoppingCartItemsByIds(this.student.shopping_cart)
-                .then(res => {
-                    this.shopping_cart = res.items;
-                    console.log(this.shopping_cart);
-
-                    this.dataSource = new MatTableDataSource<Application>(this.shopping_cart);
-                })
+        this.student = this.studentService.getCurrentStudentUser();
+        this.studentService.getShoppingCartItemsByIds(this.student.shopping_cart)
+            .then(res => {
+                this.shopping_cart = res.items;
+                console.log(this.shopping_cart);
+                this.dataSource = new MatTableDataSource<Faculty>(this.shopping_cart);
 
                 //add pagenation
                 this.dataSource.paginator = this.paginator;
 
+                //add sorting
+                this.dataSource.sort = this.sort;
+
                 this.isLoading = false;
+            })
+
+
+        // retrive data from backend
+        // const userId = this.authService.getUserId();
+        // this.studentService.getStudentByUserId(userId)
+        //     .then((res) => {
+        //         this.student = res;
+        //         this.studentService.getShoppingCartItemsByIds(this.student.shopping_cart)
+        //         .then(res => {
+        //             this.shopping_cart = res.items;
+        //             console.log(this.shopping_cart);
+
+        //             this.dataSource = new MatTableDataSource<Application>(this.shopping_cart);
+        //         })
+
+        //         //add pagenation
+        //         this.dataSource.paginator = this.paginator;
+
+        //         this.isLoading = false;
+        //     });
+    }
+
+    /** Whether the number of selected elements matches the total number of rows. */
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.dataSource.data.length;
+        return numSelected === numRows;
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle() {
+        this.isAllSelected() ?
+            this.selection.clear() :
+            this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+    // View faculty profile
+    ViewProfile() {
+        this.dialog.open(ViewStudentProfileComponent, {
+            data: { Data: this.student },
+        })
+    }
+
+    // Find opt by Id
+    findOptAndOpenDialog(optID: string) {
+        this.researchService.getOptById(optID)
+            .then(data => {
+                this.openApplicationDialog(data);
             });
     }
 
+    // Handle application submit dialog
+    openApplicationDialog(currentOpt: any) {
 
+        const dialogConfig = new MatDialogConfig();
 
+        dialogConfig.autoFocus = false;
+        dialogConfig.data = {
+            opt: currentOpt,
+            student: this.student
+        }
 
-    //get applications from database
-    getItems() {
+        let dialogRef = this.dialog.open(submitApplicationComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(res => {
+            if (res) {
+                this.deleteItem(currentOpt._id);
+                this.snackbar.open('Application submitted', 'Close', {
+                    duration: 3000,
+                    panelClass: 'success-snackbar'
+                })
+            }
+        })
+    }
 
+    addToShoppingCart(person: any) {
+        this.studentService.addToShoppingCart(this.student.user_id, person._id)
+            .then(res => {
+                this.student = res.student;
+                this.shopping_cart = res.student.shopping_cart;
+                this.snackbar.open('Faculty ' + person.first_name + ' added to the shopping cart', 'Close', {
+                    duration: 3000,
+                    panelClass: 'success-snackbar'
+                })
+            });
+    }
+
+    // Delete from the pending application
+    deleteItem(id: string) {
+        this.studentService.deleteItem(this.student.user_id, id)
+            .then(res => {
+                this.student = res.student;
+                this.studentService.getShoppingCartItemsByIds(this.student.shopping_cart)
+                    .then(res => {
+                        this.shopping_cart = res.items;
+                        this.dataSource = new MatTableDataSource<any>(this.shopping_cart);
+                    })
+                this.snackbar.open('Item deleted', 'Close', {
+                    duration: 3000,
+                    panelClass: 'success-snackbar'
+                })
+            });
+    }
+
+    // submit all items
+    submitAll() {
+        const itemList = this.selection.selected;
+        if (itemList.length > 0) {
+
+            const optIdList = itemList.map(function (item, index, input) {
+                return item.opportunity;
+            })
+
+            const dialogConfig = new MatDialogConfig();
+
+            dialogConfig.autoFocus = false;
+            dialogConfig.data = {
+                optIds: optIdList,
+                student: this.student
+            }
+
+            let dialogRef = this.dialog.open(submitAllApplicationComponent, dialogConfig);
+            dialogRef.afterClosed().subscribe(res => {
+                if (res) {
+                    this.snackbar.open('All application submitted', 'Close', {
+                        duration: 3000,
+                        panelClass: 'success-snackbar'
+                    })
+
+                }
+            })
+        }
     }
 }
-
-// export interface PeriodicElement {
-//     name: string;
-//     position: number;
-//     weight: number;
-//     symbol: string;
-//     description: string;
-// }
-
-// const ELEMENT_DATA: PeriodicElement[] = [
-//     {
-//         position: 1,
-//         name: 'Hydrogen',
-//         weight: 1.0079,
-//         symbol: 'H',
-//         description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-//           atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`
-//     }, {
-//         position: 2,
-//         name: 'Helium',
-//         weight: 4.0026,
-//         symbol: 'He',
-//         description: `Helium is a chemical element with symbol He and atomic number 2. It is a
-//           colorless, odorless, tasteless, non-toxic, inert, monatomic gas, the first in the noble gas
-//           group in the periodic table. Its boiling point is the lowest among all the elements.`
-//     }, {
-//         position: 3,
-//         name: 'Lithium',
-//         weight: 6.941,
-//         symbol: 'Li',
-//         description: `Lithium is a chemical element with symbol Li and atomic number 3. It is a soft,
-//           silvery-white alkali metal. Under standard conditions, it is the lightest metal and the
-//           lightest solid element.`
-//     }, {
-//         position: 4,
-//         name: 'Beryllium',
-//         weight: 9.0122,
-//         symbol: 'Be',
-//         description: `Beryllium is a chemical element with symbol Be and atomic number 4. It is a
-//           relatively rare element in the universe, usually occurring as a product of the spallation of
-//           larger atomic nuclei that have collided with cosmic rays.`
-//     }, {
-//         position: 5,
-//         name: 'Boron',
-//         weight: 10.811,
-//         symbol: 'B',
-//         description: `Boron is a chemical element with symbol B and atomic number 5. Produced entirely
-//           by cosmic ray spallation and supernovae and not by stellar nucleosynthesis, it is a
-//           low-abundance element in the Solar system and in the Earth's crust.`
-//     }, {
-//         position: 6,
-//         name: 'Carbon',
-//         weight: 12.0107,
-//         symbol: 'C',
-//         description: `Carbon is a chemical element with symbol C and atomic number 6. It is nonmetallic
-//           and tetravalent—making four electrons available to form covalent chemical bonds. It belongs
-//           to group 14 of the periodic table.`
-//     }, {
-//         position: 7,
-//         name: 'Nitrogen',
-//         weight: 14.0067,
-//         symbol: 'N',
-//         description: `Nitrogen is a chemical element with symbol N and atomic number 7. It was first
-//           discovered and isolated by Scottish physician Daniel Rutherford in 1772.`
-//     }, {
-//         position: 8,
-//         name: 'Oxygen',
-//         weight: 15.9994,
-//         symbol: 'O',
-//         description: `Oxygen is a chemical element with symbol O and atomic number 8. It is a member of
-//            the chalcogen group on the periodic table, a highly reactive nonmetal, and an oxidizing
-//            agent that readily forms oxides with most elements as well as with other compounds.`
-//     }, {
-//         position: 9,
-//         name: 'Fluorine',
-//         weight: 18.9984,
-//         symbol: 'F',
-//         description: `Fluorine is a chemical element with symbol F and atomic number 9. It is the
-//           lightest halogen and exists as a highly toxic pale yellow diatomic gas at standard
-//           conditions.`
-//     }, {
-//         position: 10,
-//         name: 'Neon',
-//         weight: 20.1797,
-//         symbol: 'Ne',
-//         description: `Neon is a chemical element with symbol Ne and atomic number 10. It is a noble gas.
-//           Neon is a colorless, odorless, inert monatomic gas under standard conditions, with about
-//           two-thirds the density of air.`
-//     },
-// ];

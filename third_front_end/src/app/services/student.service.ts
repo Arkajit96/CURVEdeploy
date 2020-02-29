@@ -4,8 +4,8 @@ import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
 //Models
-import{ Opportunity } from '../shared/opportunity';
-import { Application } from '../shared/application';
+import{ Student } from '../shared/student';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,35 +16,64 @@ export class StudentService {
   // private opportunities: Opportunity[] = [];
   // private opportunitiesUpdated = new Subject<{ opportunities:Opportunity[]; count: number }>();
 
+  // singleton Student User
+  private student: any;
+
   constructor(private http: HttpClient) { }
 
-  getStudentByUserId(userId:string){
-    return new Promise((res, rej) =>{
-        this.http.get<{ message: string; student: any;}>(
-          '/api/student/' + userId
-          ).toPromise().then(
-            data => {
-              res(data.student);
-            },
-            error => {
-              rej(error);
-            }
-          )
-      });
-    }
-    
-// getStudent(id: string): Promise<any> {
-//     return new Promise((res, rej) => {
-//       this.http.get('/api/student/' + id).subscribe(
-//         data => {
-//           res(data);
-//         },
-//         error => {
-//           rej(error);
-//         }
-//       )
-//     })
-//   }
+  getCurrentStudentUser() {
+    return this.student;
+  }
+
+  clearCurrentUser() {
+    this.student = null;
+  }
+
+
+  LogInAsStudent(userId: string): Promise<boolean> {
+    return new Promise((res, rej) => {
+      if (this.student) { res(true) };
+      this.http.get<{ message: string; student: any; }>(
+        '/api/student/' + userId
+      ).toPromise().then(
+        data => {
+          this.student = data.student;
+          res(true);
+        },
+        error => {
+          rej(false);
+        }
+      )
+    });
+  }
+
+  getStudentByUserId(userId: string): Promise<any> {
+    return new Promise((res, rej) => {
+      this.http.get<{ message: string; student: any; }>(
+        '/api/student/' + userId
+      ).toPromise().then(
+        data => {
+          res(data.student);
+        },
+        error => {
+          rej(error);
+        }
+      )
+    });
+  }
+
+  // getStudent(id: string): Promise<any> {
+  //     return new Promise((res, rej) => {
+  //       this.http.get('/api/student/' + id).subscribe(
+  //         data => {
+  //           res(data);
+  //         },
+  //         error => {
+  //           rej(error);
+  //         }
+  //       )
+  //     })
+  //   }
 
   search(query: String): Promise<any> {
     return new Promise((res, rej) => {
@@ -67,6 +96,7 @@ export class StudentService {
       }
       this.http.put('/api/student/editInterest', form).subscribe(
         data => {
+          this.student = data;
           res(data);
         },
         error => {
@@ -83,6 +113,7 @@ export class StudentService {
       }
       this.http.post('/api/student/update/summary', form).subscribe(
         data => {
+          this.student = data;
           res(data);
         },
         error => {
@@ -108,11 +139,12 @@ export class StudentService {
 
       this.http.post('/api/student/update', updates).subscribe(
         data => {
+          this.student = data;
           res(data);
         },
         error => {
           console.log(error);
-          res({error: 'Error saving changes'});
+          res({ error: 'Error saving changes' });
         }
       )
     })
@@ -125,11 +157,12 @@ export class StudentService {
       formData.append('id', id);
       this.http.post('/api/student/upload/profilePic', formData).subscribe(
         data => {
+          this.student = data;
           res(data);
         },
         error => {
           console.log(error);
-          rej({error: 'Error uploading profile picture'});
+          rej({ error: 'Error uploading profile picture' });
         }
       )
     })
@@ -143,53 +176,76 @@ export class StudentService {
       formData.append('fileType', fileType);
       this.http.post('/api/student/upload/file', formData).subscribe(
         data => {
+          this.student = data;
           res(data);
         },
         error => {
           console.log(error);
-          rej({error: 'Error uploading file'});
+          rej({ error: 'Error uploading file' });
         }
       )
     })
 
-}
+  }
 
   // Shopping cart related
-  addToShoppingCart(id: string, shopping_cart: any): Promise<any> {
-    console.log(shopping_cart)
+  addToShoppingCart(id: string, newItem: any): Promise<any> {
     return new Promise((res, rej) => {
       let form = {
         id: `${id}`,
-        shopping_cart: shopping_cart
+        newItem: newItem
       }
-      this.http.post<{ message: string; student: any;}>(
+      this.http.post<{ message: string; student: any; }>(
         '/api/student/addToShoppingCart', form)
         .subscribe(
-        data => {
-          res(data);
-        },
-        error => {
-          console.log(error);
-          rej({error: 'Add to shopping cart error'});
-        }
-      )
+          data => {
+            this.student = data.student;
+            res(data);
+          },
+          error => {
+            console.log(error);
+            rej({ error: 'Add to shopping cart error' });
+          }
+        )
     })
   }
 
-  getShoppingCartItemsByIds(ids:any):Promise<any> {
+  // Shopping cart related
+  deleteItem(id: string, Itemid: string): Promise<any> {
     return new Promise((res, rej) => {
-      let form = {ids: ids}
-      this.http.post<{ message: string; items: any;}>(
+      let form = {
+        id: `${id}`,
+        Itemid: Itemid
+      }
+      this.http.post<{ message: string; student: any; }>(
+        '/api/student/deleteItem', form)
+        .subscribe(
+          data => {
+            this.student = data.student;
+            res(data);
+          },
+          error => {
+            console.log(error);
+            rej({ error: 'Delete from shopping cart error' });
+          }
+        )
+    })
+  }
+
+  getShoppingCartItemsByIds(ids: any): Promise<any> {
+    return new Promise((res, rej) => {
+      let form = { ids: ids }
+      this.http.post<{ message: string; items: any; }>(
         '/api/student/getShoppingCartItemsByIds', form)
         .subscribe(
-        data => {
-          res(data);
-        },
-        error => {
-          console.log(error);
-          rej({error: 'get shopping cart items error'});
-        }
-      )
+          data => {
+            res(data);
+          },
+          error => {
+            console.log(error);
+            rej({ error: 'get shopping cart items error' });
+          }
+        )
     })
   }
 }

@@ -26,6 +26,7 @@ import { CandidateComponent } from './components/candidate/candidate.component';
 import { CanidateSearchComponent } from './components/canidate-search/canidate-search.component';
 import { AddInterestsComponent } from './components/modals/add-interests/add-interests.component'
 import { submitApplicationComponent } from './components/modals/submit-application/submit-application.component'
+import { submitAllApplicationComponent } from './components/modals/submit-all-application/submit-all-application.component'
 import { InterestList } from './services/interest-list';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {TextFieldModule} from '@angular/cdk/text-field';
@@ -58,7 +59,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     CloseConfirmComponent,
     EditStudentProfileComponent,
     ViewStudentProfileComponent,
-    submitApplicationComponent
+    submitApplicationComponent,
+    submitAllApplicationComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +91,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     CloseConfirmComponent,
     EditStudentProfileComponent,
     ViewStudentProfileComponent,
-    submitApplicationComponent
+    submitApplicationComponent,
+    submitAllApplicationComponent
   ]
 })
 export class AppModule { }
