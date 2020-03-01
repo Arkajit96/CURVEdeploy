@@ -8,8 +8,7 @@ const Application = require('../models/application');
 exports.addToShoppingCart = async (req, res) => {
     try {
         let student = await Student.findOneAndUpdate({user_id: req.body.id}, 
-            { $push: {shopping_cart: req.body.newItem}});
-        student.shopping_cart.push(req.body.newItem)
+            { $push: {shopping_cart: req.body.newItem}},{new: true});
         res.status(200).json({
             message: 'Shopping cart update successful',
             student: student
@@ -26,8 +25,7 @@ exports.addToShoppingCart = async (req, res) => {
 exports.deleteItem = async (req, res) => {
     try {
         let student = await Student.findOneAndUpdate({user_id: req.body.id}, 
-            { $pull: {shopping_cart: req.body.Itemid}});
-        student.shopping_cart.pull(req.body.Itemid)
+            { $pull: {shopping_cart: req.body.Itemid}},{new:true});
         res.status(200).json({
             message: 'Item delete successful!',
             student: student

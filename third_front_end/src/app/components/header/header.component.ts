@@ -48,7 +48,11 @@ export class HeaderComponent implements OnInit, OnDestroy{
     this.notifications = this.headerService.getNotifications();
 
     // Get shoppingCart
-    this.shoppingCart = this.headerService.getShoppingCartItems();
+    if(this.entity == 'student'){
+      this.shoppingCart = this.headerService.getShoppingCartItems();
+    }else if (this.entity == 'student'){
+      this.shoppingCart = [];
+    }
   }
 
 

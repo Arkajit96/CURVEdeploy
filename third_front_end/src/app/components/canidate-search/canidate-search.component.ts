@@ -31,7 +31,6 @@ export class CanidateSearchComponent implements OnInit, OnChanges {
   }
 
   search(query: String) {
-    console.log(query);
     if(query.trim() !== ''){
       this.loadingSearch = true;
       this.facultyService.search(this.searchQuery)

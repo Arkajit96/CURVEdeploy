@@ -22,12 +22,11 @@ export class submitAllApplicationComponent implements OnInit {
 
     // form control for submit application
     // private applications: Application[];
-    private application: Application;
+    private application: any;
     resumePreview: String;
     CVPreview: String;
 
     isLoading = true;
-    form: FormGroup;
 
     constructor(
         private closeDialog: MatDialog,
@@ -39,33 +38,35 @@ export class submitAllApplicationComponent implements OnInit {
 
     ngOnInit() {
         this.isLoading = true;
-        this.form = new FormGroup({
-            resume: new FormControl(null),
-            CV: new FormControl(null)
-        })
 
         // init appliction to submit
 
         this.application = {
             studentID: this.data.student._id,
-            opportunityID: '',
-            resume: this.data.student.resume,
-            coverLetter: this.data.student.CV,
-            createTime: ''
+            opportunityID: ''
         }
-
-        this.resumePreview = this.application.resume;
-        this.CVPreview = this.application.coverLetter;
 
         this.isLoading = false;
     }
+
+    useDefaultFile(fileType: string){
+        switch (fileType) {
+          case "resume":
+            this.resumePreview = this.data.student.resume;
+            this.application.resume = this.data.student.resume;
+            break;
+          case "coverLetter":
+            this.CVPreview = this.data.student.CV;
+            this.application.coverLetter = this.data.student.CV;
+            break;
+        }
+      }
 
     onFilePicked(event: Event, fileType: string) {
         const file = (event.target as HTMLInputElement).files[0];
         let mimeType = file.type;
 
         if (mimeType.match(/application\/*/) == null) {
-            this.form.patchValue({ fileType: [] })
             this.snackBar.open(fileType + ' must be a .pdf, .doc, .docx, or google docs', 'Close', {
                 duration: 3000,
                 panelClass: 'error-snackbar'
@@ -104,12 +105,10 @@ export class submitAllApplicationComponent implements OnInit {
             case "resume":
                 this.application.resume = '';
                 this.resumePreview = '';
-                this.form.patchValue({ resume: [] })
                 break
             case "CV":
                 this.application.coverLetter = '';
                 this.CVPreview = '';
-                this.form.patchValue({ CV: [] })
                 break
         }
     }
@@ -127,7 +126,6 @@ export class submitAllApplicationComponent implements OnInit {
             this.data.optIds, this.application.resume, this.application.coverLetter)
             .then(data => {
                 this.dialogRef.close();
-                console.log(data)
 
                 // Send message to the corresponding faculty
                 // this.researchService.sendMessage();

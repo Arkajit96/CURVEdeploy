@@ -16,7 +16,7 @@ router.post("/createOpportunity", researchControllor.createOpportunity);
 router.get("/getOpportunities/",researchControllor.getOpportunities);
 
 // get opportunty by id 
-router.get("/getOptById/:optId",researchControllor.getOptById);
+router.get("/getOptByIds/",researchControllor.getOptByIds);
 
 // create new application 
 router.post("/createApplication",checkAuth, researchControllor.createApplication);

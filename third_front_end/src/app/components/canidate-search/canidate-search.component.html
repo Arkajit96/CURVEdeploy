@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="col col-2 img-col" style="text-align: center;">
                         <ngx-avatar name="{{person.first_name}} {{person.last_name}}" *ngIf="!person.image || person.image.substring(7,12) == 'dummy'"></ngx-avatar>
-                        <ngx-avatar src="person.image" *ngIf="person.image && person.image.substring(7,12) != 'dummy'"></ngx-avatar>
+                        <ngx-avatar src="{{person.image}}" *ngIf="person.image && person.image.substring(7,12) != 'dummy'"></ngx-avatar>
                     </div>
                     <div class="col col-8">
                         <div class="row">

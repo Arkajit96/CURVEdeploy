@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var async = require('async');
 
 // Models
 const Opportunity = require('../models/opportunity');
@@ -61,33 +62,50 @@ exports.getOpportunities = (req, res) => {
 }
 
 // Get opportunity by id
-exports.getOptById = (req, res) => {
-    Opportunity.findOne({ "_id": req.params.optId }, function (err, opt) {
+exports.getOptByIds = (req, res) => {
+    Opportunity.findById(req.query.optId, function (err, opt) {
         if (err) {
             res.status(500).json({
-                message: "Fetching opportunity failed!"
+                message: "Fetching opportunity failed!",
+                opt: new Opportunity(),
+                application: new Application()
             });
         } else {
-            res.status(200).json({
-                message: "Opportunity fetched successfully",
-                opt: opt
-            })
+            Application.findOne({ studentID: req.query.studentId, opportunityID: req.query.optId })
+                .then(application => {
+                    console.log(application);
+                    res.status(200).json({
+                        message: "Opportunity fetched successfully",
+                        opt: opt,
+                        application: application
+                    })
+                })
+
         }
     });
 }
 
-// create new application
+// create new application (or update if it is already there)
 exports.createApplication = (req, res) => {
-    const application = new Application({
+    const filter = {
         studentID: req.body.studentID,
-        opportunityID: req.body.opportunityID,
+        opportunityID: req.body.opportunityID
+    };
+
+    const update = {
         resume: req.body.resume,
         coverLetter: req.body.coverLetter,
-        createTime: new Date().toLocaleString()
-    })
+        updateTime: new Date().toLocaleString()
+    };
 
-    console.log(application);
-    Application.create(application, function (err, newApplication) {
+    const config = {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true
+    };
+
+    // if find the old application then update the files and time
+    Application.findOneAndUpdate(filter, update, config, (err, Application) => {
         if (err) {
             console.log(err);
             res.status(500).json({
@@ -95,13 +113,57 @@ exports.createApplication = (req, res) => {
                 applicationID: ''
             });
         } else {
+            console.log(Application);
             res.status(200).json({
                 message: 'Application create successful',
-                applicationID: newApplication._id
+                applicationID: Application._id
             })
         }
     })
 }
+
+// create multiple applications (or update if it is already there)
+exports.createMultiApplications = (req, res) => {
+    let filter = {
+        studentID: req.body.studentID
+    };
+
+    const update = {
+        resume: req.body.resume,
+        coverLetter: req.body.coverLetter,
+        updateTime: new Date().toLocaleString()
+    };
+
+    const config = {
+        upsert: true,
+        setDefaultsOnInsert: true
+    };
+
+    async.each(req.body.opportunityIDs, (optId, cb) => {
+        filter.opportunityID = optId;
+        Application.findOneAndUpdate(filter, update, config, (err, Application) => {
+            if (err) {
+                return cb(err);
+
+            } else {
+                return cb()
+
+            }
+        })
+    }, err => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Applications create failed!"
+            });
+        } else {
+            res.status(200).json({
+                message: 'Application create successful'
+            })
+        }
+    })
+}
+
 
 // upload file to application
 exports.uploadFile = (req, res) => {
@@ -157,31 +219,3 @@ exports.uploadFileMultiApp = (req, res) => {
             });
         });
 }
-
-// create multiple applications
-exports.createMultiApplications = (req, res) => {
-    let opportunityIDs = req.body.opportunityIDs;
-    let applications = opportunityIDs.map(function (item, index, input) {
-        return new Application({
-            studentID: req.body.studentID,
-            opportunityID: mongoose.Types.ObjectId(item),
-            resume: req.body.resume,
-            coverLetter: req.body.coverLetter,
-            createTime: new Date().toLocaleString()
-        })
-    })
-    console.log(applications);
-    Application.insertMany(applications, function (err, newApplications) {
-        if (err) {
-            console.log(err);
-            res.status(500).json({
-                message: "Applications create failed!",
-            });
-        } else {
-            res.status(200).json({
-                message: 'Applications create successful',
-            })
-        }
-    })
-}
-

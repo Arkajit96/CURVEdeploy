@@ -42,7 +42,7 @@ const routes: Routes = [
     path: 'shoppingCart', component: ShoppingCartComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'candidate/:id', component: CandidateComponent, canActivate: [AuthGuard]
+    path: 'candidate', component: CandidateComponent, canActivate: [AuthGuard]
   },
   {
     path: '', redirectTo: 'login', pathMatch: 'full'

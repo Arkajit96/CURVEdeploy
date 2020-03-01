@@ -15,8 +15,8 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./student-profile.component.scss']
 })
 export class StudentProfileComponent implements OnInit {
-  loadingPage = true;
-  student_id:any
+  isloadingPage = true;
+  // student_id:any
   student:any
   form: FormGroup
   fileToUpload: File = null;
@@ -45,7 +45,7 @@ export class StudentProfileComponent implements OnInit {
   ngOnInit() {
     this.student = this.studentService.getCurrentStudentUser();
     this.newSummary = this.student.summary;
-    this.loadingPage = false;
+    this.isloadingPage = false;
 
     // this.route.params.subscribe((data) => {
     //   this.student_id = data.id;

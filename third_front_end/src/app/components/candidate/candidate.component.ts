@@ -8,9 +8,8 @@ import { FacultyService } from 'src/app/services/faculty.service';
   styleUrls: ['./candidate.component.scss']
 })
 export class CandidateComponent implements OnInit, AfterViewInit {
-  loadingPage = true;
+  isloadingPage = true;
   loadingSearch = false;
-  facultyId: String;
   faculty: any;
   searchQuery = '';
 
@@ -23,18 +22,20 @@ export class CandidateComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe((data) => {
-      this.facultyId = data.id;
-      this.facultyService.loadFaculty(this.facultyId)
-      .then((res) => {
-        this.faculty = res;
-        this.loadingPage = false;
-        setTimeout(this.setListeners, 1000);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-    })
+    this.faculty = this.facultyService.getCurrentFacultyUser();
+    this.isloadingPage = false;
+    // this.route.params.subscribe((data) => {
+    //   this.facultyId = data.id;
+    //   this.facultyService.loadFaculty(this.facultyId)
+    //   .then((res) => {
+    //     this.faculty = res;
+    //     this.loadingPage = false;
+    //     setTimeout(this.setListeners, 1000);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   })
+    // })
   }
 
   ngAfterViewInit() {

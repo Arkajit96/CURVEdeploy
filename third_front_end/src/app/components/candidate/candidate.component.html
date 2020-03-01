@@ -1,12 +1,12 @@
 <app-header></app-header>
 
-<div class="row justify-content-sm-center" *ngIf="loadingPage">
+<div class="row justify-content-sm-center" *ngIf="isloadingPage">
     <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
     </div>
 </div>
 
-<div class="container-fluid" *ngIf="!loadingPage">
+<div class="container-fluid" *ngIf="!isloadingPage">
     <div class="row justify-content-sm-center">
         <div class="col col-lg-3 col-xs-0">
             <div class="profile-card">

@@ -3,5 +3,5 @@ export interface Application{
     opportunityID:string;
     resume:string;
     coverLetter:string;
-    createTime:string;
+    updateTime:string;
 }

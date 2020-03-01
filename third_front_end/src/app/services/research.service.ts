@@ -52,13 +52,17 @@ export class ResearchService {
     return this.opportunitiesUpdated.asObservable();
   }
 
-  getOptById(optId: string): Promise<Opportunity> {
+  getOptByIds(studentId:string, optId: string): Promise<any> {
+    const queryParams = `?studentId=${studentId}&optId=${optId}`; 
     return new Promise((res, rej) => {
-      this.http.get<{ message: string; opt: Opportunity; }>(
-        '/api/research/getOptById/' + optId
+      this.http.get<{ message: string; opt: Opportunity; application: Application }>(
+        '/api/research/getOptByIds/' + queryParams
       ).toPromise().then(
         data => {
-          res(data.opt);
+          res({
+            currentOpt: data.opt,
+            application: data.application
+          });
         },
         error => {
           this.flashMessage.show(error.error.message, {
@@ -149,7 +153,7 @@ export class ResearchService {
     //     formData.append('opportunityIDs[]', optId);
     //   })
     // }
-    
+
     let optIdList = [];
     if (Array.isArray(opportunityIDs)) {
       opportunityIDs.forEach(optId => {
@@ -161,7 +165,7 @@ export class ResearchService {
       resume: resume,
       coverLetter: coverLetter,
       studentID: studentID,
-      opportunityIDs:optIdList
+      opportunityIDs: optIdList
     }
 
     return new Promise((res, rej) => {

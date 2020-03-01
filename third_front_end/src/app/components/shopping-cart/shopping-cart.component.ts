@@ -112,27 +112,29 @@ export class ShoppingCartComponent implements OnInit {
 
     // Find opt by Id
     findOptAndOpenDialog(optID: string) {
-        this.researchService.getOptById(optID)
+        this.researchService.getOptByIds(this.student._id, optID)
             .then(data => {
                 this.openApplicationDialog(data);
             });
     }
 
     // Handle application submit dialog
-    openApplicationDialog(currentOpt: any) {
+    openApplicationDialog(data: any) {
 
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.autoFocus = false;
+        dialogConfig.width = "200em";
         dialogConfig.data = {
-            opt: currentOpt,
-            student: this.student
+            opt: data.currentOpt,
+            student: this.student,
+            application: data.application
         }
 
         let dialogRef = this.dialog.open(submitApplicationComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
-                this.deleteItem(currentOpt._id);
+                this.deleteItem(data.currentOpt._id);
                 this.snackbar.open('Application submitted', 'Close', {
                     duration: 3000,
                     panelClass: 'success-snackbar'
@@ -182,6 +184,7 @@ export class ShoppingCartComponent implements OnInit {
             const dialogConfig = new MatDialogConfig();
 
             dialogConfig.autoFocus = false;
+            dialogConfig.width = "200em";
             dialogConfig.data = {
                 optIds: optIdList,
                 student: this.student

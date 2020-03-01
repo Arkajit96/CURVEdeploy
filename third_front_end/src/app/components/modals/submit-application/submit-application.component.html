@@ -23,39 +23,48 @@
       <p> <strong> Required documents: </strong></p>
     </mat-list-item>
   </mat-list>
-  <form [formGroup]="form">
+  <form>
     <h3>1. Resume</h3>
     <div *ngIf="resumePreview && resumePreview != ''">
       <div class="alert alert-success alert-dismissible">
         <button class="close" data-dismiss="alert" aria-label="close" (click)="deleteFile('resume')">&times;</button>
-        <strong> Resume upload success!</strong> You can <a [href]="resumePreview" class="alert-link">download this file</a>.
+        <strong> Resume upload success!</strong> You can <a [href]="resumePreview" class="alert-link">download this
+          file</a>.
       </div>
     </div>
     <div class="row">
-      <button mat-stroked-button color='primary' type="button" (click)="ResumePicker.click()">
+      <button mat-stroked-button color='primary' type="button" style="margin:0.5rem" (click)="ResumePicker.click()">
         <mat-icon>add_circle</mat-icon>
         <span> upload resume</span>
       </button>
-      <input type="file" #ResumePicker style="display: none;" 
-      (change)="onFilePicked($event, 'resume')" formControlName="resume"
-      accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
+      <button mat-stroked-button color='primary' type="button" style="margin:0.5rem" (click)="useDefaultFile('resume')">
+        <mat-icon>restore</mat-icon>
+        <span> use default resume</span>
+      </button>
     </div>
+    <input type="file" #ResumePicker style="display: none;" (change)="onFilePicked($event, 'resume')"
+      accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
     <h3>2. cover of letter</h3>
     <div *ngIf=" CVPreview && CVPreview != '' ">
       <div class="alert alert-success alert-dismissible">
         <button class="close" data-dismiss="alert" aria-label="close" (click)="deleteFile('CV')">&times;</button>
-        <strong> Cover letter upload success!</strong> You can <a [href]="CVPreview" class="alert-link">download this file</a>.
+        <strong> Cover letter upload success!</strong> You can <a [href]="CVPreview" class="alert-link">download this
+          file</a>.
       </div>
     </div>
     <div class="row">
-      <button mat-stroked-button color='primary' type="button" (click)="CVPicker.click()">
+      <button mat-stroked-button color='primary' type="button" style="margin:0.5rem" (click)="CVPicker.click()">
         <mat-icon>add_circle</mat-icon>
         <span> upload cover of letter</span>
       </button>
-      <input type="file" #CVPicker style="display: none;" 
-      (change)="onFilePicked($event, 'coverLetter' )" formControlName="CV"
-      accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
+      <button mat-stroked-button color='primary' type="button" style="margin:0.5rem"
+        (click)="useDefaultFile('coverLetter')">
+        <mat-icon>restore</mat-icon>
+        <span> use default cover of letter</span>
+      </button>
     </div>
+    <input type="file" #CVPicker style="display: none;" (change)="onFilePicked($event, 'coverLetter' )"
+      accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
     <!-- <h3>3. letter of recommendation</h3>
     <div class="row">
       <button mat-stroked-button color='primary' type="button" (click)="filePicker.click()">
@@ -75,6 +84,6 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button (click)="close()" >Cancel</button>
-  <button mat-raised-button color="primary" (click)="onSubmitApplication()" >submit</button>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmitApplication()">submit</button>
 </mat-dialog-actions>

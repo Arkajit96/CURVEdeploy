@@ -11,7 +11,7 @@ var applicationSchema = new mongoose.Schema({
     },
     resume: { type: String, default: ''},
     coverLetter: { type: String, default: ''},
-    createTime: { type: String, default: new Date().toLocaleString()}
+    updateTime: { type: String, default: new Date().toLocaleString()}
 });
 
 
