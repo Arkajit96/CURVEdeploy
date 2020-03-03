@@ -27,3 +27,17 @@
     top:1px;
     transition: .3s;
 }
+
+.summary-text {
+	width: 100%;
+	margin-left:2rem;
+}
+
+* {
+	overflow: hidden;
+}
+
+body {
+	overflow: visible!important;
+	padding-bottom: 1rem;
+}

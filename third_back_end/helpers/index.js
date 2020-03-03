@@ -61,8 +61,29 @@ Helpers.deleteS3 = (file) => {
         Bucket: 'curve-public-bucket',
         Key: file[3]
     }
-    s3.deleteObject(params, (err, data) => {
-        if(err) { console.log(err); return {error: err} }
+    if(file[3] != 'default_profile.png'){
+        s3.deleteObject(params, (err, data) => {
+            if(err) { console.log(err); return {error: err} }
+        })
+    }
+}
+
+Helpers.findUsers = function(users) {
+    return new Promise(async (res, rej) => {
+        try {
+            let returnArr = [];
+            for(var i = 0; i < users.length; i++) {
+                let user = await Faculty.findOne({user_id: users[i]});
+                if(!user) {
+                    user = await Student.findOne({user_id: users[i]});
+                }
+                returnArr.push(user);
+            }
+            console.log(returnArr);
+            res(returnArr);
+        } catch(e) {
+            rej(e);
+        }
     })
 }
 

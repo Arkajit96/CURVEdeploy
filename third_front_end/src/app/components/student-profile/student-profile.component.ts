@@ -37,8 +37,8 @@ export class StudentProfileComponent implements OnInit {
 
    testViewProfile() {
      this.dialog.open(ViewStudentProfileComponent, {
-       data: {Data: this.student},
-     
+       data: {id: this.student.user_id, entity: 'student'},
+       height: '80vh'
      })
    }
   
@@ -46,22 +46,6 @@ export class StudentProfileComponent implements OnInit {
     this.student = this.studentService.getCurrentStudentUser();
     this.newSummary = this.student.summary;
     this.isloadingPage = false;
-
-    // this.route.params.subscribe((data) => {
-    //   this.student_id = data.id;
-    //   this.studentService.getStudentByUserId(this.student_id)
-    //   .then((res) => {
-    //     this.student = res;
-    //     this.newSummary = this.student.summary;
-    //     this.loadingPage = false;
-    //   })
-    //   .catch((error) => {
-    //     this.snackbar.open(error.error.message, 'Close', {
-    //       duration: 3000,
-    //       panelClass: 'error-snackbar'
-    //     })
-    //   })
-    // })
   }
   
   createForm() {

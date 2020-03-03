@@ -14,7 +14,6 @@ const checkAuth = require("../middleware/check-auth");
 // Controllor
 const studentControllor = require('../controller/student');
 
-
 const uploadImage = require("../middleware").imgUpload;
 const uploadFile = require("../middleware").fileUpload;
 
@@ -58,47 +57,47 @@ router.get("/institution/:id", checkAuth, function(req, res, next) {
 })
 
 
-const mongoAdd = 'mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve';
-const connect = mongoose.createConnection(mongoAdd);
-let gfs;
-connect.once('open',() => {
-    gfs = Grid(connect.db, mongoose.mongo);
-    gfs.collection('uploads');
-})
-const storage = new GridFsStorage({
-    url: mongoAdd,
-    file: (req, file) => {
-      console.log(req.params.id)
-      user_id = req.params.id
-      return new Promise((resolve, reject) => {
-        console.log(file.originalname);
-        crypto.randomBytes(16, (err, buf) => {
-          if (err) {
-            return reject(err);
-          }
-          gfs.files.find({"metadata.studentID": user_id}).toArray(function(err, files){
-            gfs.files.deleteOne({"metadata.studentID": user_id});
-        });
-          const filename = buf.toString('hex') + path.extname(file.originalname);
-          const studentID = user_id
-          const fileInfo = {
-            filename: filename,
-            bucketName: req.params.filename,
-            metadata: {
-              studentID: user_id
-            }
-          };
-          resolve(fileInfo, studentID);
-        });
-      });
-    }
-    });
-  const upload = multer({ storage });
-  router.post("/edit/resumes/:filename/:id", upload.single('file'),(req,res) => {
-    //res.json({file: req.file});
-    console.log(1111);
-    res.json({'message':'upload successfully'});
-});
+// const mongoAdd = 'mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve';
+// const connect = mongoose.createConnection(mongoAdd);
+// let gfs;
+// connect.once('open',() => {
+//     gfs = Grid(connect.db, mongoose.mongo);
+//     gfs.collection('uploads');
+// })
+// const storage = new GridFsStorage({
+//     url: mongoAdd,
+//     file: (req, file) => {
+//       console.log(req.params.id)
+//       user_id = req.params.id
+//       return new Promise((resolve, reject) => {
+//         console.log(file.originalname);
+//         crypto.randomBytes(16, (err, buf) => {
+//           if (err) {
+//             return reject(err);
+//           }
+//           gfs.files.find({"metadata.studentID": user_id}).toArray(function(err, files){
+//             gfs.files.deleteOne({"metadata.studentID": user_id});
+//         });
+//           const filename = buf.toString('hex') + path.extname(file.originalname);
+//           const studentID = user_id
+//           const fileInfo = {
+//             filename: filename,
+//             bucketName: req.params.filename,
+//             metadata: {
+//               studentID: user_id
+//             }
+//           };
+//           resolve(fileInfo, studentID);
+//         });
+//       });
+//     }
+//     });
+//   const upload = multer({ storage });
+//   router.post("/edit/resumes/:filename/:id", upload.single('file'),(req,res) => {
+//     //res.json({file: req.file});
+//     console.log(1111);
+//     res.json({'message':'upload successfully'});
+// });
 
 
 router.get("/transcript/:filename/:id", (req, res) => {
@@ -130,23 +129,6 @@ router.get("/transcript/:filename/:id", (req, res) => {
     });   
 });
 
-
-
-// router.put("/edit/:id", checkAuth, function(req, res) {
-//     console.log(typeof req.body);
-//     console.log(req.body);
-//     console.log(req.params.id);
-    
-//     Student.findByIdAndUpdate(req.params.id, req.body, function(err, updatedStudent) {
-//         if (err) {
-//             console.log('error');
-//             res.send({'message':'something wrong'});
-//         } else {
-//             res.send({'message':'successful', 'id': updatedStudent.user_id});
-//         }
-//     });
-// })
-
 router.post("/update", checkAuth, async function(req, res) {
   try {
     const updates = {
@@ -157,10 +139,10 @@ router.post("/update", checkAuth, async function(req, res) {
       major: req.body.major,
       minor: req.body.minor,
       email: req.body.email,
-      phone: req.body.phone
+      phone: req.body.phone,
+      graduation_class: req.body.class
     }
     const student = await Student.findOneAndUpdate({user_id: req.body.user_id}, updates);
-    
     student.first_name = req.body.first_name;
     student.last_name = req.body.last_name;
     student.gender = req.body.gender;
@@ -169,6 +151,7 @@ router.post("/update", checkAuth, async function(req, res) {
     student.minor = req.body.minor;
     student.email = req.body.email;
     student.phone = req.body.phone;
+    student.graduation_class = req.body.class;
 
     res.send(student); 
   } catch(e) {
@@ -223,7 +206,7 @@ router.post("/upload/profilePic", checkAuth, uploadImage.single('image'), async 
 
 router.post("/upload/file", checkAuth, uploadFile.single('file'), async function(req, res) {
   let id = mongoose.Types.ObjectId(req.body.id);
-
+  
   try {
     let fileType = req.body.fileType; // Either cv or resume
     student = {};
@@ -269,7 +252,7 @@ router.post("/update/summary", checkAuth, async function(req, res) {
 // UPDATE DOCUMENTS TO MATCH MODEL
 router.post("/update/model", checkAuth, async function(req, res) {
   try {
-    await Student.updateMany({}, {$set: {cv: ''}});
+    await Student.updateMany({}, {$set: {image: 'https://curve-public-bucket.s3.us-east-2.amazonaws.com/default_profile.png'}});
     res.status(200).send('Updated');
   } catch(e) {
     res.status(400).send(e);

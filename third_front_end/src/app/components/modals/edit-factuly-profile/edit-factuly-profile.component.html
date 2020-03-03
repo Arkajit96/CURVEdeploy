@@ -1,5 +1,5 @@
 <div class="container" *ngIf="!loading">
-    <form [formGroup]="studentForm" autocomplete="off" (change)="setChanged()">
+    <form [formGroup]="facultyForm" (change)="setChanged()">
         <mat-tab-group class="mat-tabs">
             <mat-tab label="Personal Info">
                 <div class="row first-row">
@@ -17,70 +17,61 @@
                 <div class="row">
                     <div class="col-6 col-xs-12">
                         <mat-form-field>
-                            <input matInput formControlName="gender" placeholder="Gender">
+                            <input matInput formControlName="gender" placeholder="Gender"> 
                         </mat-form-field>
                     </div>
                     <div class="col-6 col-xs-12">
                         <mat-form-field>
-                            <input matInput [matDatepicker]="picker" formControlName="dob" placeholder="Date of birth">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6 col-xs-12">
-                        <mat-form-field>
-                            <input matInput formControlName="class" placeholder="Graduation Class">
+                            <input matInput formControlName="phone" placeholder="Phone Number"> 
                         </mat-form-field>
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="Account Info">
+            <mat-tab label="Account Info" >
                 <div class="row first-row">
-                    <div class="col-6 col-12-xs">
+                    <div class="col-6 col-xs-12">
                         <mat-form-field>
-                            <input matInput formControlName="major" placeholder="Major">
+                            <input matInput formControlName="email" placeholder="Email"> 
                         </mat-form-field>
                     </div>
-                    <div class="col-6 col-12-xs">
+                    <div class="col-6 col-xs-12">
                         <mat-form-field>
-                            <input matInput formControlName="minor" placeholder="Minor">
+                            <input matInput formControlName="education" placeholder="Education"> 
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-6 col-xs-12">
                         <mat-form-field>
-                            <input matInput formControlName="email" placeholder="Email">
+                            <input matInput formControlName="department" placeholder="Department">
                         </mat-form-field>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 col-xs-12">
                         <mat-form-field>
-                            <input matInput formControlName="phone" placeholder="Phone">
+                            <input matInput formControlName="office" placeholder="Office">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <mat-form-field>
+                            <input matInput formControlName="experience" placeholder="Research Experience">
                         </mat-form-field>
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="Documents">
+            <mat-tab label="Profile Picture">
                 <div class="container">
                     <div class="row first-row">
                             <label for="profilePicInput">Profile Picture:</label>
                             <input type="file" class="profile-pic" id="profilePicInput"
                                    (change)="newPicture($event)" 
                                    placeholder="Profile Picture" 
-                                   formControlName="profilePic" 
+                                   formControlName="image" 
                                    accept="image/x-png,image/jpeg">
                     </div>
                     <div class="row first-row" *ngIf="previewImg">
                         <img *ngIf="previewImg" [src]="previewImg" class="preview-img">
-                    </div>
-                    <div class="row first-row">
-                        <label for="resumeInput">Resume</label>
-                        <input type="file" id="resumeInput"
-                                (change)="newResume($event)"
-                                formControlName="resume"
-                                accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.google-apps.document">
                     </div>
                 </div>
             </mat-tab>
@@ -90,8 +81,4 @@
         <button mat-raised-button color="primary" (click)="submit()">Save</button>
         <button mat-raised-button color="warn" (click)="close()">Close</button>
     </div>
-</div>
-
-<div class="container" *ngIf="loading">
-    <mat-spinner></mat-spinner>
 </div>

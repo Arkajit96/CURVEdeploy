@@ -15,7 +15,7 @@
                         <mat-spinner></mat-spinner>
                     </div>
                     <h4 id = "name">{{student.first_name}} {{student.last_name}}</h4>
-                    <div class = "caption-text">Class of {{student.graduation_class}}</div>
+                    <div class = "caption-text" *ngIf="student.graduation_class">Class of {{student.graduation_class}}</div>
 
                     <div class = "profile-item">
                         <h6>Majors</h6>

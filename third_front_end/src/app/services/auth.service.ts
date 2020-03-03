@@ -114,7 +114,6 @@ export class AuthService {
             );
             this.saveAuthData(token, expirationDate, this.userId, this.entity);
             this.chatService.connectToSocket();
-            // save user profile
             if (this.entity === 'student') {
               this.studentService.LogInAsStudent(this.userId)
                 .then(res => {

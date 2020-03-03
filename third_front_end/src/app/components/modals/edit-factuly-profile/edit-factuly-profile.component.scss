@@ -1,0 +1,32 @@
+.mat-tabs, mat-tab, .row, .container-fluid, mat-form-field, form {
+    overflow-x: hidden!important;
+}
+
+.container {
+    overflow-x: hidden!important;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+input {
+    width: 100%;
+}
+
+.first-row {
+    margin-top: .5rem;
+}
+
+::ng-deep * {
+    overflow-x: hidden!important;
+}
+
+.preview-img {
+    max-height: 250px;
+    max-width: 250px;
+}
+
+button {
+    margin: .5rem;
+}

@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import {AuthService} from '../../services/auth.service';
 import {HeaderService} from '../../services/header.service';
 import { ChatService } from 'src/app/services/chat.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +21,8 @@ export class HeaderComponent implements OnInit, OnDestroy{
   private authListenerSubs: Subscription;
   constructor(private authService: AuthService, 
               private headerService: HeaderService,
-              private chatService: ChatService) { }
+              private chatService: ChatService,
+              private router: Router) { }
 
   // ngOnInit() {
 
@@ -55,6 +57,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
     }
   }
 
+  navigateToNotifications() {
+    this.router.navigate(['/notifications/' + this.userId])
+  }
 
   onLogout() {
     this.authService.logout();

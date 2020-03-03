@@ -20,7 +20,7 @@ var FacultySchema = new mongoose.Schema({
 	department: { type: String, default: ''},
 	education: { type: String, default: ''},
 	experience: { type: String, default: ''},
-	image: { type: String, default: ''},
+	image: { type: String, default: 'https://curve-public-bucket.s3.us-east-2.amazonaws.com/default_profile.png'},
 	interests: [String],
 	available: { type: Boolean, default: true},
 	opportunity:{

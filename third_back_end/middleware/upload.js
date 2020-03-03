@@ -14,8 +14,10 @@ aws.config.update(
 
 const s3 = new aws.S3();
 
-
 const imgFilter = (req, file, cb) => {
+    console.log('img filter');
+    console.log(file);
+    console.log(req);
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true)
     } else {
@@ -32,7 +34,9 @@ let imgUpload = multer({
             cb(null, {fieldName: file.fieldname});
         },
         key: function (req, file, cb) {
-            cb(null, Date.now().toString() + '.' + mime.extension(file.mimetype));
+            console.log(file);
+            // cb(null, Date.now().toString() + '.' + mime.extension(file.mimetype));
+            cb(null, Date.now().toString() + '/' + file.originalname);
         }
     })
 });
@@ -45,7 +49,7 @@ let fileUpload = multer({
             cb(null, {fieldName: file.fieldname});
         },
         key: function (req, file, cb) {
-            cb(null, Date.now().toString() + '.' + mime.extension(file.mimetype));
+            cb(null, Date.now().toString() + '/' + file.originalname);
         }
     })
 });

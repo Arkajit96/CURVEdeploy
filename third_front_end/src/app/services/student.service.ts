@@ -121,7 +121,8 @@ export class StudentService {
         major: form.major.value,
         minor: form.minor.value,
         phone: form.phone.value,
-        email: form.email.value
+        email: form.email.value,
+        class: form.class.value
       }
 
       this.http.post('/api/student/update', updates).subscribe(
@@ -235,4 +236,5 @@ export class StudentService {
         )
     })
   }
+
 }
