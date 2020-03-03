@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PageEvent, MatDialog, MatDialogConfig } from "@angular/material";
-import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -36,7 +35,6 @@ export class ShoppingCartComponent implements OnInit {
     dataSource = new MatTableDataSource<Faculty>([]);
     selection = new SelectionModel<Faculty>(true, []);
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
 
 
     // columns that we want to display
@@ -61,9 +59,6 @@ export class ShoppingCartComponent implements OnInit {
 
                 //add pagenation
                 this.dataSource.paginator = this.paginator;
-
-                //add sorting
-                this.dataSource.sort = this.sort;
 
                 this.isLoading = false;
             })

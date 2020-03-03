@@ -3,7 +3,7 @@ import { PageEvent, MatDialog, MatDialogConfig } from "@angular/material";
 import { Subscription } from "rxjs";
 import { MatSnackBar } from '@angular/material';
 
-//Modals
+// Components
 import { submitApplicationComponent } from '../modals/submit-application/submit-application.component'
 import { ViewStudentProfileComponent } from '../modals/view-student-profile/view-student-profile.component'
 
@@ -105,7 +105,6 @@ export class ResearchComponent implements OnInit, OnDestroy {
           this.searchResults = res;
           this.searchQuery = ''
           this.filter = 'People';
-          console.log(this.searchResults);
           this.loadingSearch = false;
         })
         .catch((e) => {

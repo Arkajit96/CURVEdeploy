@@ -11,7 +11,7 @@
         <h3>No applications have been saved</h3>
     </div>
     <div *ngIf="shopping_cart.length > 0">
-        <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
             <!-- Checkbox Column -->
             <ng-container matColumnDef="select">

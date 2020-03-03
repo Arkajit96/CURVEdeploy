@@ -6,6 +6,9 @@ var passport = require("passport");
 var User = require("../models/User");
 var Faculty = require("../models/faculty");
 
+//Controller
+const facultyController = require('../controller/faculty');
+
 //middleware
 const checkAuth = require("../middleware/check-auth");
 
@@ -79,5 +82,8 @@ router.put("/edit/:id", checkAuth, function (req, res) {
     });
 })
 
+
+// change availability
+router.put("/changeAvalibility", checkAuth, facultyController.changeAvalibility )
 
 module.exports = router;

@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 var async = require('async');
 
 // Models
+const Student = require('../models/student');
 const Opportunity = require('../models/opportunity');
 const Application = require('../models/application');
 
@@ -80,6 +81,47 @@ exports.getOptByIds = (req, res) => {
                         application: application
                     })
                 })
+
+        }
+    });
+}
+
+// Get opportunity by id
+exports.getCandidates = (req, res) => {
+    Application.find({ opportunityID: req.params.id }, function (err, applications) {
+        if (err) {
+            res.status(500).json({
+                message: "Fetching candidates failed!",
+                tableRow: []
+            });
+        } else {
+            async.each(applications, (application, cb) => {
+                Student.findById(application.studentID, (err, student) => {
+                    if (err) {
+                        return cb(false);
+
+                    } else {
+                        data = {
+                            student: student,
+                            application: application
+                        }
+                        return cb(data)
+
+                    }
+                })
+            }, (data) => {
+                if (!data) {
+                    res.status(500).json({
+                        message: "Fetching candidates failed!",
+                        tableRow: []
+                    });
+                } else {
+                    res.status(200).json({
+                        message: 'Fetching candidates successful',
+                        tableRow: [data]
+                    })
+                }
+            })
 
         }
     });

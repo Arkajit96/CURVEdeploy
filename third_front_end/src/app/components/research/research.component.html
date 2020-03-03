@@ -60,7 +60,7 @@
         <div class="col col-12" style="text-align: center; margin-bottom: 1rem;">
             Filter by:
             <button class="btn btn-outline-primary" type="button" (click)="filterBy('People')">People</button>
-            <button class="btn btn-outline-primary" type="button" (click)="filterBy('Department')">Department</button>
+            <button class="btn btn-outline-primary" type="bu`11tton" (click)="filterBy('Department')">Department</button>
         </div>
         <div class="card" *ngIf="filter == 'People' && searchResults.names.length > 0">
             <ul class="list-group list-group-flush">
@@ -87,7 +87,7 @@
                             <button mat-fab color="warn" (click)="ViewProfile()">
                                 <mat-icon>search</mat-icon>
                             </button>
-                            <button [disabled]="!person.opportunity" mat-fab color="primary"
+                            <button [disabled]="!person.opportunity || !person.available " mat-fab color="primary"
                                 (click)="addToShoppingCart(person)">
                                 <mat-icon>add</mat-icon>
                             </button>

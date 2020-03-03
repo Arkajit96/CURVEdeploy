@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 import { FlashMessagesService } from 'angular2-flash-messages';
 
 //Models
+import { Student } from '../shared/student';
 import { Opportunity } from '../shared/opportunity';
 import { Application } from '../shared/application';
 
@@ -50,6 +51,25 @@ export class ResearchService {
 
   getopportunitiesUpdatedListener() {
     return this.opportunitiesUpdated.asObservable();
+  }
+
+  getCandidates(optId: string): Promise<any> {
+    return new Promise((res, rej) => {
+      this.http.get<{ message: string; tableRow:any }>(
+        '/api/research/getCandidates/' + optId
+      ).toPromise().then(
+        data => {
+          res(data.tableRow);
+        },
+        error => {
+          this.flashMessage.show(error.error.message, {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
+          rej(error);
+        }
+      )
+    });
   }
 
   getOptByIds(studentId:string, optId: string): Promise<any> {
