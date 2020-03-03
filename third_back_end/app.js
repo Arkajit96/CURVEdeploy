@@ -26,6 +26,7 @@ const indexRoutes = require("./routes/index"),
       studentRoutes = require("./routes/student"),
       facultyRoutes = require("./routes/faculty"),
       messageRoutes = require("./routes/messages")
+      researchRoutes = require("./routes/research");
  
 // let uri = "mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve?retryWrites=true";
 

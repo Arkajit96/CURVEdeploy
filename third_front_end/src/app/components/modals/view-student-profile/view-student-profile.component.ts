@@ -31,7 +31,7 @@ export class ViewStudentProfileComponent implements OnInit {
 
 
   loadStudent() {
-    this.studentService.getStudent(this.id)
+    this.studentService.getStudentByUserId(this.id)
     .then((res) => {
       console.log(res);
       this.student = res.student;
