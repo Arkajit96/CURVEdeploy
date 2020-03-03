@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   }
 
   navigateToNotifications() {
-    this.router.navigate(['/notifications/' + this.userId])
+    this.router.navigate(['/notifications/' + this.authService.getUserId()]);
   }
 
   onLogout() {

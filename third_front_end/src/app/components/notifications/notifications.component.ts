@@ -45,7 +45,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked {
     if(!localStorage.getItem('student')){
       this.route.params.subscribe((data) => {
         this.student_id = data.id;
-        this.studentService.getStudent(this.student_id)
+        this.studentService.getStudentByUserId(this.student_id)
         .then((res) => {
           console.log(res);
           this.student = res.student;

@@ -64,7 +64,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ViewStudentProfileComponent,
     submitApplicationComponent,
     NotificationsComponent,
-    EditFactulyProfileComponent
+    EditFactulyProfileComponent,
     submitAllApplicationComponent
   ],
   imports: [
@@ -98,7 +98,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditStudentProfileComponent,
     ViewStudentProfileComponent,
     submitApplicationComponent,
-    EditFactulyProfileComponent
+    EditFactulyProfileComponent,
     submitAllApplicationComponent
   ]
 })

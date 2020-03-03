@@ -15,8 +15,9 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./faculty-profile.component.scss']
 })
 export class FacultyProfileComponent implements OnInit {
-  faculty_id:any;
   faculty:any;
+  fileToUpload: any;
+  loadingImg = false;
   constructor(public route:ActivatedRoute, 
     public http: HttpClient, 
     public router: Router,
@@ -26,16 +27,7 @@ export class FacultyProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.faculty = {
-      image: ""
-    };
-    this.route.params.subscribe((data) => {
-      this.faculty_id = data.id;
-      this.http.get("/api/faculty/" + this.faculty_id).subscribe((res:any) => {
-        this.faculty = res;
-        localStorage.setItem('faculty', JSON.stringify(this.faculty));
-      })
-    });
+    this.faculty = this.facultyService.getCurrentFacultyUser();
   }
   edit() {
     let dialog = this.dialog.open(EditFactulyProfileComponent, {
@@ -95,24 +87,8 @@ export class FacultyProfileComponent implements OnInit {
       let file = event.target.files[0];
       this.fileToUpload = event.target.files[0];
       console.log(this.fileToUpload);
-      this.form.get('avatar').setValue(file);
     }
   }
-
-  // edit() {
-  //   this.router.navigate(['/editFacultyProfile/'],
-  //     {
-  //       queryParams:
-  //         { faculty_id: this.faculty_id }
-        // {faculty_id: this.faculty._id, email: this.faculty.email,
-        // gender: this.faculty.gender, address: this.faculty.address, phone: this.faculty.phone, summary: this.faculty.research_summary,
-        // projects: this.faculty.current_projects,
-        // department: this.faculty.department, education: this.faculty.education, experience: this.faculty.experience, image: this.faculty.image,
-        // date_of_birth: this.faculty.date_of_birth, date_of_joining: this.faculty.date_of_joining, first_name: this.faculty.first_name, 
-        // middle_name: this.faculty.middle_name, last_name: this.faculty.last_name
-        // }
-  //     });
-  // }
 
   finishLoad() {
     this.loadingImg = false;
