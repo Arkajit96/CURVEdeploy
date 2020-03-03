@@ -33,6 +33,4 @@ var StudentSchema = new mongoose.Schema({
 	]
 });
 
-//StudentSchema.plugin(passportLocalMongoose);
-
 module.exports = mongoose.model("Student", StudentSchema);

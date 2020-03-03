@@ -15,8 +15,8 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./student-profile.component.scss']
 })
 export class StudentProfileComponent implements OnInit {
-  loadingPage = true;
-  student_id:any
+  isloadingPage = true;
+  // student_id:any
   student:any
   form: FormGroup
   fileToUpload: File = null;
@@ -43,20 +43,27 @@ export class StudentProfileComponent implements OnInit {
    }
   
   ngOnInit() {
-    this.route.params.subscribe((data) => {
-      this.student_id = data.id;
-      this.studentService.getStudent(this.student_id)
-      .then((res) => {
-        console.log(res);
-        this.student = res.student;
-        this.newSummary = res.student.summary;
-        this.loadingPage = false;
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-    })
+    this.student = this.studentService.getCurrentStudentUser();
+    this.newSummary = this.student.summary;
+    this.isloadingPage = false;
+
+    // this.route.params.subscribe((data) => {
+    //   this.student_id = data.id;
+    //   this.studentService.getStudentByUserId(this.student_id)
+    //   .then((res) => {
+    //     this.student = res;
+    //     this.newSummary = this.student.summary;
+    //     this.loadingPage = false;
+    //   })
+    //   .catch((error) => {
+    //     this.snackbar.open(error.error.message, 'Close', {
+    //       duration: 3000,
+    //       panelClass: 'error-snackbar'
+    //     })
+    //   })
+    // })
   }
+  
   createForm() {
     this.form = this.fb.group({
       name: ['', Validators.required],

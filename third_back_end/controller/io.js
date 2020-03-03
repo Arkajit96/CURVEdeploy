@@ -4,7 +4,7 @@ const ioListener = {};
 
 ioListener.setIO = function(io) {
     io.on('connection', (socket) => {
-        console.log('New socket connection');
+        // console.log('New socket connection');
     })
 }
 

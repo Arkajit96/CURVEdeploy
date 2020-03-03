@@ -153,13 +153,13 @@ export class EditStudentProfileComponent implements OnInit {
       dialogRef.afterClosed().subscribe(
         res => {
           if(res) {
-            this.dialogRef.close();
+            this.dialogRef.close({student: this.student, imgChanged: this.imgChanged});
           }
         }
       );
     }
     else {
-      this.dialogRef.close();
+      this.dialogRef.close({student: this.student, imgChanged: this.imgChanged});
     }
   }
 

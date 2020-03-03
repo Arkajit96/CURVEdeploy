@@ -1,30 +1,24 @@
-const Student = require('../models/student');
+var mongoose = require("mongoose");
+
+
+// Models
 const Faculty = require('../models/faculty');
-const Opportunities = require('../models/opportunities');
 
-exports.createOpportunities = (req, res) => {
-    const opportunities = new Opportunities({
-        name: req.body.name,
-        icon: req.body.icon,
-        school: req.body.school,
-        department: req.body.department,
-        address: req.body.address,
-        city: req.body.city,
-        state: req.body.state,
-        country: req.body.country,
-        expireTime: req.body.expireTime,
-        summary: req.body.summary,
-        // modifiy/add middleware for id
-        creator: req.body.id
-    });
+exports.changeAvalibility = (req, res) => {
 
-    Opportunities.create(opportunities,function(err, newOpp) {
-        if (err) {
-            console.log(err);
-            rej(error);
-          } else {
-            console.log(newOpp);
-            // res(newOpp);
-          }
-    });
+    Faculty.findOneAndUpdate({ user_id: req.body.id }, 
+        { available: req.body.available },(err, faculty) => {
+            if (err) {
+                console.log(err);
+                res.status(500).json({
+                    message: "Avalibility change failed!",
+                    available: faculty.available
+                });
+            } else {
+                res.status(200).json({
+                    message: 'Avalibility change successful',
+                    available: req.body.available
+                })
+            }
+        })
 }

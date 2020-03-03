@@ -1,32 +1,34 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent, MatDialog, MatDialogConfig } from "@angular/material";
-import { Subscription, fromEventPattern } from "rxjs";
+import { Subscription } from "rxjs";
+import { MatSnackBar } from '@angular/material';
 
-//Modals
-import{submitApplicationComponent} from '../modals/submit-application/submit-application.component'
+// Components
+import { submitApplicationComponent } from '../modals/submit-application/submit-application.component'
+import { ViewStudentProfileComponent } from '../modals/view-student-profile/view-student-profile.component'
 
 //Models
-import{Opportunity} from '../../shared/opportunity';
+import { Opportunity } from '../../shared/opportunity';
 
 //Service
-import {AuthService} from '../../services/auth.service';
 import { StudentService } from '../../services/student.service';
+import { ResearchService } from '../../services/research.service';
 
 @Component({
   selector: 'app-research',
   templateUrl: './research.component.html',
   styleUrls: ['./research.component.scss']
 })
-export class ResearchComponent implements OnInit, OnDestroy{
+export class ResearchComponent implements OnInit, OnDestroy {
 
-  isLoading = false;
+  isLoading = true;
 
   //Fields for opportunities
   opportunities: Opportunity[] = [];
   private opportunitiesSub: Subscription;
 
   //Fields for shopping cart
-  student:any;
+  student: any;
   private shopping_cart = [];
 
   // Pageinate
@@ -42,41 +44,53 @@ export class ResearchComponent implements OnInit, OnDestroy{
   loadingSearch = false;
 
   constructor(
-    private authService: AuthService,
+    private researchService: ResearchService,
     private studentService: StudentService,
+    private snackbar: MatSnackBar,
     private dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    this.isLoading = true;
+    // Directlt get student from the service
+    this.student = this.studentService.getCurrentStudentUser();
+    this.shopping_cart = this.student.shopping_cart;
 
-    // shopping cart part
-    const userId = this.authService.getUserId();
-    this.studentService.getStudentByUserId(userId)
-    .then((res) => {
-        this.student = res;
-        this.shopping_cart = this.student.shopping_cart;
-        console.log(this.student);
+    //lab part
+    this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
+    this.opportunitiesSub = this.researchService.getopportunitiesUpdatedListener()
+      .subscribe((data: { opportunities: Opportunity[]; count: number }) => {
+        this.totalNum = data.count;
+        this.opportunities = data.opportunities;
+      });
 
-        //lab part
-        this.studentService.getOppurtunities(this.numPerPage, this.currentPage);
-        this.opportunitiesSub = this.studentService.getopportunitiesUpdatedListener()
-        .subscribe((data: { opportunities:Opportunity[]; count: number }) => {
-            this.totalNum = data.count;
-            this.opportunities = data.opportunities;
-        });
-        
-        this.isLoading = false;
-    });
-    
+    this.isLoading = false;
+
+    // new opt part
+    // const userId = this.authService.getUserId();
+    // this.studentService.getStudentByUserId(userId)
+    // .then((res) => {
+    //     this.student = res;
+    //     this.shopping_cart = this.student.shopping_cart;
+
+    //     //lab part
+    //     this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
+    //     this.opportunitiesSub = this.researchService.getopportunitiesUpdatedListener()
+    //     .subscribe((data: { opportunities:Opportunity[]; count: number }) => {
+    //         this.totalNum = data.count;
+    //         this.opportunities = data.opportunities;
+    //     });
+
+    //     this.isLoading = false;
+    // });
+
 
     //search part
     // this.isLoading = true;
     let searchBar = document.getElementById("searchBar");
     let searchLink = document.getElementById('searchLink');
-    
+
     searchBar.addEventListener("keyup", (event) => {
-      if(event.keyCode === 13) {
+      if (event.keyCode === 13) {
         event.preventDefault();
         searchLink.click();
       }
@@ -84,19 +98,18 @@ export class ResearchComponent implements OnInit, OnDestroy{
   }
 
   search() {
-    if(this.searchQuery.trim() !== ''){
+    if (this.searchQuery.trim() !== '') {
       this.loadingSearch = true;
       this.studentService.search(this.searchQuery)
-      .then((res) => {
-        this.searchResults = res;
-        this.searchQuery = ''
-        this.filter = 'People';
-        console.log(this.searchResults);
-        this.loadingSearch = false;
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+        .then((res) => {
+          this.searchResults = res;
+          this.searchQuery = ''
+          this.filter = 'People';
+          this.loadingSearch = false;
+        })
+        .catch((e) => {
+          console.log(e);
+        })
     }
   }
 
@@ -108,22 +121,66 @@ export class ResearchComponent implements OnInit, OnDestroy{
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.numPerPage = pageData.pageSize;
-    this.studentService.getOppurtunities(this.numPerPage, this.currentPage);
+    this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
   }
 
-  // quick apply dialog
-     openApplicationDialog(index:number) {
-      const currentOpt = this.opportunities[index];
+  findOptAndOpenDialog(optID: string) {
+    this.researchService.getOptByIds(this.student._id, optID)
+      .then(data => {
+        this.openApplicationDialog(data);
+      });
+  }
 
-      const dialogConfig = new MatDialogConfig();
-  
-      dialogConfig.autoFocus = false;
-      dialogConfig.data = {
-        opt: currentOpt,
-        student:this.student
+  // Handle quick apply dialog
+  openApplicationDialog(data: any) {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = "200em";
+    dialogConfig.data = {
+      opt: data.currentOpt,
+      student: this.student,
+      application:data.application
+    }
+
+    let dialogRef = this.dialog.open(submitApplicationComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.snackbar.open('Application submitted', 'Close', {
+          duration: 3000,
+          panelClass: 'success-snackbar'
+        })
+
+        // Send message to the corresponding faculty
+        // this.researchService.sendMessage();
+
       }
-  
-      this.dialog.open(submitApplicationComponent, dialogConfig);
+    })
+  }
+
+  addToShoppingCart(person: any) {
+    if (this.student.shopping_cart.includes(person._id)) {
+      this.snackbar.open('Faculty ' + person.first_name + ' already added to the shopping cart', 'Close', {
+        duration: 3000,
+        panelClass: 'info-snackbar'
+      })
+      return;
+    }
+    this.studentService.addToShoppingCart(this.student.user_id, person._id)
+      .then(res => {
+        this.student = res.student;
+        this.shopping_cart = res.student.shopping_cart;
+        this.snackbar.open('Faculty ' + person.first_name + ' added to the shopping cart', 'Close', {
+          duration: 3000,
+          panelClass: 'success-snackbar'
+        })
+      });
+  }
+
+  ViewProfile() {
+    this.dialog.open(ViewStudentProfileComponent, {
+      data: { Data: this.student },
+    })
   }
 
 

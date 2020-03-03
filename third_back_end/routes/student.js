@@ -7,12 +7,12 @@ const User = require("../models/User");
 const Faculty = require("../models/faculty");
 const Student = require("../models/student");
 
-//Controllor
-const StudentControllor = require('../controller/student');
-
-//middleware
+// Middleware
 const checkAuth = require("../middleware/check-auth");
 // var middlewareObj = require("../middleware");
+
+// Controllor
+const studentControllor = require('../controller/student');
 
 
 const uploadImage = require("../middleware").imgUpload;
@@ -31,16 +31,14 @@ const addEsIndex = Helper.esSearch;
 const mongodb = require('mongodb');
 
 
-// get research opportunies 
-router.get("/getOpportunities/",StudentControllor.getOpportunities)
-
 // when user login, according to the userid to get the information of this student
 router.get("/:id", checkAuth, function(req, res, next) {
     // console.log("backend fatched user: " + req.userData.userId)
-    Student.findOne({"user_id": req.userData.userId}, function(err, student){
+    Student.findOne({"user_id": req.params.id}, function(err, student){
         if(err){
           res.status(500).json({
-            message: "Fetching student failed!"
+            message: "Fetching student failed!",
+            student: null
           });
         } else {
           res.status(200).json({
@@ -299,5 +297,14 @@ router.post("/add/index", checkAuth, async function(req, res) {
     res.status(400).send("Error");
   }
 })
+
+// add application to the shopping cart
+router.post("/addToShoppingCart",checkAuth,studentControllor.addToShoppingCart);
+
+// delete item from the cart
+router.post("/deleteItem",checkAuth,studentControllor.deleteItem);
+
+// get shopping cart
+router.post("/getShoppingCartItemsByIds",checkAuth,studentControllor.getShoppingCartItemsByIds);
 
 module.exports = router;
