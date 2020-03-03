@@ -13,17 +13,13 @@ const Faculty = require('../models/faculty')
 // MIDDLEWARE
 const checkAuth = require("../middleware/check-auth");
 
-router.get('/test', checkAuth, async (req, res) => {
-    res.send('OK');
-});
-
-router.post('/createNotification', async (req, res) => {
+router.post('/createNotification', checkAuth, async (req, res) => {
     messageController.createNewNotifications(req.body.recipientId, req.body.senderId)
     .then((newNotification) => {res.send(newNotification)})
     .catch((e) => {res.send(e)});
 })
 
-router.post('/get/notification', async (req, res) => {
+router.post('/get/notification', checkAuth, async (req, res) => {
     try {
         let notifications = await Notifications.find({$or: [
             { sender: req.body.senderId, recipient: req.body.recipientId },
@@ -53,7 +49,7 @@ router.post('/sendMessage', checkAuth, async (req, res) => {
     }
 });
 
-router.post('/getMessages', async (req, res) => {
+router.post('/getMessages', checkAuth, async (req, res) => {
     const user1 = req.body.senderId;
     const user2 = req.body.recipientId;
     
@@ -68,7 +64,7 @@ router.post('/getMessages', async (req, res) => {
     }
 })
 
-router.get('/getInbox/:userid', async (req, res) => {
+router.get('/getInbox/:userid', checkAuth, async (req, res) => {
     console.log(req.params.userid);
     const userid = req.params.userid;
     try {

@@ -1,7 +1,7 @@
 <app-header></app-header>
 <body>
     <div class = "container-fluid">
-        <div class = "row justify-content-lg-center">
+        <div class = "row justify-content-sm-center">
             <div class = "col-lg-3 col-sm-4">
                 <div class = "profile-card">
                         <img src = "{{faculty.image}}" class = "pro-pic">
@@ -14,15 +14,11 @@
                         </div>
                         <div class = "profile-item">
                             <h6>Education</h6>
-                            <ul>
-                                <li>{{faculty.education}}</li>
-                            </ul>
+                            {{faculty.education}}
                         </div>
                         <div class = "profile-item">
                             <h6>Experience</h6>
-                            <ul>
-                                <li>{{faculty.experience}}</li>
-                            </ul>
+                            {{faculty.experience}}
                         </div>
                         <div class = "profile-item">
                             <h6>Office</h6>
@@ -37,18 +33,51 @@
                             {{faculty.phone}}
                         </div>
                 </div>
-                <div>
-                    <button class="myButton" (click)="edit()" >Edit</button>
+                <div style="margin: 1rem;">
+                    <button mat-raised-button color="primary" (click)="edit()">Edit</button>
                 </div>
             </div>
             <div class = "col-sm-8">
                 <div class="d-flex flex-column align-items-center">
-                    <div class = "research-summary">
-                        <h1>RESEARCH SUMMARY</h1> {{faculty.research_summary}}
+                    <h1 style="margin-bottom: 1rem;">Interests</h1>
+                    <div class = "interests-container">
+                        <div class = "interest" *ngFor="let interest of faculty.interests">
+                            {{interest}}
+                        </div>                                                 
                     </div>
-                    <div class = "current-projects">
+                    <!-- <button class="myButton" (click)="openInterestsDialog()">Edit Interests</button> -->
+                    <button mat-raised-button color="primary" class="interests-btn" (click)="openInterestsDialog()">Edit Interests</button>
+
+                    <div style="margin-top: 1rem">
+                        <h1>RESEARCH SUMMARY</h1>
+                        <div class="row" style="width:100%">
+                            <mat-form-field style="width:100%" class="summary-text">
+                                <mat-label>Edit summary:</mat-label>
+                                <textarea matInput cdkTextareaAutosize
+                                        #autosize="cdkTextareaAutosize"
+                                        cdkAutosizeMinRows="5"
+                                        cdkAutosizeMaxRows="10" 
+                                        [(ngModel)]="faculty.research_summary"
+                                        >{{faculty.research_summary}}</textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem">
                         <h1>CURRENT PROJECTS</h1>
-                        {{faculty.current_projects}}
+                        <div class="row" style="width:100%">
+                            <mat-form-field style="width:100%" class="summary-text">
+                                <mat-label>Edit Current Projects:</mat-label>
+                                <textarea matInput cdkTextareaAutosize
+                                        #autosize="cdkTextareaAutosize"
+                                        cdkAutosizeMinRows="5"
+                                        cdkAutosizeMaxRows="10" 
+                                        [(ngModel)]="faculty.current_projects"
+                                        >{{faculty.current_projects}}</textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-raised-button color="primary" (click)="saveSummary()">Save Summary and Current Projects</button>
                     </div>
 
                 </div>

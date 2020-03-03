@@ -8,4 +8,5 @@ package-lock.json
 *.DS_Store
 *.spec.ts
 .env
+config.js
 

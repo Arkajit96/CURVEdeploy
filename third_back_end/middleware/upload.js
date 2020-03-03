@@ -49,7 +49,7 @@ let fileUpload = multer({
             cb(null, {fieldName: file.fieldname});
         },
         key: function (req, file, cb) {
-            cb(null, Date.now().toString() + '.' + mime.extension(file.mimetype));
+            cb(null, Date.now().toString() + '/' + file.originalname);
         }
     })
 });

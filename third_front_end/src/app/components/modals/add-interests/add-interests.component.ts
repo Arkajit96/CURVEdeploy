@@ -6,6 +6,7 @@ import {map, startWith} from 'rxjs/operators';
 import { InterestList } from 'src/app/services/interest-list';
 import { CloseConfirmComponent } from 'src/app/components/modals/close-confirm/close-confirm.component';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { FacultyService } from 'src/app/services/faculty.service';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class AddInterestsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private studentService: StudentService,
+    private facultyService: FacultyService,
     private list: InterestList,
     public dialogRef: MatDialogRef<AddInterestsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -59,6 +61,18 @@ export class AddInterestsComponent implements OnInit {
   }
 
   saveInterests() {
+    console.log(this.User);
+    if(this.User.research_summary != undefined) {
+      this.saveFacultyInterest();
+    } else {
+      this.saveStudentInterest();
+    }
+
+   
+    this.interestControl.setValue('');
+  }
+
+  saveStudentInterest() {
     this.studentService.editInterests(this.User.user_id, this.interests)
     .then((res) => {
       this.User = res;
@@ -67,7 +81,17 @@ export class AddInterestsComponent implements OnInit {
     .catch((e) => {
       console.log(e);
     })
-    this.interestControl.setValue('');
+  }
+
+  saveFacultyInterest() {
+    this.facultyService.editInterests(this.User.user_id, this.interests)
+    .then((res) => {
+      this.User = res;
+      this.dialogRef.close(this.User);
+    })
+    .catch((e) => {
+      console.log(e);
+    })
   }
 
   close() {

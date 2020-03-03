@@ -32,10 +32,12 @@ import { CloseConfirmComponent } from './components/modals/close-confirm/close-c
 import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
 import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
 import { ChatService } from './services/chat.service';
+import { ConfigService } from './services/config.service';
 
 // SOCKET
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { EditFactulyProfileComponent } from './components/modals/edit-factuly-profile/edit-factuly-profile.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -58,7 +60,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditStudentProfileComponent,
     ViewStudentProfileComponent,
     submitApplicationComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    EditFactulyProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -81,7 +84,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
       multi: true
     },
     InterestList,
-    ChatService
+    ChatService,
+    ConfigService
   ],
   bootstrap: [AppComponent],
   entryComponents: [
@@ -89,7 +93,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     CloseConfirmComponent,
     EditStudentProfileComponent,
     ViewStudentProfileComponent,
-    submitApplicationComponent
+    submitApplicationComponent,
+    EditFactulyProfileComponent
   ]
 })
 export class AppModule { }

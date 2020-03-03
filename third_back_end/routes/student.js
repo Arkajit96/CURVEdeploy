@@ -12,8 +12,6 @@ const StudentControllor = require('../controller/student');
 
 //middleware
 const checkAuth = require("../middleware/check-auth");
-// var middlewareObj = require("../middleware");
-
 
 const uploadImage = require("../middleware").imgUpload;
 const uploadFile = require("../middleware").fileUpload;
@@ -60,47 +58,47 @@ router.get("/institution/:id", checkAuth, function(req, res, next) {
 })
 
 
-const mongoAdd = 'mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve';
-const connect = mongoose.createConnection(mongoAdd);
-let gfs;
-connect.once('open',() => {
-    gfs = Grid(connect.db, mongoose.mongo);
-    gfs.collection('uploads');
-})
-const storage = new GridFsStorage({
-    url: mongoAdd,
-    file: (req, file) => {
-      console.log(req.params.id)
-      user_id = req.params.id
-      return new Promise((resolve, reject) => {
-        console.log(file.originalname);
-        crypto.randomBytes(16, (err, buf) => {
-          if (err) {
-            return reject(err);
-          }
-          gfs.files.find({"metadata.studentID": user_id}).toArray(function(err, files){
-            gfs.files.deleteOne({"metadata.studentID": user_id});
-        });
-          const filename = buf.toString('hex') + path.extname(file.originalname);
-          const studentID = user_id
-          const fileInfo = {
-            filename: filename,
-            bucketName: req.params.filename,
-            metadata: {
-              studentID: user_id
-            }
-          };
-          resolve(fileInfo, studentID);
-        });
-      });
-    }
-    });
-  const upload = multer({ storage });
-  router.post("/edit/resumes/:filename/:id", upload.single('file'),(req,res) => {
-    //res.json({file: req.file});
-    console.log(1111);
-    res.json({'message':'upload successfully'});
-});
+// const mongoAdd = 'mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve';
+// const connect = mongoose.createConnection(mongoAdd);
+// let gfs;
+// connect.once('open',() => {
+//     gfs = Grid(connect.db, mongoose.mongo);
+//     gfs.collection('uploads');
+// })
+// const storage = new GridFsStorage({
+//     url: mongoAdd,
+//     file: (req, file) => {
+//       console.log(req.params.id)
+//       user_id = req.params.id
+//       return new Promise((resolve, reject) => {
+//         console.log(file.originalname);
+//         crypto.randomBytes(16, (err, buf) => {
+//           if (err) {
+//             return reject(err);
+//           }
+//           gfs.files.find({"metadata.studentID": user_id}).toArray(function(err, files){
+//             gfs.files.deleteOne({"metadata.studentID": user_id});
+//         });
+//           const filename = buf.toString('hex') + path.extname(file.originalname);
+//           const studentID = user_id
+//           const fileInfo = {
+//             filename: filename,
+//             bucketName: req.params.filename,
+//             metadata: {
+//               studentID: user_id
+//             }
+//           };
+//           resolve(fileInfo, studentID);
+//         });
+//       });
+//     }
+//     });
+//   const upload = multer({ storage });
+//   router.post("/edit/resumes/:filename/:id", upload.single('file'),(req,res) => {
+//     //res.json({file: req.file});
+//     console.log(1111);
+//     res.json({'message':'upload successfully'});
+// });
 
 
 router.get("/transcript/:filename/:id", (req, res) => {
@@ -131,23 +129,6 @@ router.get("/transcript/:filename/:id", (req, res) => {
         //readstream1.pipe(res);
     });   
 });
-
-
-
-// router.put("/edit/:id", checkAuth, function(req, res) {
-//     console.log(typeof req.body);
-//     console.log(req.body);
-//     console.log(req.params.id);
-    
-//     Student.findByIdAndUpdate(req.params.id, req.body, function(err, updatedStudent) {
-//         if (err) {
-//             console.log('error');
-//             res.send({'message':'something wrong'});
-//         } else {
-//             res.send({'message':'successful', 'id': updatedStudent.user_id});
-//         }
-//     });
-// })
 
 router.post("/update", checkAuth, async function(req, res) {
   try {
