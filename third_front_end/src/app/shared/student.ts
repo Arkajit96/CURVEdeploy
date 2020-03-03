@@ -1,20 +1,22 @@
 export interface Student {
-    studentId: number;
-    username: string;
-    fisrtName: string;
-    middleName: string;
-    lastName: string;
+    user_id: string;
+    fisrt_name: string;
+    middle_name: string;
+    last_name: string;
     institutionId: number;
-    birthday: Date;
-    joinDate: Date;
+    date_of_birth: string;
+    date_of_joining: string;
     address: string;
     email: string;
     major: string;
     minor: string;
+    phone:string;
     gender: string;
     image: string;
     department:string;
     summary:string;
-    interest:[];
-    shopping_cart:[];
+    interest: string[];
+    shopping_cart: string[];
+    resume:string;
+    cv: string;
 }

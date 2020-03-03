@@ -1,46 +1,101 @@
 <div class="container-fluid">
-    <div class="row justify-content-sm-center" *ngIf="loadingSearch">
 
-    </div>
-    
-    <div class="row justify-content-sm-center" *ngIf="candidates.length == 0 && !showSearch">
+    <!-- <div class="row justify-content-sm-center" *ngIf="candidates.length == 0 && !showSearch">
         <div class="card">
             You currently have no applicants
         </div>
+    </div> -->
+    <div class="row justify-content-md-center">
+        <div class="searchbar">
+            <input class="search_input" [(ngModel)]="searchQuery" type="text" name=""
+                placeholder="Search for a department or principal investigator" id="searchBar">
+            <a class="search_icon" (click)="search()" id="searchLink"><i class="fas fa-search"></i></a>
+        </div>
     </div>
 
-    <section *ngIf="showSearch">
-        <div class="row justify-content-sm-center">
-            <div class="col col-12">
-                Filter by: 
-                <button class="btn btn-outline-primary" type="button" (click)="changeFilter('People')">People</button>
-                <button class="btn btn-outline-primary" type="button" (click)="changeFilter('Department')">Department</button>
-            </div>
-            <div class="card" *ngFor="let person of showPeople">
-                <div class="row">
-                    <div class="col col-2 img-col" style="text-align: center;">
-                        <ngx-avatar name="{{person.first_name}} {{person.last_name}}" *ngIf="!person.image || person.image.substring(7,12) == 'dummy'"></ngx-avatar>
-                        <ngx-avatar src="person.image" *ngIf="person.image && person.image.substring(7,12) != 'dummy'"></ngx-avatar>
-                    </div>
-                    <div class="col col-8">
-                        <div class="row">
-                            {{person.first_name}} {{person.last_name}}
-                        </div>
-                        <div class="row">
-                            {{person.department}}
-                        </div>
-                        <div class="row">
-                            {{person.address}}
-                        </div>
-                    </div>
-                    <div class="col col-1">
-                        <div class="row"><a><i class="fas fa-plus"></i></a></div>
-                    </div>
-                </div>
-            </div>
-            <div class="card" *ngIf="showPeople.length == 0">
-                No matches for your search
-            </div>
+
+    <div class="row justify-content-md-center" *ngIf="searchResults.length != 0 && !loadingSearch"
+        style="margin-bottom: 1rem;">
+        <div class="col col-12" style="text-align: center; margin-bottom: 1rem;">
+            Filter by:
+            <button class="btn btn-outline-primary" type="button" (click)="filterBy('People')">People</button>
+            <button class="btn btn-outline-primary" type="bu`11tton"
+                (click)="filterBy('Department')">Department</button>
         </div>
-    </section>
+        <div class="card" *ngIf="filter == 'People' && searchResults.names.length > 0">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" *ngFor="let person of searchResults.names">
+                    <div class="row">
+                        <div class="col col-2">
+                            <!-- <ngx-avatar name="{{person.first_name}} {{person.last_name}}" size="75"></ngx-avatar> -->
+                            <ngx-avatar
+                                src="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578428133276.jpg">
+                            </ngx-avatar>
+                        </div>
+                        <div class="col col-6">
+                            <div class="row">
+                                {{person.first_name}} {{person.last_name}}
+                            </div>
+                            <div class="row">
+                                {{person.department}}
+                            </div>
+                            <div class="row">
+                                {{person.address}}
+                            </div>
+                        </div>
+                        <div class="col col-4">
+                            <button mat-fab color="warn" (click)="ViewProfile()">
+                                <mat-icon>search</mat-icon>
+                            </button>
+                            <button [disabled]="!person.opportunity || !person.available " mat-fab color="primary"
+                                (click)="directMessage(person)">
+                                <mat-icon>message</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="card" *ngIf="filter == 'Department' && searchResults.departments.length > 0">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" *ngFor="let person of searchResults.departments">
+                    <div class="row">
+                        <div class="col col-2">
+                            <ngx-avatar
+                                src="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578428133276.jpg">
+                            </ngx-avatar>
+                        </div>
+                        <div class="col col-8">
+                            <div class="row">
+                                {{person.first_name}} {{person.last_name}}
+                            </div>
+                            <div class="row">
+                                {{person.department}}
+                            </div>
+                            <div class="row">
+                                {{person.address}}
+                            </div>
+                        </div>
+                        <div class="col col-2">
+                            <a><i class="fas fa-plus"></i></a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="card" *ngIf="filter==='People' && searchResults.names.length == 0">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    No people match your search
+                </li>
+            </ul>
+        </div>
+        <div class="card" *ngIf="filter=='Department' && searchResults.departments.length == 0">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    No departments match your search
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

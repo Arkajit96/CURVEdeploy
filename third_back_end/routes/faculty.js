@@ -1,13 +1,13 @@
 var express = require("express");
-var router  = express.Router();
+var router = express.Router();
 var passport = require("passport");
 
 // Model
 var User = require("../models/User");
 var Faculty = require("../models/faculty");
 
-// Controllor
-const FacultyControllor = require('../controller/faculty');
+//Controller
+const facultyController = require('../controller/faculty');
 
 //middleware
 const checkAuth = require("../middleware/check-auth");
@@ -16,30 +16,43 @@ const checkAuth = require("../middleware/check-auth");
 const uploadImage = require("../middleware").imgUpload;
 var mongoose = require("mongoose");
 var Institution = require("../models/institution");
-var FacultyProfile = require("../models/facultyProfile");
 const Helper = require('../helpers/index');
 
-// Opportunities create
-router.post("/createOpportunies", FacultyControllor.createOpportunities);
+// UPDATE MODEL of faculty
+router.get("/update/model", async function (req, res) {
+    try {
+        await Faculty.updateMany({}, { $set: { opportunity: null } });
+        res.status(200).send('Updated');
+    } catch (e) {
+        res.status(400).send(e);
+    }
+})
+
 
 // when user login, according to the userid to get the information of this faculty
-router.get("/:id", checkAuth, function(req, res, next) {
+router.get("/:id", checkAuth, function (req, res, next) {
     // console.log("back end req" + req.params.id);
     var id = mongoose.Types.ObjectId(req.params.id);
-    Faculty.findOne({"user_id": id}, function(err, faculty){
-        if(err){
-            console.log(err);
+    Faculty.findOne({ "user_id": id }, function (err, faculty) {
+        if (err) {
+            res.status(500).json({
+                message: "Fetching Faculty failed!",
+                faculty: null
+            });
         } else {
-        res.send(faculty);
+            res.status(200).json({
+                message: "Faculty fetched successfully",
+                faculty: faculty
+            })
         }
-     });
+    });
 
 })
 
 // get the institution information of this faculty
 router.get("/institution/:id", checkAuth, function(req, res, next) {
     console.log("institution id:" + req.params.id);
-    Institution.findById(req.params.id, function(err, foundInstitution) {
+    Institution.findById(req.params.id, function (err, foundInstitution) {
         res.send(foundInstitution);
     })
 })
@@ -49,12 +62,12 @@ router.get("/institution/:id", checkAuth, function(req, res, next) {
 router.get("/search/:query", checkAuth, async (req,res) => {
     let query = req.params.query.split(' ');
     Helper.SearchHelper(query, req.params.query)
-    .then((results) => {
-        res.status(200).send({"names": results.names, "departments": results.departments, "interests": results.interests});
-    })
-    .catch((e) => {
-        res.status(500).send("ERROR");
-    })
+        .then((results) => {
+            res.status(200).send({ "names": results.names, "departments": results.departments, "interests": results.interests });
+        })
+        .catch((e) => {
+            res.status(500).send("ERROR");
+        })
 })
 
 router.post("/update", checkAuth, async function(req, res) {
@@ -116,7 +129,6 @@ router.put("/editInterest", checkAuth, async function(req, res) {
 
   router.post("/upload/profilePic", checkAuth, uploadImage.single('image'), async function(req, res) {
     let id = mongoose.Types.ObjectId(req.body.id);
-
     try{
       let faculty = await Faculty.findOneAndUpdate({user_id: id}, {image: req.file.location});
       let oldImg = faculty.image;
@@ -130,5 +142,8 @@ router.put("/editInterest", checkAuth, async function(req, res) {
       res.send(e);
     }
   })
+
+// change availability
+router.put("/changeAvalibility", checkAuth, facultyController.changeAvalibility )
 
 module.exports = router;

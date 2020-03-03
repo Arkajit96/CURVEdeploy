@@ -1,9 +1,7 @@
 export interface Application{
     studentID: string;
-    opptunityID:string;
-    transcripts:[];
-    letterOfRecommendations:[];
-    statementOfInterests:[];
-    otherDocs:[];
-    createTime:string;
+    opportunityID:string;
+    resume:string;
+    coverLetter:string;
+    updateTime:string;
 }

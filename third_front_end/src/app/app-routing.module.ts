@@ -10,6 +10,7 @@ import { EditStudentComponent } from './components/edit-student/edit-student.com
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
+import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { CandidateComponent } from './components/candidate/candidate.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 
@@ -18,10 +19,10 @@ const routes: Routes = [
     path: 'login', component: LoginComponent
   },
   {
-    path: 'studentProfile/:id', component: StudentProfileComponent, canActivate: [AuthGuard]
+    path: 'studentProfile', component: StudentProfileComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'facultyProfile/:id', component: FacultyProfileComponent, canActivate: [AuthGuard]
+    path: 'facultyProfile', component: FacultyProfileComponent, canActivate: [AuthGuard]
   },
   {
     path: 'register', component: RegisterComponent
@@ -31,9 +32,12 @@ const routes: Routes = [
   },
   {
     path: 'research', component: ResearchComponent, canActivate: [AuthGuard]
+  },  
+  {
+    path: 'shoppingCart', component: ShoppingCartComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'candidate/:id', component: CandidateComponent, canActivate: [AuthGuard]
+    path: 'candidate', component: CandidateComponent, canActivate: [AuthGuard]
   },
   {
     path: 'notifications/:id', component: NotificationsComponent, canActivate: [AuthGuard]

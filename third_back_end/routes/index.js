@@ -140,11 +140,11 @@ router.post("/login", UserController.userLogin)
   // });
 
 // logout route
-router.get("/logout", function(req, res){
-  console.log("1111")
-  req.logout();
-  res.send({'message':'log out successfully'});
-});
+// router.get("/logout", function(req, res){
+//   console.log("1111")
+//   req.logout();
+//   res.send({'message':'log out successfully'});
+// });
 
 
 module.exports = router;

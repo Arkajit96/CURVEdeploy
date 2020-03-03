@@ -58,6 +58,8 @@ export class EditStudentProfileComponent implements OnInit {
       .then((res) => {
         this.imgChanged = true;
 
+        console.log('upload resume');
+
         if(this.uploadResume) {
           this.studentService.uploadFile(this.student.user_id, this.resumeData, 'resume')
           .then((res) => {
@@ -152,13 +154,13 @@ export class EditStudentProfileComponent implements OnInit {
       dialogRef.afterClosed().subscribe(
         res => {
           if(res) {
-            this.dialogRef.close();
+            this.dialogRef.close({student: this.student, imgChanged: this.imgChanged});
           }
         }
       );
     }
     else {
-      this.dialogRef.close();
+      this.dialogRef.close({student: this.student, imgChanged: this.imgChanged});
     }
   }
 

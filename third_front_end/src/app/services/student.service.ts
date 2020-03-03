@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
-import {FlashMessagesService} from 'angular2-flash-messages';
 
 //Models
-import{ Opportunity } from '../shared/opportunity';
-import { Application } from '../shared/application';
+import{ Student } from '../shared/student';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,26 +13,53 @@ import { Application } from '../shared/application';
 export class StudentService {
 
   //Fields for opportunities
-  private opportunities: Opportunity[] = [];
-  private opportunitiesUpdated = new Subject<{ opportunities:Opportunity[]; count: number }>();
+  // private opportunities: Opportunity[] = [];
+  // private opportunitiesUpdated = new Subject<{ opportunities:Opportunity[]; count: number }>();
 
-  constructor(private http: HttpClient, private flashMessage: FlashMessagesService) { }
+  // singleton Student User
+  private student: any;
 
-  updateLocalStorage(student) {
-    localStorage.setItem('student', JSON.stringify(student));
+  constructor(private http: HttpClient) { }
+
+  getCurrentStudentUser() {
+    return this.student;
   }
 
-  getStudent(id: string): Promise<any> {
+  clearCurrentUser() {
+    this.student = null;
+  }
+
+
+  LogInAsStudent(userId: string): Promise<boolean> {
     return new Promise((res, rej) => {
-      this.http.get('/api/student/' + id).subscribe(
+      if (this.student) { res(true) };
+      this.http.get<{ message: string; student: any; }>(
+        '/api/student/' + userId
+      ).toPromise().then(
         data => {
-          res(data);
+          this.student = data.student;
+          res(true);
+        },
+        error => {
+          rej(false);
+        }
+      )
+    });
+  }
+
+  getStudentByUserId(userId: string): Promise<any> {
+    return new Promise((res, rej) => {
+      this.http.get<{ message: string; student: any; }>(
+        '/api/student/' + userId
+      ).toPromise().then(
+        data => {
+          res(data.student);
         },
         error => {
           rej(error);
         }
       )
-    })
+    });
   }
 
   search(query: String): Promise<any> {
@@ -57,7 +83,7 @@ export class StudentService {
       }
       this.http.put('/api/student/editInterest', form).subscribe(
         data => {
-          this.updateLocalStorage(data);
+          this.student = data;
           res(data);
         },
         error => {
@@ -74,7 +100,7 @@ export class StudentService {
       }
       this.http.post('/api/student/update/summary', form).subscribe(
         data => {
-          this.updateLocalStorage(data);
+          this.student = data;
           res(data);
         },
         error => {
@@ -101,12 +127,12 @@ export class StudentService {
 
       this.http.post('/api/student/update', updates).subscribe(
         data => {
-          this.updateLocalStorage(data);
+          this.student = data;
           res(data);
         },
         error => {
           console.log(error);
-          res({error: 'Error saving changes'});
+          res({ error: 'Error saving changes' });
         }
       )
     })
@@ -119,12 +145,12 @@ export class StudentService {
       formData.append('id', id);
       this.http.post('/api/student/upload/profilePic', formData).subscribe(
         data => {
-          this.updateLocalStorage(data);
+          this.student = data;
           res(data);
         },
         error => {
           console.log(error);
-          rej({error: 'Error uploading profile picture'});
+          rej({ error: 'Error uploading profile picture' });
         }
       )
     })
@@ -138,81 +164,77 @@ export class StudentService {
       formData.append('fileType', fileType);
       this.http.post('/api/student/upload/file', formData).subscribe(
         data => {
-          this.updateLocalStorage(data);
+          this.student = data;
           res(data);
         },
         error => {
           console.log(error);
-          rej({error: 'Error uploading file'});
+          rej({ error: 'Error uploading file' });
         }
       )
     })
 
-}
-
-  // functions for fetching the opportunities
-  getOppurtunities(numPerPage: number, currentPage: number){
-    // this.opportunities= [
-    //   {name:'lab 1',school:'pitt',summary:'test summary',expireTime:'2/5/2020',icon:'https://material.angular.io/assets/img/examples/shiba2.jpg'},
-    //   {name:'lab 2',school:'pitt',summary:'test summary 2',expireTime:'2/10/2020',icon:'https://material.angular.io/assets/img/examples/shiba2.jpg'}
-    // ];
-
-    const queryParams = `?pagesize=${numPerPage}&page=${currentPage}`;
-    this.http.get<{ message: string; opportunities: any; maxOpp: number }>(
-      '/api/student/getOpportunities/' + queryParams
-      ).pipe(
-        map(optData =>{
-        return {
-          opportunities : optData.opportunities.map(opt => {
-              return {
-                id: opt._id,
-                name:  opt.name,
-                school:opt.school,
-                summary:opt.summary,
-                expireTime:opt.expireTime,
-                icon:opt.icon
-                };
-            }),
-            count: optData.maxOpp
-        };
-      })
-    )
-    .subscribe(newOppData => {
-      this.opportunities = newOppData.opportunities;
-      this.opportunitiesUpdated.next({
-        opportunities: [...this.opportunities],
-        count: newOppData.count
-      });
-    });
-}
-
-  getopportunitiesUpdatedListener() {
-    return this.opportunitiesUpdated.asObservable();
   }
-
-  getStudentByUserId(userId:string){
-  return new Promise((res, rej) =>{
-      this.http.get<{ message: string; student: any;}>(
-        '/api/student/' + userId
-        ).toPromise().then(
-          data => {
-            res(data.student);
-          },
-          error => {
-            this.flashMessage.show(error.error.message, {
-              cssClass: 'alert-danger',
-              timeout: 5000
-            });
-            rej(error);
-          }
-        )
-    });
-  }
-
 
   // Shopping cart related
-  addToShoppingCart(application:Application){
-    console.log(application);
+  addToShoppingCart(id: string, newItem: any): Promise<any> {
+    return new Promise((res, rej) => {
+      let form = {
+        id: `${id}`,
+        newItem: newItem
+      }
+      this.http.post<{ message: string; student: any; }>(
+        '/api/student/addToShoppingCart', form)
+        .subscribe(
+          data => {
+            this.student = data.student;
+            res(data);
+          },
+          error => {
+            console.log(error);
+            rej({ error: 'Add to shopping cart error' });
+          }
+        )
+    })
+  }
+
+  // Shopping cart related
+  deleteItem(id: string, Itemid: string): Promise<any> {
+    return new Promise((res, rej) => {
+      let form = {
+        id: `${id}`,
+        Itemid: Itemid
+      }
+      this.http.post<{ message: string; student: any; }>(
+        '/api/student/deleteItem', form)
+        .subscribe(
+          data => {
+            this.student = data.student;
+            res(data);
+          },
+          error => {
+            console.log(error);
+            rej({ error: 'Delete from shopping cart error' });
+          }
+        )
+    })
+  }
+
+  getShoppingCartItemsByIds(ids: any): Promise<any> {
+    return new Promise((res, rej) => {
+      let form = { ids: ids }
+      this.http.post<{ message: string; items: any; }>(
+        '/api/student/getShoppingCartItemsByIds', form)
+        .subscribe(
+          data => {
+            res(data);
+          },
+          error => {
+            console.log(error);
+            rej({ error: 'get shopping cart items error' });
+          }
+        )
+    })
   }
 
 }

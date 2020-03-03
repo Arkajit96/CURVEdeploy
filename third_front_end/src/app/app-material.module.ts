@@ -12,13 +12,15 @@ import {
   MatAutocompleteModule,
   MatListModule,
   MatSnackBarModule,
+  MatSlideToggleModule,
   MatTabsModule,
   MatDatepickerModule,
   MatNativeDateModule, 
   MatRippleModule,
   MatIconModule,
   MatMenuModule,
-  MatBadgeModule
+  MatBadgeModule,
+  MatTableModule
 } from '@angular/material';
 
 @NgModule({
@@ -39,10 +41,12 @@ import {
     MatDividerModule,
     MatListModule,
     MatSnackBarModule,
+    MatSlideToggleModule,
     MatTabsModule,
     MatDatepickerModule,
     MatNativeDateModule, 
-    MatRippleModule
+    MatRippleModule,
+    MatTableModule
   ]
 })
 export class AngularMaterialModule {}

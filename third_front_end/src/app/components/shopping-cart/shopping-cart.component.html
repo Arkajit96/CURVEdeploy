@@ -1,0 +1,75 @@
+<app-header></app-header>
+<div class="container">
+    <div class="row" style="margin-top: 4rem">
+        <div class="col col-md-7 col-sm-12">
+            <h2>Pending Applications</h2>
+        </div>
+        <div class="col col-md-5"></div>
+    </div>
+    <br>
+    <div class="row" *ngIf="shopping_cart.length <= 0">
+        <h3>No applications have been saved</h3>
+    </div>
+    <div *ngIf="shopping_cart.length > 0">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)" >
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.first_name}} {{element.middle_name}} {{element.last_name}}</td>
+            </ng-container>
+
+            <!-- Department Column -->
+            <ng-container matColumnDef="department">
+                <th mat-header-cell *matHeaderCellDef> Department </th>
+                <td mat-cell *matCellDef="let element"> {{element.department}} </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button matTooltip="Click to View profile" class="iconbutton" color="primary"
+                        (click)="ViewProfile()">
+                        <mat-icon aria-label="View">search</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Submit application" class="iconbutton" color="accent"
+                        (click)="findOptAndOpenDialog(element.opportunity)">
+                        <mat-icon aria-label="View">note_add</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn">
+                        <mat-icon aria-label="Delete" (click)="deleteItem(element._id)">delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" (click)="selection.toggle(row)">
+            </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+    <br>
+    <div align='right'><button mat-raised-button color="accent" (click)="submitAll()">Submit selected Items</button></div>
+</div>

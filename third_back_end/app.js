@@ -68,6 +68,7 @@ app.use("/", indexRoutes);
 app.use("/student", studentRoutes);
 app.use("/faculty", facultyRoutes);
 app.use("/message", messageRoutes);
+app.use("/research", researchRoutes);
 
 const listener = server.listen(PORT, function() {
    console.log(`Your app is listening on port ${PORT}`);

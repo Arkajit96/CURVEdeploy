@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import {FlashMessagesService} from 'angular2-flash-messages';
+import { FlashMessagesService } from 'angular2-flash-messages';
+
+// Service
+import { StudentService } from './student.service';
+import { FacultyService } from './faculty.service';
 
 // user model for auth
 import { User } from '../shared/User';
@@ -18,32 +22,46 @@ export class AuthService {
   private authStatusListener = new Subject<boolean>();
 
   constructor(private http: HttpClient,
-              private router: Router,
-              private flashMessage: FlashMessagesService,
-              private chatService: ChatService
-              ) {}
+    private router: Router,
+    private flashMessage: FlashMessagesService,
+    private studentService: StudentService,
+    private facultyService: FacultyService,
+    private chatService: ChatService
+  ) { }
 
   getToken() {
-    return localStorage.getItem("token");
     return this.token;
   }
 
-  getIsAuth() {
-    let expirationTime = new Date(localStorage.getItem("expiration"));
-    if(expirationTime < new Date()){
-      return false;
-    } else {
-      return true;
-    }
+  getIsAuth(): Promise<boolean> {
+    return new Promise((res, rej) => {
+      if (this.entity === 'student') {
+        this.studentService.LogInAsStudent(this.userId)
+          .then(isAuth => {
+            res(this.isAuthenticated && isAuth)
+          })
+          .catch(err =>{
+            rej(false);
+          })
+      } else if (this.entity === 'faculty') {
+        this.facultyService.LogInAsFaculty(this.userId)
+        .then(isAuth => {
+          res(this.isAuthenticated && isAuth)
+        })
+        .catch(err =>{
+          rej(false);
+        })
+      }else{
+        res(this.isAuthenticated);
+      }
+    })
   }
 
   getUserId() {
-    return localStorage.getItem("userId")
     return this.userId;
   }
 
   getEntity() {
-    return localStorage.getItem("entity");
     return this.entity;
   }
 
@@ -51,25 +69,25 @@ export class AuthService {
     return this.authStatusListener.asObservable();
   }
 
-  createUser(email: string, password: string, entity: string ) {
-    const user: User = { email, password, entity};
-    this.http.post<{ message: string}>
-    ('/api/register', user).subscribe(
-       res => {
-        this.flashMessage.show(res.message, {
-          cssClass: 'alert-success',
-          timeout: 5000
-        });
-        this.router.navigate(['/']);
-      },
-      error => {
-        this.flashMessage.show(error.error.message, {
-          cssClass: 'alert-danger',
-          timeout: 5000
-        });
-        this.authStatusListener.next(false);
-      }
-    );
+  createUser(email: string, password: string, entity: string) {
+    const user: User = { email, password, entity };
+    this.http.post<{ message: string }>
+      ('/api/register', user).subscribe(
+        res => {
+          this.flashMessage.show(res.message, {
+            cssClass: 'alert-success',
+            timeout: 5000
+          });
+          this.router.navigate(['/']);
+        },
+        error => {
+          this.flashMessage.show(error.error.message, {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
+          this.authStatusListener.next(false);
+        }
+      );
   }
 
   login(email: string, password: string, entity: string) {
@@ -95,14 +113,17 @@ export class AuthService {
               now.getTime() + expiresInDuration * 1000
             );
             this.saveAuthData(token, expirationDate, this.userId, this.entity);
-
             this.chatService.connectToSocket();
-            localStorage.removeItem('student');
-            localStorage.removeItem('faculty');
             if (this.entity === 'student') {
-              this.router.navigate(['/studentProfile/', this.userId]);
+              this.studentService.LogInAsStudent(this.userId)
+                .then(res => {
+                  if (res) { this.router.navigate(['/studentProfile']); }
+                })
             } else if (this.entity === 'faculty') {
-              this.router.navigate(['/facultyProfile/', this.userId]);
+              this.facultyService.LogInAsFaculty(this.userId)
+              .then(res => {
+                if (res) { this.router.navigate(['/facultyProfile']); }
+              })
             }
           }
         },
@@ -119,7 +140,7 @@ export class AuthService {
   autoAuthUser() {
     const authInformation = this.getAuthData();
     if (!authInformation) {
-      return ;
+      return;
     }
     const now = new Date();
     const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
@@ -138,6 +159,14 @@ export class AuthService {
     this.isAuthenticated = false;
     this.authStatusListener.next(false);
     this.userId = null;
+
+    // clear user profile
+    if (this.entity === 'student') {
+      this.studentService.clearCurrentUser();
+    } else if (this.entity === 'faculty') {
+      this.facultyService.clearCurrentUser();
+    }
+
     this.entity = null;
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
@@ -155,7 +184,6 @@ export class AuthService {
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('entity', entity);
-    localStorage.setItem('isAuth', "1");
   }
 
   private clearAuthData() {

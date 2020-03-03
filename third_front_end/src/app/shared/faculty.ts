@@ -1,12 +1,21 @@
 export interface Faculty {
-    facultyId: number;
-    institutionId: number;
-    birthday: Date;
-    joinDate: Date;
+    first_name: string;
+    last_name: string;
+    middle_name: string;
     email: string;
-    firstName: string;
-    lastName: string;
-    middleName: string;
     gender: string;
+    date_of_joining:string;
+    date_of_birth:string;
     address: string;
+    phone: string;
+    research_summary: string;
+    current_projects: string;
+    department: string;
+    education:string;
+    experience:string;
+    image:string;
+    interests: string[];
+    available:boolean;
+    candidates:string[];
+    opportunity:string;
 }
