@@ -9,7 +9,7 @@ let express     = require("express"),
     methodOverride = require("method-override"),
     Blog  = require("./models/blog"),
     Comment     = require("./models/comment"),
-    User       = require("./models/User"),
+    User       = require("./models/user"),
     http = require('http');
     cors = require('cors')
    
