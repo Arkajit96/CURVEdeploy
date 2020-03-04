@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ChatService {
 
-    private url = 'http://localhost:3000';
+    private url = 'http://localhost:3000/';
     private socket;   
     private isConnected = false; 
 
