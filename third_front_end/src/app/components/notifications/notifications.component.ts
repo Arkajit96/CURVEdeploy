@@ -3,6 +3,7 @@ import { ChatService } from 'src/app/services/chat.service';
 import { StudentService } from 'src/app/services/student.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { FacultyService } from 'src/app/services/faculty.service';
 
 @Component({
   selector: 'app-notifications',
@@ -25,6 +26,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked {
     public route:ActivatedRoute,
     private chatService: ChatService,
     private studentService: StudentService,
+    private facultyService: FacultyService,
     private renderer: Renderer2,
     private authService: AuthService
   ) { }
@@ -35,35 +37,13 @@ export class NotificationsComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     if(this.authService.getEntity() == 'student') {
-      this.user = JSON.parse(localStorage.getItem('student'));
+      this.user = this.studentService.getCurrentStudentUser();
     } else {
-      this.user = JSON.parse(localStorage.getItem('faculty'));
+      this.user = this.facultyService.getCurrentFacultyUser();
     }
 
+    this.loadInbox();
     console.log(this.user);
-
-    if(!localStorage.getItem('student')){
-      this.route.params.subscribe((data) => {
-        this.student_id = data.id;
-        this.studentService.getStudentByUserId(this.student_id)
-        .then((res) => {
-          console.log(res);
-          this.student = res.student;
-          // this.loadingPage = false;
-          this.loadInbox();
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-      })
-    } else {
-      this.student = JSON.parse(localStorage.getItem('student'));
-      console.log(this.student);
-      this.loadInbox();
-    }
-    for(let i = 0; i < 100; i++) {
-      this.test.push(i);
-    }
   }
 
   ngAfterViewChecked() {

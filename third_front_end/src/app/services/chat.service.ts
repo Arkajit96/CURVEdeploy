@@ -28,7 +28,7 @@ export class ChatService {
 
     loadInbox(userid):Promise<any> {
       return new Promise((res, rej) => {
-        this.http.get('/api/message/getInbox/' + userid).subscribe(
+        this.http.get(this.url + 'message/getInbox/' + userid).subscribe(
           data => {
             res(data);
           },

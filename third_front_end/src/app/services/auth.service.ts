@@ -11,6 +11,7 @@ import { FacultyService } from './faculty.service';
 // user model for auth
 import { User } from '../shared/User';
 import { ChatService } from './chat.service';
+import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -26,8 +27,11 @@ export class AuthService {
     private flashMessage: FlashMessagesService,
     private studentService: StudentService,
     private facultyService: FacultyService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private config: ConfigService
   ) { }
+
+  private url = this.config.getURL();
 
   getToken() {
     return this.token;
@@ -72,7 +76,7 @@ export class AuthService {
   createUser(email: string, password: string, entity: string) {
     const user: User = { email, password, entity };
     this.http.post<{ message: string }>
-      ('/api/register', user).subscribe(
+      (this.url + 'register', user).subscribe(
         res => {
           this.flashMessage.show(res.message, {
             cssClass: 'alert-success',
@@ -94,7 +98,7 @@ export class AuthService {
     const user: User = { email, password, entity };
     this.http
       .post<{ token: string; expiresIn: number; userId: string; entity: string }>(
-        '/api/login',
+        this.url + 'login',
         user
       )
       .subscribe(

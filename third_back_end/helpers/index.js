@@ -1,6 +1,7 @@
 const Faculty = require("../models/faculty");
 const Student = require("../models/student");
-const config = require('dotenv').config().parsed;
+// const config = require('dotenv').config().parsed;
+const config = require('../config');
 const aws = require('aws-sdk')
 const search = require('./search').addIndex;
 

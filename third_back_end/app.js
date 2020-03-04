@@ -11,6 +11,7 @@ let express     = require("express"),
     Comment     = require("./models/comment"),
     User       = require("./models/User"),
     http = require('http');
+    cors = require('cors')
    
 const server = http.createServer(app);
 const socketio = require('socket.io');
@@ -56,6 +57,7 @@ mongoose.connect(mongoDB,
    });
 
 //bodyParse setting
+app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true, limit: '50mb', parameterLimit: 1000000}));
 
