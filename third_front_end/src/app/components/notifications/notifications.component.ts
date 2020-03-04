@@ -65,6 +65,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked {
         })
         .catch((e) => {
           console.log(e);
+          this.loadingPage = false;
         })
   }
 
