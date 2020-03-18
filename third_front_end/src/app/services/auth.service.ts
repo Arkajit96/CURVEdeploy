@@ -117,7 +117,7 @@ export class AuthService {
               now.getTime() + expiresInDuration * 1000
             );
             this.saveAuthData(token, expirationDate, this.userId, this.entity);
-            this.chatService.connectToSocket();
+            this.chatService.connectToSocket(this.userId);
             if (this.entity === 'student') {
               this.studentService.LogInAsStudent(this.userId)
                 .then(res => {

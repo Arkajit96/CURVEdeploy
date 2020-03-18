@@ -26,6 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "method-override": "^2.3.5",
     "mime-types": "^2.1.26",
+    "moment": "^2.24.0",
     "mongoose": "^5.5.0",
     "mongoose-unique-validator": "^2.0.3",
     "multer": "^1.4.2",
