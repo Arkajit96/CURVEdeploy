@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 
 //Models
 import{ Student } from '../shared/student';
+import { ConfigService } from './config.service';
 
 
 @Injectable({
@@ -18,8 +19,12 @@ export class StudentService {
 
   // singleton Student User
   private student: any;
+  private url = this.config.getURL();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private config: ConfigService
+  ) { }
 
   getCurrentStudentUser() {
     return this.student;
@@ -34,7 +39,7 @@ export class StudentService {
     return new Promise((res, rej) => {
       if (this.student) { res(true) };
       this.http.get<{ message: string; student: any; }>(
-        '/api/student/' + userId
+        this.url + 'student/' + userId
       ).toPromise().then(
         data => {
           this.student = data.student;
@@ -50,7 +55,7 @@ export class StudentService {
   getStudentByUserId(userId: string): Promise<any> {
     return new Promise((res, rej) => {
       this.http.get<{ message: string; student: any; }>(
-        '/api/student/' + userId
+        this.url + 'student/' + userId
       ).toPromise().then(
         data => {
           res(data.student);
@@ -64,7 +69,7 @@ export class StudentService {
 
   search(query: String): Promise<any> {
     return new Promise((res, rej) => {
-      this.http.get('/api/student/search/' + query).subscribe(
+      this.http.get(this.url + 'student/search/' + query).subscribe(
         data => {
           res(data);
         },
@@ -81,7 +86,7 @@ export class StudentService {
         id: `${id}`,
         interests: interests
       }
-      this.http.put('/api/student/editInterest', form).subscribe(
+      this.http.put(this.url + 'student/editInterest', form).subscribe(
         data => {
           this.student = data;
           res(data);
@@ -98,7 +103,7 @@ export class StudentService {
         user_id: id,
         summary: summary
       }
-      this.http.post('/api/student/update/summary', form).subscribe(
+      this.http.post(this.url + 'student/update/summary', form).subscribe(
         data => {
           this.student = data;
           res(data);
@@ -125,7 +130,7 @@ export class StudentService {
         class: form.class.value
       }
 
-      this.http.post('/api/student/update', updates).subscribe(
+      this.http.post(this.url + 'student/update', updates).subscribe(
         data => {
           this.student = data;
           res(data);
@@ -143,7 +148,7 @@ export class StudentService {
       const formData = new FormData();
       formData.append('image', imageData);
       formData.append('id', id);
-      this.http.post('/api/student/upload/profilePic', formData).subscribe(
+      this.http.post(this.url + 'student/upload/profilePic', formData).subscribe(
         data => {
           this.student = data;
           res(data);
@@ -162,7 +167,7 @@ export class StudentService {
       formData.append('file', fileData);
       formData.append('id', id);
       formData.append('fileType', fileType);
-      this.http.post('/api/student/upload/file', formData).subscribe(
+      this.http.post(this.url + 'student/upload/file', formData).subscribe(
         data => {
           this.student = data;
           res(data);
@@ -184,7 +189,7 @@ export class StudentService {
         newItem: newItem
       }
       this.http.post<{ message: string; student: any; }>(
-        '/api/student/addToShoppingCart', form)
+        this.url + 'student/addToShoppingCart', form)
         .subscribe(
           data => {
             this.student = data.student;
@@ -206,7 +211,7 @@ export class StudentService {
         Itemid: Itemid
       }
       this.http.post<{ message: string; student: any; }>(
-        '/api/student/deleteItem', form)
+        this.url + 'student/deleteItem', form)
         .subscribe(
           data => {
             this.student = data.student;
@@ -224,7 +229,7 @@ export class StudentService {
     return new Promise((res, rej) => {
       let form = { ids: ids }
       this.http.post<{ message: string; items: any; }>(
-        '/api/student/getShoppingCartItemsByIds', form)
+        this.url + 'student/getShoppingCartItemsByIds', form)
         .subscribe(
           data => {
             res(data);

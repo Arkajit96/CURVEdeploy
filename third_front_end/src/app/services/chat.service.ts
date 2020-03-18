@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { HttpClient } from '@angular/common/http';
+import { ConfigService } from './config.service';
+import { Observable, fromEvent } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-    private url = 'http://localhost:3000';
+    private url = this.config.getURL();
     private socket;   
     private isConnected = false; 
 
     constructor(
-      private http: HttpClient
+      private http: HttpClient,
+      private config: ConfigService
     ) {
         // this.socket = io(this.url);
     }
@@ -21,14 +24,43 @@ export class ChatService {
       return this.isConnected;
     }
 
-    connectToSocket() {
+    connectToSocket(userid) {
       this.socket = io(this.url);
+      let room = 'room' + userid + '';
+      this.socket.emit('join', room, (error) => {
+        if(error) {
+          console.log(error);
+        } else {
+          console.log('Connected to room ' + userid);
+          console.log(this.socket);
+        }
+      })
       this.isConnected = true;
+    }
+
+    getMessages(userid) {
+      console.log(userid);
+      let observable = new Observable<any>(observer => {
+        this.socket = io(this.url);
+        let room = 'room' + userid + '';
+        console.log(room);
+        this.socket.emit('join', room, (error) => {
+          console.log('Connected again')
+          this.socket.on('new-message', (data) => {
+            console.log(data);
+            observer.next(data);    
+          });
+        });
+        return () => {
+          this.socket.disconnect();
+        };  
+      })     
+      return observable;
     }
 
     loadInbox(userid):Promise<any> {
       return new Promise((res, rej) => {
-        this.http.get('/api/message/getInbox/' + userid).subscribe(
+        this.http.get(this.url + 'message/getInbox/' + userid).subscribe(
           data => {
             res(data);
           },
@@ -38,5 +70,51 @@ export class ChatService {
         )
       })
     }
+
+   loadMessages(senderId, recipientId): Promise<any> {
+    return new Promise((res, rej) => {
+      this.http.post(this.url + 'message/getMessages', {senderId, recipientId}).subscribe(
+        data => {
+          // console.log(data);
+          res(data);
+        },
+        error => {
+          console.log(error);
+          rej(error);
+        }
+      )
+    })
+   }
+
+   sendMessage(senderId, recipientId, text): Promise<any> {
+     return new Promise((res, rej) => {
+       this.http.post(this.url + 'message/sendMessage', {
+         senderId: senderId,
+         recipientId: recipientId,
+         text: text
+       }).subscribe(
+         data => {
+           this.socket.emit('send-message', data);
+           res(data);
+         },
+         error => {
+           rej(error);
+         }
+       )
+     })
+   }
+
+   searchFaculty(query): Promise<any> {
+     return new Promise((res, rej) => {
+       this.http.get(this.url + 'message/searchFaculty/' + query).subscribe(
+         data => { 
+          res(data);
+         },
+         error => {
+           rej(error);
+         }
+       )
+     })
+   }
     
 }

@@ -117,6 +117,7 @@ export class AddInterestsComponent implements OnInit {
   }
 
   _filter(value) {
+    console.log(value);
     if(value.trim() == '') {
       return []
     } else {

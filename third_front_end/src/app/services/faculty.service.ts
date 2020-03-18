@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,12 @@ export class FacultyService {
   // Singleton Faculty user
   private faculty: any;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private config: ConfigService
+  ) { }
+
+  private url = this.config.getURL();
 
   getCurrentFacultyUser() {
     return this.faculty;
@@ -24,7 +30,7 @@ export class FacultyService {
     return new Promise((res, rej) => {
       if (this.faculty) { res(true) };
       this.http.get<{ message: string; faculty: any; }>(
-        '/api/faculty/' + userId
+        this.url + 'faculty/' + userId
       ).toPromise().then(
         data => {
           this.faculty = data.faculty;
@@ -39,7 +45,7 @@ export class FacultyService {
 
   loadFaculty(id: String): Promise<any> {
     return new Promise((res, rej) => {
-      this.http.get("/api/faculty/" + id).subscribe(
+      this.http.get(this.url + "faculty/" + id).subscribe(
         data => {
           res(data);
         },
@@ -52,7 +58,7 @@ export class FacultyService {
 
   search(searchQuery): Promise<any> {
     return new Promise((res, rej) => {
-      this.http.get("/api/faculty/search/" + searchQuery).subscribe(
+      this.http.get(this.url + "faculty/search/" + searchQuery).subscribe(
         data => {
           res(data);
         },
@@ -71,7 +77,7 @@ export class FacultyService {
       }
 
       this.http.put<{ message: string; available: boolean; }>(
-        "/api/faculty/changeAvalibility", form)
+        this.url + "faculty/changeAvalibility", form)
       .subscribe(
         data => {
           res(data.available);
@@ -89,7 +95,7 @@ export class FacultyService {
         id: `${id}`,
         interests: interests
       }
-      this.http.put('/api/faculty/editInterest', form).subscribe(
+      this.http.put(this.url + 'faculty/editInterest', form).subscribe(
         data => {
           res(data);
         },
@@ -107,7 +113,7 @@ export class FacultyService {
         researchSummary: researchSummary,
         currentProjects: currentProjects
       };
-      this.http.post('/api/faculty/update/summary', form).subscribe(
+      this.http.post(this.url + 'faculty/update/summary', form).subscribe(
         data => {
           res(data);
         },
@@ -123,7 +129,7 @@ export class FacultyService {
       const formData = new FormData();
       formData.append('image', imageData);
       formData.append('id', id);
-      this.http.post('/api/faculty/upload/profilePic', formData).subscribe(
+      this.http.post(this.url + 'faculty/upload/profilePic', formData).subscribe(
         data => {
           // this.updateLocalStorage(data);
           res(data);
@@ -151,7 +157,7 @@ export class FacultyService {
         address: form.office.value
       }
 
-      this.http.post('/api/faculty/update', updates).subscribe(
+      this.http.post(this.url + 'faculty/update', updates).subscribe(
         data => {
           res(data);
         },

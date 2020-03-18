@@ -14,7 +14,7 @@
                     <mat-spinner></mat-spinner>
                 </div>
                 <h4 id = "name">{{user.first_name}} {{user.last_name}}</h4>
-                <div class = "caption-text" *ngIf="user.graduation_class">Class of {{user.graduation_class}}</div>
+                <div class = "caption-text">{{user.caption}}</div>
             </div>
         </div>
         <div class="col-lg-9 col-sm-8">
@@ -28,34 +28,33 @@
                             </div>
                             <div class="search_msg">
                                 <div class="stylish-input-group">
-                                    <input type="text" class="search-bar" placeholder="Search">
+                                  <form>
+                                    <input type="text" class="search-bar" placeholder="Search" [formControl]="searchControl" [matAutocomplete]="auto">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                      <mat-option *ngFor="let option of searchResults" (click)="startNewMessage(option)">
+                                          <span *ngIf="option.first_name" (click)="startNewMessage(option)">{{option.first_name}} {{option.last_name}}</span>
+                                          <span *ngIf="!option.first_name" (click)="startNewMessage(option)">{{option.email}}</span>
+                                      </mat-option>
+                                    </mat-autocomplete>
                                     <span class="input-group-addon" style="margin-left:3px">
-                                        <button type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                        <button type="button"><i class="fa fa-search" aria-hidden="true" (click)="search()">
+                                          </i>
+                                        </button>
                                     </span>
+                                  </form>
                                 </div>
                             </div>
                         </div>
                         <div class="inbox_chat ">
-                            <div class="chat_list active_chat">
-                                <div class="chat_people">
-                                    <div class="chat_img">
-                                        <img class="msg_img" [src] = "user.image"> 
-                                    </div>
-                                    <div class="chat_prev">
-                                        <h5>Brad Smith <span class="chat_date">Feb 18</span></h5>
-                                        <p>This is a preview to the chat</p>
-                                    </div>
-                                </div>
-                            </div>
                             <section *ngFor="let people of inbox; index as i">
-                              <div class="chat_list" id="chat{{i}}" (click)="testIndex(this.id)">
+                              <div class="{{people.class}}" id="chat{{i}}" (click)="changeInbox(i)">
                                 <div class="chat_people">
-                                  <div class="chat_img">
+                                  <!-- <div class="chat_img">
                                     <img class="msg_img" [src]="people.image">
-                                  </div>
+                                  </div> -->
                                   <div class="chat_prev">
-                                    <h5 *ngIf="people.first_name !== ''">{{people.first_name}} {{people.last_name}}</h5>
-                                    <h5 *ngIf="people.first_name == ''">{{people.email}}</h5>
+                                    <h5 *ngIf="people.name !== ' '">{{people.name}}</h5>
+                                    <h5 *ngIf="people.name.trim() == ''">{{people.email}}</h5>
                                   </div>
                               </div>
                               </div>
@@ -64,70 +63,33 @@
                     </div>
                     <div class="messages">
                       <div class="message_history" #msgDiv>
-                        <div class="incoming_message">
-                          <div class="received_msg_body">
-                            <div class="received_msg_text">
-                              <p>I recieved this message from somebody and it is on two lines</p>
-                              <span class="message_time">9:30 pm    |    February 23</span>
+                        <section *ngFor = "let message of messages" style="margin:0;">
+                          <div *ngIf="message.senderId == user.user_id" class="sent_msg_body">
+                              <div class="sent_msg_text">
+                                <p>{{message.text}}</p>
+                                <span class="message_time">{{message.sentAt}}</span>
+                              </div>
+                          </div>
+                          <div *ngIf="message.senderId != user.user_id" class="incoming_message">
+                            <div class="received_msg_body">
+                              <div class="received_msg_text">
+                                <p>{{message.text}}</p>
+                                <span class="message_time">{{message.sentAt}}</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="sent_msg_body">
-                          <div class="sent_msg_text">
-                            <p>I sent this message to someobody and it is on two lines</p>
-                            <span class="message_time">9:33 PM    |    February 23</span>
-                          </div>
-                        </div>
-                        <div class="sent_msg_body">
-                          <div class="sent_msg_text">
-                            <p>I sent this message</p>
-                            <span class="message_time">9:33 PM    |    February 23</span>
-                          </div>
-                        </div>
-                        <div class="incoming_message">
-                          <div class="received_msg_body">
-                            <div class="received_msg_text">
-                              <p>I recieved this message from somebody</p>
-                              <span class="message_time">9:30 pm    |    February 23</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="sent_msg_body">
-                          <div class="sent_msg_text">
-                            <p>I sent this message</p>
-                            <span class="message_time">9:33 PM    |    February 23</span>
-                          </div>
-                        </div>
-                        <div class="incoming_message">
-                          <div class="received_msg_body">
-                            <div class="received_msg_text">
-                              <p>I recieved this message from somebody</p>
-                              <span class="message_time">9:30 pm    |    February 23</span>
-                            </div>
-                          </div>
-                      </div>
-                      <div class="sent_msg_body">
-                        <div class="sent_msg_text">
-                          <p>I sent this message</p>
-                          <span class="message_time">9:33 PM    |    February 23</span>
-                        </div>
-                      </div>
-                      <div class="incoming_message">
-                        <div class="received_msg_body">
-                          <div class="received_msg_text">
-                            <p>I recieved this message from somebody</p>
-                            <span class="message_time">9:30 pm    |    February 23</span>
-                          </div>
-                        </div>
-                    </div>
+                        </section>
                     </div>
                     <div class="type_msg">
                       <div class="input_msg_write">
                         <textarea type="text" class="write_msg" placeholder="Type a message"
                                   matInput cdkTextareaAutosize
                                   #autosize="cdkTextareaAutosize"
-                                  cdkAutosizeMaxRows="1" ></textarea>
-                        <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                  cdkAutosizeMaxRows="1" 
+                                  [(ngModel)]="newMessage"></textarea>
+                        <button class="msg_send_btn" type="button" (click)="sendMessage()">
+                          <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                        </button>
                       </div>
                     </div>
                 </div>
