@@ -33,32 +33,34 @@
                       <a class="dropdown-item" href="#">Notification 3</a> -->
         <!-- </div>
                 </div> -->
-        <!-- <a class="nav-item nav-link" routerLink="/calender" routerLinkActive="active">CALENDAR</a> -->
-        <button class="nav-item" mat-button [matMenuTriggerFor]="menu">
-          <mat-icon>person</mat-icon>
-          <span>Me</span>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="navigateToNotifications()">
-            <mat-icon [matBadge]="notifications.length" [matBadgeHidden]="notifications.length <= 0"
-              matBadgeColor="warn" > notifications_active</mat-icon>
-            <span>notifications</span>
-          </button>
-          <a mat-menu-item *ngIf="entity == 'student'" routerLink="/shoppingCart">
-            <mat-icon [matBadge]="shoppingCart.length" [matBadgeHidden]="shoppingCart.length <= 0" matBadgeColor="warn">
-              shopping_cart</mat-icon>
-            <span>View application</span>
-          </a>
-          <button mat-menu-item>
-            <mat-icon>event</mat-icon>
-            <span>calendar</span>
-          </button>
-          <button mat-menu-item (click)="onLogout()">
-            <mat-icon>logout</mat-icon>
-            <span>logout</span>
-          </button>
-        </mat-menu>
-      </div>
+            <!-- <a class="nav-item nav-link" routerLink="/calender" routerLinkActive="active">CALENDAR</a> -->
+            <button class="nav-item"  mat-button [matMenuTriggerFor]="menu">
+                <mat-icon>person</mat-icon>
+                <span>Me</span>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="navigateToNotifications()">
+                  <mat-icon [matBadge]="notifications.length" 
+                  [matBadgeHidden]= "notifications.length <= 0"
+                  matBadgeColor="warn" > notifications_active</mat-icon>
+                  <span>notifications</span>
+                </button>
+                <a mat-menu-item *ngIf="entity == 'student'" routerLink="/shoppingCart">
+                    <mat-icon [matBadge]="shoppingCart.length" 
+                    [matBadgeHidden]= "shoppingCart.length <= 0"
+                    matBadgeColor="warn" >shopping_cart</mat-icon>
+                    <span>View application</span>
+                </a>
+                <button mat-menu-item>
+                    <mat-icon>event</mat-icon>
+                    <span>calendar</span>
+                  </button>
+                <button mat-menu-item (click)="onLogout()">
+                  <mat-icon>logout</mat-icon>
+                  <span>logout</span>
+                </button>
+            </mat-menu>
+        </div>
     </div>
   </nav>
 </div>

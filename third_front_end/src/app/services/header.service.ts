@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { StudentService } from './student.service';
 import { FacultyService } from './faculty.service';
+import { ConfigService } from './config.service';
 
 
 
@@ -15,7 +16,10 @@ export class HeaderService {
         private authService : AuthService,
         private studentService: StudentService,
         private facultyService: FacultyService,
+        private config: ConfigService
       ) { }
+
+    private url = this.config.getURL();
 
     // hardcode this function right now, need to figure out we to get it
     getNotifications(){

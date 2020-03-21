@@ -3,7 +3,7 @@ var router = express.Router();
 var passport = require("passport");
 
 // Model
-var User = require("../models/User");
+var User = require("../models/user");
 var Faculty = require("../models/faculty");
 
 //Controller

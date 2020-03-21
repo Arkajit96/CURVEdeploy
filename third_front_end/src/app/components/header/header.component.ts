@@ -19,6 +19,8 @@ export class HeaderComponent implements OnInit, OnDestroy{
   private entity: string;
   private notifications = [];
   private authListenerSubs: Subscription;
+  private _msgSub: Subscription;
+
   constructor(private authService: AuthService, 
               private headerService: HeaderService,
               private chatService: ChatService,
@@ -35,8 +37,10 @@ export class HeaderComponent implements OnInit, OnDestroy{
   //   }
   // }
   ngOnInit() {
+    let userid = localStorage.getItem('userId');
     if(!this.chatService.getIsConnected()) {
-      this.chatService.connectToSocket();
+      console.log(localStorage.getItem('userId'));
+      this.chatService.connectToSocket(localStorage.getItem('userId'));
     }
     // this.userId = this.authService.getUserId();
     this.entity = this.authService.getEntity();
@@ -55,6 +59,12 @@ export class HeaderComponent implements OnInit, OnDestroy{
     }else if (this.entity == 'student'){
       this.shoppingCart = [];
     }
+
+    this._msgSub = this.chatService.getMessages(userid).subscribe(
+      data => {
+        console.log("Recieved new message");
+      }
+    )
   }
 
   navigateToNotifications() {

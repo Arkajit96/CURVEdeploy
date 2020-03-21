@@ -8,6 +8,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { Student } from '../shared/student';
 import { Opportunity } from '../shared/opportunity';
 import { Application } from '../shared/application';
+import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class ResearchService {
@@ -15,14 +16,19 @@ export class ResearchService {
   //Fields for opportunities
   private opportunities: Opportunity[] = [];
   private opportunitiesUpdated = new Subject<{ opportunities: Opportunity[]; count: number }>();
+  private url = this.config.getURL();
 
-  constructor(private http: HttpClient, private flashMessage: FlashMessagesService) { }
+  constructor(
+    private http: HttpClient, 
+    private flashMessage: FlashMessagesService,
+    private config: ConfigService
+  ) { }
 
   // functions for fetching the opportunities
   getOppurtunities(numPerPage: number, currentPage: number) {
     const queryParams = `?pagesize=${numPerPage}&page=${currentPage}`;
     this.http.get<{ message: string; opportunities: any; maxOpp: number }>(
-      '/api/research/getOpportunities/' + queryParams
+      this.url + 'research/getOpportunities/' + queryParams
     ).pipe(
       map(optData => {
         return {
@@ -56,7 +62,7 @@ export class ResearchService {
   getCandidates(optId: string): Promise<any> {
     return new Promise((res, rej) => {
       this.http.get<{ message: string; tableRow:any }>(
-        '/api/research/getCandidates/' + optId
+        this.url + 'research/getCandidates/' + optId
       ).toPromise().then(
         data => {
           res(data.tableRow);
@@ -124,7 +130,7 @@ export class ResearchService {
     formData.append('fileType', fileType);
     return new Promise((res, rej) => {
       this.http.post<{ message: String; location: String }>(
-        '/api/research/uploadFile', formData)
+        this.url + 'research/uploadFile', formData)
         .toPromise().then(
           data => {
             res(data);
@@ -149,7 +155,7 @@ export class ResearchService {
     }
     return new Promise((res, rej) => {
       this.http.post<{ message: String; location: String }>(
-        '/api/research/uploadFileMultiApp', formData)
+        this.url + 'research/uploadFileMultiApp', formData)
         .toPromise().then(
           data => {
             res(data);
@@ -166,7 +172,7 @@ export class ResearchService {
   createApplication(application: Application): Promise<any> {
     return new Promise((res, rej) => {
       this.http.post<{ message: String; applicationID: String }>(
-        '/api/research/createApplication', application)
+        this.url + 'research/createApplication', application)
         .toPromise().then(
           data => {
             res(data);
@@ -209,7 +215,7 @@ export class ResearchService {
 
     return new Promise((res, rej) => {
       this.http.post<{ message: String }>(
-        '/api/research/createMultiApplications', formData)
+        this.url + 'research/createMultiApplications', formData)
         .toPromise().then(
           data => {
             res(data);

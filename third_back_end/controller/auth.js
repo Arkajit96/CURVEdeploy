@@ -1,9 +1,10 @@
-let config = require('dotenv').config().parsed;
+// let config = require('dotenv').config().parsed;
+const config = require('../config');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
 
-const User = require('../models/User');
+const User = require('../models/user');
 const Student = require('../models/student');
 const Faculty = require('../models/faculty');
 
