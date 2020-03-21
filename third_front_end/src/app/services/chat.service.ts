@@ -22,8 +22,8 @@ export class ChatService {
     }
 
     connectToSocket() {
-      this.socket = io(this.url);
-      this.isConnected = true;
+      // this.socket = io(this.url);
+      // this.isConnected = true;
     }
 
     loadInbox(userid):Promise<any> {

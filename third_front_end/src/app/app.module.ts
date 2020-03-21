@@ -17,29 +17,31 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HeaderComponent } from './components/header/header.component';
 import { EditStudentComponent } from './components/edit-student/edit-student.component';
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
-// import { RequestInterceptor } from './services/request-interceptor';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
 import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CandidateComponent } from './components/candidate/candidate.component';
 import { CanidateSearchComponent } from './components/canidate-search/canidate-search.component';
-import { AddInterestsComponent } from './components/modals/add-interests/add-interests.component'
-import { submitApplicationComponent } from './components/modals/submit-application/submit-application.component'
-import { submitAllApplicationComponent } from './components/modals/submit-all-application/submit-all-application.component'
 import { InterestList } from './services/interest-list';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {TextFieldModule} from '@angular/cdk/text-field';
-import { CloseConfirmComponent } from './components/modals/close-confirm/close-confirm.component';
-import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
-import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
 import { ChatService } from './services/chat.service';
 import { ConfigService } from './services/config.service';
 
 // SOCKET
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+
+// Modal Components
+import { AddInterestsComponent } from './components/modals/add-interests/add-interests.component'
+import { submitApplicationComponent } from './components/modals/submit-application/submit-application.component'
+import { submitAllApplicationComponent } from './components/modals/submit-all-application/submit-all-application.component'
+import { CloseConfirmComponent } from './components/modals/close-confirm/close-confirm.component';
+import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
+import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
 import { EditFactulyProfileComponent } from './components/modals/edit-factuly-profile/edit-factuly-profile.component';
+import { EditOpportunityComponent } from './components/modals/edit-opportunity/edit-opportunity.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -65,7 +67,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     submitApplicationComponent,
     NotificationsComponent,
     EditFactulyProfileComponent,
-    submitAllApplicationComponent
+    submitAllApplicationComponent,
+    EditOpportunityComponent
   ],
   imports: [
     BrowserModule,
@@ -99,7 +102,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ViewStudentProfileComponent,
     submitApplicationComponent,
     EditFactulyProfileComponent,
-    submitAllApplicationComponent
+    submitAllApplicationComponent,
+    EditOpportunityComponent
   ]
 })
 export class AppModule { }

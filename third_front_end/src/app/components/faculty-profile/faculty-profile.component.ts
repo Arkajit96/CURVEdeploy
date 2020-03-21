@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material';
+
+// Services
+import { FacultyService } from '../../services/faculty.service';
+import {ResearchService} from '../../services/research.service';
+
+// Components
 import { AddInterestsComponent } from '../modals/add-interests/add-interests.component';
 import { EditFactulyProfileComponent } from '../modals/edit-factuly-profile/edit-factuly-profile.component'
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { FacultyService } from 'src/app/services/faculty.service';
-import { MatSnackBar } from '@angular/material';
+import { EditOpportunityComponent } from '../modals/edit-opportunity/edit-opportunity.component'
+
 
 @Component({
   selector: 'app-faculty-profile',
@@ -15,22 +18,55 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./faculty-profile.component.scss']
 })
 export class FacultyProfileComponent implements OnInit {
-  faculty:any;
   fileToUpload: any;
-  loadingImg = false;
-  constructor(public route:ActivatedRoute, 
-    public http: HttpClient, 
-    public router: Router,
+  loadingImg = true;
+
+  // store faculty
+  faculty:any;
+  
+  // store Opportunity
+  opportunity:any;
+  loadingOpt = true;
+
+
+  constructor(
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private facultyService: FacultyService
+    private facultyService: FacultyService,
+    private researchService: ResearchService
   ) { }
 
   ngOnInit() {
     this.faculty = this.facultyService.getCurrentFacultyUser();
+    if(this.faculty.opportunity){
+      this.researchService.getOptByIds(this.faculty.opportunity)
+      .then(res => {
+        this.opportunity = res;
+        this.finishLoad()
+      })
+    }
   }
   edit() {
-    let dialog = this.dialog.open(EditFactulyProfileComponent, {
+    let dialog = this.dialog.open(EditOpportunityComponent, {
+      width: '550px',
+      data: {user: this.faculty, opportunity: this.opportunity}
+    })
+
+    dialog.afterClosed().subscribe(
+      data => {
+        if(data.faculty) {
+          this.faculty = data.faculty
+          this.snackbar.open("Profile Updated", 'Dismiss', {
+            duration: 3000,
+            panelClass: 'success-snackbar'
+          })
+        }
+      }
+    )
+  }
+
+  editopportunity() {
+    let dialog = this.dialog.open(EditOpportunityComponent, {
       width: '550px',
       data: {user: this.faculty}
     })
@@ -92,5 +128,6 @@ export class FacultyProfileComponent implements OnInit {
 
   finishLoad() {
     this.loadingImg = false;
+    this.loadingOpt = false;
   }
 }

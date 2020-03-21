@@ -110,9 +110,8 @@ saveProfile = (user) => {
 
 exports.userLogin = (req, res, next) => {
     let fetchedUser;
-    User.findOne({ email: req.body.email })
+    User.findOne({ email: req.body.email, entity: req.body.entity })
       .then(user => {
-        console.log(user);
         if (!user) {
           return res.status(401).json({
             message: "Auth failed"

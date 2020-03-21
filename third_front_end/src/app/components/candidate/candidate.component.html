@@ -41,52 +41,69 @@
                 </div>
 
                 <div *ngIf="candidates.length > 0">
-                    <mat-form-field class="col col-md-12 col-sm-12" >
+                    <mat-form-field class="col col-md-12 col-sm-12">
                         <mat-label>Filter</mat-label>
                         <input matInput (keyup)="applyFilter($event)" placeholder="Filter for candidates">
                     </mat-form-field>
-                    <table mat-table [dataSource]="dataSource" 
-                    class="mat-elevation-z8 col col-md-12 col-sm-12">
-                        <!-- Name Column -->
-                        <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef> Name </th>
-                            <td mat-cell *matCellDef="let element">
-                                {{element.student.first_name}} {{element.student.middle_name}}
-                                {{element.student.last_name}}</td>
-                        </ng-container>
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSource" matSort class="col col-md-12 col-sm-12">
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                <td mat-cell *matCellDef="let element">{{element.name}}</td>
+                            </ng-container>
 
-                        <!-- Address Column -->
-                        <ng-container matColumnDef="address">
-                            <th mat-header-cell *matHeaderCellDef> Address </th>
-                            <td mat-cell *matCellDef="let element"> {{element.student.address}} </td>
-                        </ng-container>
+                            <!-- Address Column -->
+                            <ng-container matColumnDef="address">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
+                                <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+                            </ng-container>
 
-                        <!-- Major Column -->
-                        <ng-container matColumnDef="major">
-                            <th mat-header-cell *matHeaderCellDef> Major </th>
-                            <td mat-cell *matCellDef="let element"> {{element.student.major}} </td>
-                        </ng-container>
+                            <!-- Major Column -->
+                            <ng-container matColumnDef="major">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Major </th>
+                                <td mat-cell *matCellDef="let element"> {{element.major}} </td>
+                            </ng-container>
 
-                        <!-- Action Column -->
-                        <ng-container matColumnDef="actions">
-                            <th mat-header-cell *matHeaderCellDef> Actions </th>>
-                            <td mat-cell *matCellDef="let element">
-                                <button mat-icon-button matTooltip="Click to View profile" class="iconbutton"
-                                    color="primary" (click)="ViewProfile(element.student)">
-                                    <mat-icon aria-label="View">search</mat-icon>
-                                </button>
-                                <button mat-icon-button matTooltip="Submit application" class="iconbutton"
-                                    color="accent" (click)="directMessage(element.student)">
-                                    <mat-icon aria-label="View">message</mat-icon>
-                                </button>
-                            </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                        <tr mat-row *matRowDef="let element; columns: columnsToDisplay;">
-                        </tr>
-                    </table>
+                            <!-- Action Column -->
+                            <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button mat-icon-button matTooltip="Click to View profile" class="iconbutton"
+                                        color="primary" (click)="viewProfile(element.userId, 'student')">
+                                        <mat-icon aria-label="View">search</mat-icon>
+                                    </button>
+                                    <button mat-icon-button matTooltip="Direct Message" class="iconbutton"
+                                        color="accent" (click)="directMessage(element)">
+                                        <mat-icon aria-label="View">message</mat-icon>
+                                    </button>
+                                    <button mat-icon-button matTooltip="Accept application" class="iconbutton"
+                                        color="accent" (click)="updateApplicationStatus(element.applicationID, 'Accept')">
+                                        <mat-icon aria-label="View">check</mat-icon>
+                                    </button>
+                                    <button mat-icon-button matTooltip="Accept application" class="iconbutton"
+                                        color="accent" (click)="updateApplicationStatus(element.applicationID, 'Deny')">
+                                        <mat-icon aria-label="View">close</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <!-- Status Column -->
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                                <td mat-cell *matCellDef="let element"
+                                    [style.color]="getFontColor(element.status)">
+                                    {{element.status}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                            <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"></tr>
+                        </table>
+                    </div>
                     <br>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                    <mat-paginator style="background-color:rgba(255, 255, 255, 0.5);" 
+                        [pageSize]="5" [pageIndex]="0" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                    </mat-paginator>
                 </div>
             </div>
             <app-canidate-search></app-canidate-search>

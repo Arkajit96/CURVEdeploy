@@ -125,7 +125,7 @@ export class ResearchComponent implements OnInit, OnDestroy {
   }
 
   findOptAndOpenDialog(optID: string) {
-    this.researchService.getOptByIds(this.student._id, optID)
+    this.researchService.getApplicationInfo(this.student._id, optID)
       .then(data => {
         this.openApplicationDialog(data);
       });

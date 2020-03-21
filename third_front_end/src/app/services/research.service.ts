@@ -72,11 +72,30 @@ export class ResearchService {
     });
   }
 
-  getOptByIds(studentId:string, optId: string): Promise<any> {
+  getOptByIds(optId: string): Promise<any> {
+    return new Promise((res, rej) => {
+      this.http.get<{ message: string; opt: Opportunity}>(
+        '/api/research/getOptByIds/' + optId
+      ).toPromise().then(
+        data => {
+          res(data.opt);
+        },
+        error => {
+          this.flashMessage.show(error.error.message, {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
+          rej(error);
+        }
+      )
+    });
+  }
+
+  getApplicationInfo(studentId:string, optId: string): Promise<any> {
     const queryParams = `?studentId=${studentId}&optId=${optId}`; 
     return new Promise((res, rej) => {
       this.http.get<{ message: string; opt: Opportunity; application: Application }>(
-        '/api/research/getOptByIds/' + queryParams
+        '/api/research/getApplicationInfo/' + queryParams
       ).toPromise().then(
         data => {
           res({
@@ -191,6 +210,27 @@ export class ResearchService {
     return new Promise((res, rej) => {
       this.http.post<{ message: String }>(
         '/api/research/createMultiApplications', formData)
+        .toPromise().then(
+          data => {
+            res(data);
+          },
+          error => {
+            console.log(error);
+            rej({ error: 'Error uploading file' });
+          }
+        )
+    })
+  }
+
+  updateApplicationStatus( applicationID: string, status : string): Promise<any> {
+    const formData = {
+      applicationID: applicationID,
+      status: status
+    }
+
+    return new Promise((res, rej) => {
+      this.http.post<{ message: String; application: String }>(
+        '/api/research/updateApplicationStatus', formData)
         .toPromise().then(
           data => {
             res(data);

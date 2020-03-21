@@ -30,7 +30,6 @@ exports.createOpportunity = (req, res) => {
             rej(error);
         } else {
             res(newOpt);
-            console.log(newOpt);
         }
     });
 }
@@ -62,8 +61,25 @@ exports.getOpportunities = (req, res) => {
     });
 }
 
-// Get opportunity by id
+//get opt by opt id
 exports.getOptByIds = (req, res) => {
+    Opportunity.findById(req.params.optId, function (err, opt) {
+        if (err) {
+            res.status(500).json({
+                message: "Fetching opportunity failed!",
+                opt: new Opportunity(),
+            });
+        } else {
+            res.status(200).json({
+                message: "Opportunity fetched successfully",
+                opt: opt,
+            })
+        }
+    });
+}
+
+// Get opt and application
+exports.getApplicationInfo = (req, res) => {
     Opportunity.findById(req.query.optId, function (err, opt) {
         if (err) {
             res.status(500).json({
@@ -74,7 +90,6 @@ exports.getOptByIds = (req, res) => {
         } else {
             Application.findOne({ studentID: req.query.studentId, opportunityID: req.query.optId })
                 .then(application => {
-                    console.log(application);
                     res.status(200).json({
                         message: "Opportunity fetched successfully",
                         opt: opt,
@@ -102,8 +117,12 @@ exports.getCandidates = (req, res) => {
 
                     } else {
                         data = {
-                            student: student,
-                            application: application
+                            userId: student.user_id,
+                            applicationID: application._id,
+                            name: student.first_name + " " + student.middle_name + " " + student.last_name,
+                            address: student.address,
+                            major: student.major,
+                            status: application.status
                         }
                         return cb(data)
 
@@ -137,7 +156,8 @@ exports.createApplication = (req, res) => {
     const update = {
         resume: req.body.resume,
         coverLetter: req.body.coverLetter,
-        updateTime: new Date().toLocaleString()
+        updateTime: new Date().toLocaleString(),
+        status: 'Submitted'
     };
 
     const config = {
@@ -155,7 +175,6 @@ exports.createApplication = (req, res) => {
                 applicationID: ''
             });
         } else {
-            console.log(Application);
             res.status(200).json({
                 message: 'Application create successful',
                 applicationID: Application._id
@@ -173,7 +192,8 @@ exports.createMultiApplications = (req, res) => {
     const update = {
         resume: req.body.resume,
         coverLetter: req.body.coverLetter,
-        updateTime: new Date().toLocaleString()
+        updateTime: new Date().toLocaleString(),
+        status: 'Submitted'
     };
 
     const config = {
@@ -201,6 +221,33 @@ exports.createMultiApplications = (req, res) => {
         } else {
             res.status(200).json({
                 message: 'Application create successful'
+            })
+        }
+    })
+}
+
+
+exports.updateApplicationStatus = (req, res) => {
+    const update = {
+        status: req.body.status,
+        updateTime: new Date().toLocaleString()
+    };
+
+    const config = {
+        new: true
+    };
+
+    Application.findByIdAndUpdate(req.body.applicationID, update, config, (err, application) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Application status update failed!",
+                application: ''
+            });
+        } else {
+            res.status(200).json({
+                message: 'Application status update successful',
+                application: application
             })
         }
     })

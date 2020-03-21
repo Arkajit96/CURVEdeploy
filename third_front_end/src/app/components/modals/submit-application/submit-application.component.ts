@@ -19,8 +19,6 @@ import { ResearchService } from '../../../services/research.service';
 })
 
 export class submitApplicationComponent implements OnInit {
-  // change the type of student
-  private student: any;
   // form control for submit application
   private application: any;
   resumePreview: String;
@@ -99,9 +97,6 @@ export class submitApplicationComponent implements OnInit {
     }
   }
 
-  // onNoClick(): void {
-  //   this.dialogRef.close();
-  // }
 
   deleteFile(target: string) {
     switch (target) {

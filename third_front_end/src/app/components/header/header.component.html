@@ -1,63 +1,64 @@
 <div>
-<nav id = "curve-navbar" class="navbar navbar-expand-md navbar-dark py-0 sticky-top">
+  <nav id="curve-navbar" class="navbar navbar-expand-md navbar-dark py-0 sticky-top">
     <a class="navbar-brand" href="https://www.curve-research.com/">CURVE</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-collapse" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-collapse"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <div class="collapse navbar-collapse justify-content-end" id = "nav-collapse">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" routerLink="/mycurve" routerLinkActive="active">myCURVE</a>
-            <div *ngIf="entity == 'student'">
-            <a class="nav-item nav-link"  [routerLink]="['/studentProfile/']"  routerLinkActive="active">PROFILE</a>
-            </div>
-            <div *ngIf="entity == 'faculty'">
-            <a class="nav-item nav-link"  [routerLink]="['/facultyProfile/']" routerLinkActive="active">PROFILE</a>
-            </div>
-            <a class="nav-item nav-link" routerLink="/research" routerLinkActive="active" *ngIf="entity == 'student'">RESEARCH</a>
-            <a class="nav-item nav-link" routerLink="/candidate" routerLinkActive="active" *ngIf="entity == 'faculty'">CANDIDATES</a>
+    <div class="collapse navbar-collapse justify-content-end" id="nav-collapse">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" routerLink="/mycurve" routerLinkActive="active">myCURVE</a>
+        <div *ngIf="entity == 'student'">
+          <a class="nav-item nav-link" [routerLink]="['/studentProfile/']" routerLinkActive="active">PROFILE</a>
+        </div>
+        <div *ngIf="entity == 'faculty'">
+          <a class="nav-item nav-link" [routerLink]="['/facultyProfile/']" routerLinkActive="active">PROFILE</a>
+        </div>
+        <a class="nav-item nav-link" routerLink="/research" routerLinkActive="active"
+          *ngIf="entity == 'student'">RESEARCH</a>
+        <a class="nav-item nav-link" routerLink="/candidate" routerLinkActive="active"
+          *ngIf="entity == 'faculty'">CANDIDATES</a>
 
-            <!-- <a class="nav-item nav-link" href="mycurve.html">myCURVE<span class="sr-only">(current)</span></a>
+        <!-- <a class="nav-item nav-link" href="mycurve.html">myCURVE<span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="profile.html">PROFILE</a>
             <a class="nav-item nav-link active" href="research.html">RESEARCH</a> -->
-            <!-- <div class="nav-item dropdown">
+        <!-- <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       NOTIFICATIONS
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" *ngFor="let notification of notifications" href="#">{{notification}}</a> -->
-                      <!-- <a class="dropdown-item" href="#">Notification 2</a>
+        <!-- <a class="dropdown-item" href="#">Notification 2</a>
                       <a class="dropdown-item" href="#">Notification 3</a> -->
-                    <!-- </div>
+        <!-- </div>
                 </div> -->
-            <!-- <a class="nav-item nav-link" routerLink="/calender" routerLinkActive="active">CALENDAR</a> -->
-            <button class="nav-item"  mat-button [matMenuTriggerFor]="menu">
-                <mat-icon>person</mat-icon>
-                <span>Me</span>
-            </button>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item>
-                  <mat-icon [matBadge]="notifications.length" 
-                  [matBadgeHidden]= "notifications.length <= 0"
-                  matBadgeColor="warn" > notifications_active</mat-icon>
-                  <span>notifications</span>
-                </button>
-                <a mat-menu-item *ngIf="entity == 'student'" routerLink="/shoppingCart">
-                    <mat-icon [matBadge]="shoppingCart.length" 
-                    [matBadgeHidden]= "shoppingCart.length <= 0"
-                    matBadgeColor="warn" >shopping_cart</mat-icon>
-                    <span>View application</span>
-                </a>
-                <button mat-menu-item>
-                    <mat-icon>event</mat-icon>
-                    <span>calendar</span>
-                  </button>
-                <button mat-menu-item (click)="onLogout()">
-                  <mat-icon>logout</mat-icon>
-                  <span>logout</span>
-                </button>
-            </mat-menu>
-        </div>
+        <!-- <a class="nav-item nav-link" routerLink="/calender" routerLinkActive="active">CALENDAR</a> -->
+        <button class="nav-item" mat-button [matMenuTriggerFor]="menu">
+          <mat-icon>person</mat-icon>
+          <span>Me</span>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="navigateToNotifications()">
+            <mat-icon [matBadge]="notifications.length" [matBadgeHidden]="notifications.length <= 0"
+              matBadgeColor="warn" > notifications_active</mat-icon>
+            <span>notifications</span>
+          </button>
+          <a mat-menu-item *ngIf="entity == 'student'" routerLink="/shoppingCart">
+            <mat-icon [matBadge]="shoppingCart.length" [matBadgeHidden]="shoppingCart.length <= 0" matBadgeColor="warn">
+              shopping_cart</mat-icon>
+            <span>View application</span>
+          </a>
+          <button mat-menu-item>
+            <mat-icon>event</mat-icon>
+            <span>calendar</span>
+          </button>
+          <button mat-menu-item (click)="onLogout()">
+            <mat-icon>logout</mat-icon>
+            <span>logout</span>
+          </button>
+        </mat-menu>
+      </div>
     </div>
-</nav>
+  </nav>
 </div>
