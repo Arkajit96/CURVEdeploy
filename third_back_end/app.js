@@ -1,5 +1,5 @@
-// let config = require('dotenv').config().parsed;
-const config = require('./config');
+let config = require('dotenv').config().parsed;
+// const config = require('./config');
 let express     = require("express"),
     app         = express(),
     bodyParser  = require("body-parser"),

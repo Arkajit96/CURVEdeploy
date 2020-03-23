@@ -1,5 +1,5 @@
-// let config = require('dotenv').config().parsed;
-const config = require('../config');
+let config = require('dotenv').config().parsed;
+// const config = require('../config');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
@@ -111,9 +111,8 @@ saveProfile = (user) => {
 
 exports.userLogin = (req, res, next) => {
     let fetchedUser;
-    User.findOne({ email: req.body.email })
+    User.findOne({ email: req.body.email, entity: req.body.entity })
       .then(user => {
-        console.log(user);
         if (!user) {
           return res.status(401).json({
             message: "Auth failed"

@@ -1,64 +1,94 @@
 <app-header></app-header>
-<body>
-    <div class = "container-fluid">
-        <div class = "row justify-content-sm-center">
-            <div class = "col-lg-3 col-sm-4">
-                <div class = "profile-card">
-                        <img src = "{{faculty.image}}" class = "pro-pic">
-                        <h4 id = "name">{{faculty.first_name}} {{faculty.last_name}}</h4>
-                        <div class = "caption-text">PhD Associate Professor</div>
 
-                        <div class = "profile-item">
-                            <h6>Department</h6>
-                            {{faculty.department}}
-                        </div>
-                        <div class = "profile-item">
-                            <h6>Education</h6>
-                            {{faculty.education}}
-                        </div>
-                        <div class = "profile-item">
-                            <h6>Experience</h6>
-                            {{faculty.experience}}
-                        </div>
-                        <div class = "profile-item">
-                            <h6>Office</h6>
-                            {{faculty.address}}
-                        </div>
-                        <div class = "profile-item">
-                            <h6>Email</h6>
-                            {{faculty.email}}
-                        </div>
-                        <div class = "profile-item">
-                            <h6>Phone</h6>
-                            {{faculty.phone}}
-                        </div>
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-sm-center">
+            <div class="col-lg-3 col-sm-4">
+                <div class="profile-card">
+                    <img src="{{faculty.image}}" class="pro-pic">
+                    <h4 id="name">{{faculty.first_name}} {{faculty.last_name}}</h4>
+                    <div class="caption-text">PhD Associate Professor</div>
+
+                    <div class="profile-item">
+                        <h6>School</h6>
+                        {{faculty.school}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Department</h6>
+                        {{faculty.department}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Education</h6>
+                        {{faculty.education}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Experience</h6>
+                        {{faculty.experience}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Office</h6>
+                        {{faculty.address}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Email</h6>
+                        {{faculty.email}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Phone</h6>
+                        {{faculty.phone}}
+                    </div>
+                    <div style="margin: 1rem;">
+                        <button mat-raised-button color="primary" (click)="edit()">Edit</button>
+                    </div>
                 </div>
-                <div style="margin: 1rem;">
-                    <button mat-raised-button color="primary" (click)="edit()">Edit</button>
-                </div>
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Opportunity</mat-card-title>
+                    </mat-card-header>
+                    <mat-spinner style="display:block;margin:0 auto;" *ngIf="loadingOpt"></mat-spinner>
+                    <div *ngIf='faculty.opportunity && !loadingOpt'>
+                        <img mat-card-image [src]="opportunity.icon" alt="Opportunity icon">
+                        <mat-card-content>
+                            <p>
+                                {{opportunity.name}}
+                            </p>
+                        </mat-card-content>
+                        <mat-card-actions align="center">
+                            <button mat-raised-button color="primary"  (click)="createOreditopportunity()">Edit</button>
+                        </mat-card-actions>
+                    </div>
+                    <div *ngIf='!faculty.opportunity && !loadingOpt'>
+                        <mat-card-content>
+                            <p>
+                               No opportunity created
+                            </p>
+                        </mat-card-content>
+                        <mat-card-actions align="center">
+                            <button mat-raised-button color="primary" (click)="createOreditopportunity()" >Create</button>
+                        </mat-card-actions>
+                    </div>
+                </mat-card>
             </div>
             <div class="col-sm-8">
                 <div class="d-flex flex-column align-items-center">
                     <h1 style="margin-bottom: 1rem;">Interests</h1>
-                    <div class = "interests-container">
-                        <div class = "interest" *ngFor="let interest of faculty.interests">
+                    <div class="interests-container">
+                        <div class="interest" *ngFor="let interest of faculty.interests">
                             {{interest}}
-                        </div>                                                 
+                        </div>
                     </div>
                     <!-- <button class="myButton" (click)="openInterestsDialog()">Edit Interests</button> -->
-                    <button mat-raised-button color="primary" class="interests-btn" (click)="openInterestsDialog()">Edit Interests</button>
+                    <button mat-raised-button color="primary" class="interests-btn" (click)="openInterestsDialog()">Edit
+                        Interests</button>
 
                     <div style="margin-top: 1rem">
                         <h1>RESEARCH SUMMARY</h1>
                         <div class="row" style="width:100%">
                             <mat-form-field style="width:100%" class="summary-text">
                                 <mat-label>Edit summary:</mat-label>
-                                <textarea matInput cdkTextareaAutosize
-                                        #autosize="cdkTextareaAutosize"
-                                        cdkAutosizeMinRows="5"
-                                        cdkAutosizeMaxRows="10" 
-                                        [(ngModel)]="faculty.research_summary"
-                                        >{{faculty.research_summary}}</textarea>
+                                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                                    cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"
+                                    [(ngModel)]="faculty.research_summary">{{faculty.research_summary}}</textarea>
                             </mat-form-field>
                         </div>
                     </div>
@@ -67,17 +97,15 @@
                         <div class="row" style="width:100%">
                             <mat-form-field style="width:100%" class="summary-text">
                                 <mat-label>Edit Current Projects:</mat-label>
-                                <textarea matInput cdkTextareaAutosize
-                                        #autosize="cdkTextareaAutosize"
-                                        cdkAutosizeMinRows="5"
-                                        cdkAutosizeMaxRows="10" 
-                                        [(ngModel)]="faculty.current_projects"
-                                        >{{faculty.current_projects}}</textarea>
+                                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                                    cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"
+                                    [(ngModel)]="faculty.current_projects">{{faculty.current_projects}}</textarea>
                             </mat-form-field>
                         </div>
                     </div>
                     <div>
-                        <button mat-raised-button color="primary" (click)="saveSummary()">Save Summary and Current Projects</button>
+                        <button mat-raised-button color="primary" (click)="saveSummary()">Save Summary and Current
+                            Projects</button>
                     </div>
                 </div>
             </div>

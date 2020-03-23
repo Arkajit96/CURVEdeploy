@@ -4,4 +4,5 @@ export interface Application{
     resume:string;
     coverLetter:string;
     updateTime:string;
+    status:string;
 }

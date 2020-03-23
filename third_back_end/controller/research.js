@@ -3,36 +3,61 @@ var async = require('async');
 
 // Models
 const Student = require('../models/student');
+const Faculty = require('../models/faculty');
 const Opportunity = require('../models/opportunity');
 const Application = require('../models/application');
 
 const Helper = require('../helpers/index');
 
 // Create new opportunities
-exports.createOpportunity = (req, res) => {
-    const opportunity = new Opportunity({
+exports.createOrUpdateOpportunity = (req, res) => {
+    const filter = {
+        creator: req.body.faculty._id,
+    };
+
+    const update = {
         name: req.body.name,
-        icon: req.body.icon,
-        school: req.body.school,
-        department: req.body.department,
-        address: req.body.address,
-        city: req.body.city,
-        state: req.body.state,
-        country: req.body.country,
+        school: req.body.faculty.school,
+        department: req.body.faculty.department,
         expireTime: req.body.expireTime,
         summary: req.body.summary,
-        // modifiy/add middleware for id
-        creator: req.body.id
-    });
-    Opportunity.create(opportunity, function (err, newOpt) {
+    };
+
+    const config = {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true
+    };
+
+    Opportunity.findOneAndUpdate(filter, update, config, (err, opportunity) => {
         if (err) {
             console.log(err);
-            rej(error);
+            res.status(500).json({
+                message: "Opportunity update failed!",
+                opportunity: opportunity,
+                faculty: req.body.faculty
+            });
         } else {
-            res(newOpt);
-            console.log(newOpt);
+            Faculty.findByIdAndUpdate(req.body.faculty._id,
+                { opportunity: opportunity._id }, {}, (err, faculty) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).json({
+                            message: "Opportunity update failed!",
+                            opportunity: opportunity,
+                            faculty: req.body.faculty
+                        });
+                    }
+                    else {
+                        res.status(200).json({
+                            message: 'Opportunity create successful',
+                            opportunity: opportunity,
+                            faculty: faculty
+                        })
+                    }
+                })
         }
-    });
+    })
 }
 
 // Get all the opportunities
@@ -62,8 +87,25 @@ exports.getOpportunities = (req, res) => {
     });
 }
 
-// Get opportunity by id
+//get opt by opt id
 exports.getOptByIds = (req, res) => {
+    Opportunity.findById(req.params.optId, function (err, opt) {
+        if (err) {
+            res.status(500).json({
+                message: "Fetching opportunity failed!",
+                opt: new Opportunity(),
+            });
+        } else {
+            res.status(200).json({
+                message: "Opportunity fetched successfully",
+                opt: opt,
+            })
+        }
+    });
+}
+
+// Get opt and application
+exports.getApplicationInfo = (req, res) => {
     Opportunity.findById(req.query.optId, function (err, opt) {
         if (err) {
             res.status(500).json({
@@ -74,7 +116,6 @@ exports.getOptByIds = (req, res) => {
         } else {
             Application.findOne({ studentID: req.query.studentId, opportunityID: req.query.optId })
                 .then(application => {
-                    console.log(application);
                     res.status(200).json({
                         message: "Opportunity fetched successfully",
                         opt: opt,
@@ -102,8 +143,12 @@ exports.getCandidates = (req, res) => {
 
                     } else {
                         data = {
-                            student: student,
-                            application: application
+                            userId: student.user_id,
+                            applicationID: application._id,
+                            name: student.first_name + " " + student.middle_name + " " + student.last_name,
+                            address: student.address,
+                            major: student.major,
+                            status: application.status
                         }
                         return cb(data)
 
@@ -137,7 +182,8 @@ exports.createApplication = (req, res) => {
     const update = {
         resume: req.body.resume,
         coverLetter: req.body.coverLetter,
-        updateTime: new Date().toLocaleString()
+        updateTime: new Date().toLocaleString(),
+        status: 'Submitted'
     };
 
     const config = {
@@ -155,7 +201,6 @@ exports.createApplication = (req, res) => {
                 applicationID: ''
             });
         } else {
-            console.log(Application);
             res.status(200).json({
                 message: 'Application create successful',
                 applicationID: Application._id
@@ -173,7 +218,8 @@ exports.createMultiApplications = (req, res) => {
     const update = {
         resume: req.body.resume,
         coverLetter: req.body.coverLetter,
-        updateTime: new Date().toLocaleString()
+        updateTime: new Date().toLocaleString(),
+        status: 'Submitted'
     };
 
     const config = {
@@ -201,6 +247,33 @@ exports.createMultiApplications = (req, res) => {
         } else {
             res.status(200).json({
                 message: 'Application create successful'
+            })
+        }
+    })
+}
+
+
+exports.updateApplicationStatus = (req, res) => {
+    const update = {
+        status: req.body.status,
+        updateTime: new Date().toLocaleString()
+    };
+
+    const config = {
+        new: true
+    };
+
+    Application.findByIdAndUpdate(req.body.applicationID, update, config, (err, application) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Application status update failed!",
+                application: ''
+            });
+        } else {
+            res.status(200).json({
+                message: 'Application status update successful',
+                application: application
             })
         }
     })

@@ -159,6 +159,7 @@ export class FacultyService {
 
       this.http.post(this.url + 'faculty/update', updates).subscribe(
         data => {
+          this.faculty = data;
           res(data);
         },
         error => {

@@ -6,10 +6,6 @@ var oppurtunitySchema = new mongoose.Schema({
     icon:{ type: String, default: ''},
     school:{ type: String, default: ''},
     department:{ type: String, default: ''},
-    address:{ type: String, default: ''},
-    city:{ type: String, default: ''},
-    state:{ type: String, default: ''},
-    country:{ type: String, default: ''},
     expireTime: { type: String, default: ''},
     summary:{ type: String, default: ''},
     creator:{

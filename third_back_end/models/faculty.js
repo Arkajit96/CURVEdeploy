@@ -13,6 +13,7 @@ var FacultySchema = new mongoose.Schema({
 	gender: { type: String, default: ''},
 	date_of_joining: { type: String, default: ''},
 	date_of_birth: { type: String, default: ''},
+	school: { type: String, default: ''},
 	address: { type: String, default: ''},
 	phone: { type: String, default: ''},
 	research_summary: { type: String, default: ''},

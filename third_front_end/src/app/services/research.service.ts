@@ -59,6 +59,29 @@ export class ResearchService {
     return this.opportunitiesUpdated.asObservable();
   }
 
+
+  createOrUpdateOpportunity(id: string, form: any, faculty:any): Promise<any> {
+    return new Promise((res, rej) => {
+      let data = {
+        name: form.name.value,
+        expireTime: form.expireTime.value,
+        summary: form.summary.value,
+        faculty: faculty
+      }
+
+      this.http.post<{ message: string; opportunity: any; faculty: any }>(
+        this.url + 'research/createOrUpdateOpportunity', data
+        ).toPromise().then(
+        data => {
+          res(data);
+        },
+        error => {
+          res(error);
+        }
+      )
+    })
+  }
+
   getCandidates(optId: string): Promise<any> {
     return new Promise((res, rej) => {
       this.http.get<{ message: string; tableRow:any }>(
@@ -78,11 +101,30 @@ export class ResearchService {
     });
   }
 
-  getOptByIds(studentId:string, optId: string): Promise<any> {
+  getOptByIds(optId: string): Promise<any> {
+    return new Promise((res, rej) => {
+      this.http.get<{ message: string; opt: Opportunity}>(
+        '/api/research/getOptByIds/' + optId
+      ).toPromise().then(
+        data => {
+          res(data.opt);
+        },
+        error => {
+          this.flashMessage.show(error.error.message, {
+            cssClass: 'alert-danger',
+            timeout: 5000
+          });
+          rej(error);
+        }
+      )
+    });
+  }
+
+  getApplicationInfo(studentId:string, optId: string): Promise<any> {
     const queryParams = `?studentId=${studentId}&optId=${optId}`; 
     return new Promise((res, rej) => {
       this.http.get<{ message: string; opt: Opportunity; application: Application }>(
-        this.url + 'research/getOptByIds/' + queryParams
+        '/api/research/getApplicationInfo/' + queryParams
       ).toPromise().then(
         data => {
           res({
@@ -168,18 +210,6 @@ export class ResearchService {
 
   // submit the application
   createMultiApplications(studentID: string, opportunityIDs: any, resume: string, coverLetter: string): Promise<any> {
-    // Very weird why formData doesn't work??
-
-    // const formData = new FormData();
-    // formData.append('studentID', studentID);
-    // formData.append('resume', resume);
-    // formData.append('coverLetter', coverLetter);
-    // if (Array.isArray(opportunityIDs)) {
-    //   opportunityIDs.forEach(optId => {
-    //     formData.append('opportunityIDs[]', optId);
-    //   })
-    // }
-
     let optIdList = [];
     if (Array.isArray(opportunityIDs)) {
       opportunityIDs.forEach(optId => {
@@ -197,6 +227,27 @@ export class ResearchService {
     return new Promise((res, rej) => {
       this.http.post<{ message: String }>(
         this.url + 'research/createMultiApplications', formData)
+        .toPromise().then(
+          data => {
+            res(data);
+          },
+          error => {
+            console.log(error);
+            rej({ error: 'Error uploading file' });
+          }
+        )
+    })
+  }
+
+  updateApplicationStatus( applicationID: string, status : string): Promise<any> {
+    const formData = {
+      applicationID: applicationID,
+      status: status
+    }
+
+    return new Promise((res, rej) => {
+      this.http.post<{ message: String; application: String }>(
+        '/api/research/updateApplicationStatus', formData)
         .toPromise().then(
           data => {
             res(data);

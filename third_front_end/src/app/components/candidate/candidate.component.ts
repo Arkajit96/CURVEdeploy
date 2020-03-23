@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PageEvent, MatDialog, MatDialogConfig } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material';
 
@@ -8,8 +9,20 @@ import { MatSnackBar } from '@angular/material';
 import { ViewStudentProfileComponent } from '../modals/view-student-profile/view-student-profile.component'
 
 // Service
+import { StudentService } from 'src/app/services/student.service';
 import { FacultyService } from 'src/app/services/faculty.service';
 import { ResearchService } from 'src/app/services/research.service';
+
+// Define row data 
+export interface rowData {
+  userId: string,
+  applicationID: string,
+  name: string,
+  address: string,
+  major: string,
+  status: string
+}
+
 
 @Component({
   selector: 'app-candidate',
@@ -21,20 +34,26 @@ export class CandidateComponent implements OnInit {
   faculty: any;
 
   // Candidates controll
-  private candidates = [];
+  private candidates: rowData[] = [];
 
   // data control
-  dataSource = new MatTableDataSource<any>([]);
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  dataSource = new MatTableDataSource<rowData>([]);
+  @ViewChild(MatPaginator, { static: false }) set paginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator;
+  }
+  @ViewChild(MatSort, { static: false }) set Sort(sort: MatSort) {
+    this.dataSource.sort = sort;
+  }
 
 
   // columns that we want to display
-  columnsToDisplay: string[] = ['name', 'address', 'major', 'actions'];
+  columnsToDisplay: string[] = ['name', 'address', 'major', 'actions', 'status'];
 
   // slider controll
   private checked = false;
 
   constructor(
+    private studentService: StudentService,
     private facultyService: FacultyService,
     private researchService: ResearchService,
     private snackbar: MatSnackBar,
@@ -45,35 +64,18 @@ export class CandidateComponent implements OnInit {
     this.faculty = this.facultyService.getCurrentFacultyUser();
     this.checked = this.faculty.available;
 
-
     // get candidates
     if (this.faculty.opportunity || this.faculty.opportunity != '') {
       this.researchService.getCandidates(this.faculty.opportunity)
-      .then(res => {
-        this.candidates = res;
-        console.log(this.candidates);
-        this.dataSource = new MatTableDataSource<any>(this.candidates);
+        .then(res => {
+          this.candidates = res;
+          this.dataSource = new MatTableDataSource<rowData>(this.candidates);
 
-        //add pagenation
-        this.dataSource.paginator = this.paginator;
-      })
+          this.isloadingPage = false;
+        })
     }
-
-
-    this.isloadingPage = false;
-    // this.route.params.subscribe((data) => {
-    //   this.facultyId = data.id;
-    //   this.facultyService.loadFaculty(this.facultyId)
-    //   .then((res) => {
-    //     this.faculty = res;
-    //     this.loadingPage = false;
-    //     setTimeout(this.setListeners, 1000);
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   })
-    // })
   }
+
 
   onSliderChange() {
     this.facultyService.changeAvalibility(this.faculty.user_id, this.checked)
@@ -91,38 +93,60 @@ export class CandidateComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  getFontColor(status: string) {
+    switch (status) {
+      case 'Submit':
+        return 'orange';
+      case 'Accept':
+        return 'green';
+      case 'Deny':
+        return 'red';
+    }
+
   }
 
   // View student profile
-  ViewProfile(student: any) {
-    this.dialog.open(ViewStudentProfileComponent, {
-      data: { Data: student },
-    })
+  viewProfile(userId: string, entity: string) {
+    this.studentService.getStudentByUserId(userId)
+      .then(student => {
+        this.dialog.open(ViewStudentProfileComponent, {
+          data: { user: student, entity: entity },
+        })
+      })
   }
 
-  directMessage(person: any) {
+  directMessage(element: any) {
 
     // Send message to person
 
-    this.snackbar.open('Send message to ' + person.first_name, 'Close', {
+    this.snackbar.open('Send message to ' + element.name, 'Close', {
       duration: 3000,
       panelClass: 'success-snackbar'
     })
   }
 
-  // getCandidates() {
-  //   if (!this.faculty.opportunity || this.faculty.opportunity == '') {
-  //     return;
-  //   }
-  //   this.researchService.getCandidates(this.faculty.opportunity)
-  //     .then(res => {
-  //       this.candidates = res;
-  //       console.log(this.candidates.length);
-  //       this.dataSource = new MatTableDataSource<any>(this.candidates);
+  updateApplicationStatus(applicationID: string, status: string) {
 
-  //       //add pagenation
-  //       this.dataSource.paginator = this.paginator;
-  //     })
-  // }
+    this.researchService.updateApplicationStatus(applicationID, status)
+      .then(res => {
+
+        this.candidates.forEach(row => {
+          if (row.applicationID === res.application._id) {
+            row.status = res.application.status;
+          }
+        })
+
+        this.snackbar.open('Application status changed', 'Close', {
+          duration: 3000,
+          panelClass: 'success-snackbar'
+        })
+      })
+
+  }
 
 }

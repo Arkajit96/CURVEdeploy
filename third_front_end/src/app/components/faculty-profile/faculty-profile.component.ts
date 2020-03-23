@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material';
+
+// Services
+import { FacultyService } from '../../services/faculty.service';
+import { ResearchService } from '../../services/research.service';
+
+// Components
 import { AddInterestsComponent } from '../modals/add-interests/add-interests.component';
 import { EditFactulyProfileComponent } from '../modals/edit-factuly-profile/edit-factuly-profile.component'
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { FacultyService } from 'src/app/services/faculty.service';
-import { MatSnackBar } from '@angular/material';
+import { EditOpportunityComponent } from '../modals/edit-opportunity/edit-opportunity.component'
+
 
 @Component({
   selector: 'app-faculty-profile',
@@ -15,34 +18,78 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./faculty-profile.component.scss']
 })
 export class FacultyProfileComponent implements OnInit {
-  faculty:any;
   fileToUpload: any;
-  loadingImg = false;
-  constructor(public route:ActivatedRoute, 
-    public http: HttpClient, 
-    public router: Router,
+  loadingImg = true;
+
+  // store faculty
+  faculty: any;
+
+  // store Opportunity
+  opportunity = null;
+  loadingOpt = true;
+
+
+  constructor(
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private facultyService: FacultyService
+    private facultyService: FacultyService,
+    private researchService: ResearchService
   ) { }
 
   ngOnInit() {
     this.faculty = this.facultyService.getCurrentFacultyUser();
+    console.log(this.faculty)
+    if (this.faculty.opportunity) {
+      this.researchService.getOptByIds(this.faculty.opportunity)
+        .then(res => {
+          this.opportunity = res;
+          this.finishLoad();
+        })
+    } else {
+      this.finishLoad();
+    }
   }
   edit() {
     let dialog = this.dialog.open(EditFactulyProfileComponent, {
       width: '550px',
-      data: {user: this.faculty}
+      data: { user: this.faculty },
+      disableClose: true
+    })
+
+    dialog.backdropClick().subscribe(() => {
+      // Close the dialog
+      dialog.close({ faculty: this.faculty });
     })
 
     dialog.afterClosed().subscribe(
       data => {
-        if(data.faculty) {
+        if (data.faculty) {
           this.faculty = data.faculty
-          this.snackbar.open("Profile Updated", 'Dismiss', {
-            duration: 3000,
-            panelClass: 'success-snackbar'
-          })
+        }
+      }
+    )
+  }
+
+  createOreditopportunity() {
+    let dialog = this.dialog.open(EditOpportunityComponent, {
+      width: '600px',
+      data: { user: this.faculty, opportunity: this.opportunity },
+      disableClose: true
+    })
+
+    dialog.backdropClick().subscribe(() => {
+      dialog.close({
+        faculty: null,
+        opportunity: null
+      });
+    })
+
+    dialog.afterClosed().subscribe(
+      data => {
+        console.log(data.factuly)
+        if (data.factuly && data.opportunity) {
+          this.faculty = data.factuly;
+          this.opportunity = data.opportunity;
         }
       }
     )
@@ -63,16 +110,16 @@ export class FacultyProfileComponent implements OnInit {
           duration: 3000
         });
       })
-  } 
+  }
 
   openInterestsDialog() {
     const dialogRef = this.dialog.open(AddInterestsComponent, {
       width: '500px',
-      data: {User: this.faculty}
+      data: { User: this.faculty }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
+      if (result) {
         this.faculty = result;
         this.snackbar.open('Interests saved', 'Close', {
           duration: 3000,
@@ -83,7 +130,7 @@ export class FacultyProfileComponent implements OnInit {
   }
 
   onFileChange(event) {
-    if(event.target.files.length > 0) {
+    if (event.target.files.length > 0) {
       let file = event.target.files[0];
       this.fileToUpload = event.target.files[0];
       console.log(this.fileToUpload);
@@ -92,5 +139,6 @@ export class FacultyProfileComponent implements OnInit {
 
   finishLoad() {
     this.loadingImg = false;
+    this.loadingOpt = false;
   }
 }

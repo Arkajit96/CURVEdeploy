@@ -31,7 +31,6 @@ export class EditFactulyProfileComponent implements OnInit {
 
   ngOnInit() {
     this.faculty = this.data.user;
-    console.log(this.faculty);
 
     this.facultyForm = this.fb.group({
       first_name: [this.faculty.first_name],
@@ -68,6 +67,10 @@ export class EditFactulyProfileComponent implements OnInit {
     this.facultyService.updateFaculty(this.faculty.user_id, this.facultyForm.controls)
       .then((data) => {
         this.dialogRef.close({faculty: data});
+        this.snackBar.open("Profile Updated", 'Dismiss', {
+          duration: 3000,
+          panelClass: 'success-snackbar'
+        })
       })
       .catch((e) => {
         this.snackBar.open('Error Updating Student', 'Dismiss', {
@@ -102,6 +105,7 @@ export class EditFactulyProfileComponent implements OnInit {
       this.previewImg = reader.result; 
     }
   }
+  
 
   close() {
     if(this.anyChanges) {
@@ -113,13 +117,13 @@ export class EditFactulyProfileComponent implements OnInit {
       dialogRef.afterClosed().subscribe(
         res => {
           if(res) {
-            this.dialogRef.close();
+            this.dialogRef.close({faculty: this.faculty});
           }
         }
       );
     }
     else {
-      this.dialogRef.close();
+      this.dialogRef.close({faculty: this.faculty});
     }
   }
 

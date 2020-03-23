@@ -15,8 +15,7 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-  loadingPage = true;
-  student: any;
+  isloadingPage = true;
   user: any;
   otherUser: any;
   student_id: any;
@@ -50,6 +49,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
   ) { }
 
   ngOnInit() {
+
     if(this.authService.getEntity() == 'student') {
       this.user = this.studentService.getCurrentStudentUser();
       this.user.caption = 'Class of ' + this.user.graduation_class
@@ -100,7 +100,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
         })
         .catch((e) => {
           console.log(e);
-          this.loadingPage = false;
+          this.isloadingPage = false;
         })
   }
 
@@ -110,10 +110,10 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
     this.chatService.loadMessages(this.user.user_id, otherUser.id)
       .then((res) => {
         this.messages = res;
-        this.loadingPage = false;
+        this.isloadingPage = false;
       })
       .catch((e) => {
-        this.loadingPage = false;
+        this.isloadingPage = false;
       })
   }
 

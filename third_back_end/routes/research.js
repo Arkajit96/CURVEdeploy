@@ -10,13 +10,16 @@ const checkAuth = require("../middleware/check-auth");
 const fileUpload = require("../middleware").fileUpload;
 
 // Opportunities create
-router.post("/createOpportunity", researchControllor.createOpportunity);
+router.post("/createOrUpdateOpportunity", researchControllor.createOrUpdateOpportunity);
 
 // get research opportunies 
 router.get("/getOpportunities/",researchControllor.getOpportunities);
 
 // get opportunty by id 
-router.get("/getOptByIds/",researchControllor.getOptByIds);
+router.get("/getOptByIds/:optId",researchControllor.getOptByIds);
+
+// get opt and application by opt id and student id 
+router.get("/getApplicationInfo/",researchControllor.getApplicationInfo);
 
 // get candidates
 router.get("/getCandidates/:id",researchControllor.getCandidates);
@@ -26,6 +29,9 @@ router.post("/createApplication",checkAuth, researchControllor.createApplication
 
 // create multiple applications 
 router.post("/createMultiApplications",checkAuth, researchControllor.createMultiApplications);
+
+// update the status of application
+router.post("/updateApplicationStatus",checkAuth, researchControllor.updateApplicationStatus);
 
 //upload file to the application
 router.post("/uploadFile", checkAuth, fileUpload.single('file'), researchControllor.uploadFile);

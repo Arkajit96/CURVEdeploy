@@ -11,7 +11,8 @@ var applicationSchema = new mongoose.Schema({
     },
     resume: { type: String, default: ''},
     coverLetter: { type: String, default: ''},
-    updateTime: { type: String, default: new Date().toLocaleString()}
+    updateTime: { type: String, default: new Date().toLocaleString()},
+    status: { type: String, default: 'submitted'}
 });
 
 

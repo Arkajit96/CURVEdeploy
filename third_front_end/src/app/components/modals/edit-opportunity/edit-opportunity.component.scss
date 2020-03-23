@@ -1,0 +1,22 @@
+.mat-tabs, mat-tab, .row, .container-fluid, mat-form-field, form {
+    overflow-x: hidden!important;
+}
+.preview-img {
+    max-height: 250px;
+    max-width: 250px;
+}
+input {
+    width: 100%;
+}
+
+.first-row {
+    margin-top: .5rem;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+button {
+    margin: .5rem;
+}

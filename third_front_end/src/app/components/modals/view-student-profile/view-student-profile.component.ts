@@ -8,9 +8,8 @@ import { StudentService } from 'src/app/services/student.service';
   styleUrls: ['./view-student-profile.component.scss']
 })
 export class ViewStudentProfileComponent implements OnInit {
-  id: any;
-  entity: any;
   student: any;
+  faculty: any;
   loadingPage = true;
 
   constructor(
@@ -21,25 +20,33 @@ export class ViewStudentProfileComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log(this.Data);
-    this.id = this.Data.id;
-    this.entity = this.Data.entity;
-    if(this.entity == 'student') {
-      this.loadStudent();
+    // console.log(this.Data);
+    // this.id = this.Data.id;
+    // this.entity = this.Data.entity;
+    // if(this.entity == 'student') {
+    //   this.loadStudent();
+    // }
+
+    if (this.Data.entity == 'student') {
+      this.student = this.Data.user;
+    }else if (this.Data.entity == 'faculty') {
+      this.faculty = this.Data.user;
     }
+
+    this.loadingPage = false;
   }
 
 
-  loadStudent() {
-    this.studentService.getStudentByUserId(this.id)
-    .then((res) => {
-      console.log(res);
-      this.student = res.student;
-      this.loadingPage = false;
-    })
-    .catch((e) => {
+  // loadStudent() {
+  //   this.studentService.getStudentByUserId(this.id)
+  //     .then((res) => {
+  //       console.log(res);
+  //       this.student = res.student;
+  //       this.loadingPage = false;
+  //     })
+  //     .catch((e) => {
 
-    })
-  }
+  //     })
+  // }
 
 }
