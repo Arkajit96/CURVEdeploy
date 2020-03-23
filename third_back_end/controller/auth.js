@@ -1,5 +1,5 @@
-// let config = require('dotenv').config().parsed;
-const config = require('../config');
+let config = require('dotenv').config().parsed;
+// const config = require('../config');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 

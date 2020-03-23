@@ -3,35 +3,61 @@ var async = require('async');
 
 // Models
 const Student = require('../models/student');
+const Faculty = require('../models/faculty');
 const Opportunity = require('../models/opportunity');
 const Application = require('../models/application');
 
 const Helper = require('../helpers/index');
 
 // Create new opportunities
-exports.createOpportunity = (req, res) => {
-    const opportunity = new Opportunity({
+exports.createOrUpdateOpportunity = (req, res) => {
+    const filter = {
+        creator: req.body.faculty._id,
+    };
+
+    const update = {
         name: req.body.name,
-        icon: req.body.icon,
-        school: req.body.school,
-        department: req.body.department,
-        address: req.body.address,
-        city: req.body.city,
-        state: req.body.state,
-        country: req.body.country,
+        school: req.body.faculty.school,
+        department: req.body.faculty.department,
         expireTime: req.body.expireTime,
         summary: req.body.summary,
-        // modifiy/add middleware for id
-        creator: req.body.id
-    });
-    Opportunity.create(opportunity, function (err, newOpt) {
+    };
+
+    const config = {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true
+    };
+
+    Opportunity.findOneAndUpdate(filter, update, config, (err, opportunity) => {
         if (err) {
             console.log(err);
-            rej(error);
+            res.status(500).json({
+                message: "Opportunity update failed!",
+                opportunity: opportunity,
+                faculty: req.body.faculty
+            });
         } else {
-            res(newOpt);
+            Faculty.findByIdAndUpdate(req.body.faculty._id,
+                { opportunity: opportunity._id }, {}, (err, faculty) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).json({
+                            message: "Opportunity update failed!",
+                            opportunity: opportunity,
+                            faculty: req.body.faculty
+                        });
+                    }
+                    else {
+                        res.status(200).json({
+                            message: 'Opportunity create successful',
+                            opportunity: opportunity,
+                            faculty: faculty
+                        })
+                    }
+                })
         }
-    });
+    })
 }
 
 // Get all the opportunities

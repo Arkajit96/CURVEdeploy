@@ -22,7 +22,7 @@ const Helper = require('../helpers/index');
 router.get("/update/model", async function (req, res) {
     try {
         await Faculty.updateMany({}, { $set: { opportunity: null } });
-        res.status(200).send('Updated');
+        res.status(200).send('Updated faculty');
     } catch (e) {
         res.status(400).send(e);
     }

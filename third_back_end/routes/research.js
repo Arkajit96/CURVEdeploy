@@ -10,7 +10,7 @@ const checkAuth = require("../middleware/check-auth");
 const fileUpload = require("../middleware").fileUpload;
 
 // Opportunities create
-router.post("/createOpportunity", researchControllor.createOpportunity);
+router.post("/createOrUpdateOpportunity", researchControllor.createOrUpdateOpportunity);
 
 // get research opportunies 
 router.get("/getOpportunities/",researchControllor.getOpportunities);

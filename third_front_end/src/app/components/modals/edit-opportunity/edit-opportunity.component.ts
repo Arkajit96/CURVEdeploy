@@ -20,7 +20,7 @@ export class EditOpportunityComponent implements OnInit {
 
     //maintaning data
     faculty: any;
-    opportunity:any;
+    opportunity: any;
 
     // form control
     opportunityForm: any;
@@ -39,99 +39,127 @@ export class EditOpportunityComponent implements OnInit {
         private snackBar: MatSnackBar,
         private facultyService: FacultyService,
         private researchService: ResearchService
-    ) { }
-
-    ngOnInit() {
+    ) {
         this.faculty = this.data.user;
         this.opportunity = this.data.opportunity;
+    }
 
-        this.opportunityForm = this.fb.group({
-            name: [this.opportunity.name],
-            icon: [],
-            expireTime: [this.opportunity.expireTime],
-            summary: [this.opportunity.summary]
-        })
+    ngOnInit() {
+        console.log(this.data);
+        if (this.opportunity) {
+            this.opportunityForm = this.fb.group({
+                name: [this.opportunity.name],
+                icon: [],
+                expireTime: [this.opportunity.expireTime],
+                summary: [this.opportunity.summary]
+            })
+        } else {
+            this.opportunityForm = this.fb.group({
+                name: [],
+                icon: [],
+                expireTime: [],
+                summary: []
+            })
+        }
+
     }
 
     submit() {
-        if(this.uploadImg) {
-          this.facultyService.uploadProfilePicture(this.faculty.user_id, this.imageData)
-            .then((res) => {
-              this.saveForm();
+        if (this.uploadImg) {
+            this.facultyService.uploadProfilePicture(this.faculty.user_id, this.imageData)
+                .then((res) => {
+                    this.saveForm();
+                })
+                .catch((e) => {
+                    this.snackBar.open('Error uploading icon', 'Dismiss', {
+                        duration: 3000,
+                        panelClass: 'error-snackbar'
+                    })
+                })
+        } else {
+            this.saveForm();
+        }
+    }
+
+    saveForm() {
+        this.researchService.createOrUpdateOpportunity(
+            this.faculty.user_id,
+            this.opportunityForm.controls,
+            this.faculty)
+            .then((data) => {
+                this.dialogRef.close({
+                    opportunity: data.opportunity,
+                    faculty: data.faculty,
+                });
+
+                this.snackBar.open('Updating opportunity successful', 'Close', {
+                    duration: 3000,
+                    panelClass: 'success-snackbar'
+                });
             })
             .catch((e) => {
-              this.snackBar.open('Error uploading icon', 'Dismiss', {
-                duration: 3000,
-                panelClass: 'error-snackbar'
-              })
+                this.snackBar.open('Error Updating opportunity', 'Dismiss', {
+                    duration: 3000,
+                    panelClass: 'error-snackbar'
+                });
             })
-        } else {
-          this.saveForm();
-        }
-      }
-    
-      saveForm() {
-        this.facultyService.updateFaculty(this.faculty.user_id, this.opportunityForm.controls)
-          .then((data) => {
-            this.dialogRef.close();
-          })
-          .catch((e) => {
-            this.snackBar.open('Error Updating Student', 'Dismiss', {
-              duration: 3000,
-              panelClass: 'error-snackbar'
-            });
-          })
-      }
-    
-      newPicture(fileInput: any) {
+    }
+
+    newPicture(fileInput: any) {
         this.imageData = <File>fileInput.target.files[0];
-    
+
         let mimeType = this.imageData.type;
         if (mimeType.match(/image\/*/) == null) {
-          this.opportunityForm.patchValue({image: ''})
-          this.snackBar.open('Must be a .png or .jpg file', 'Close', {
-            duration: 3000,
-            panelClass: 'error-snackbar'
-          })
+            this.opportunityForm.patchValue({ icon: '' })
+            this.snackBar.open('Must be a .png or .jpg file', 'Close', {
+                duration: 3000,
+                panelClass: 'error-snackbar'
+            })
         } else {
-          this.anyChanges = true;
-          this.uploadImg = true;
+            this.anyChanges = true;
+            this.uploadImg = true;
         }
-    
+
         this.previewProfilePic();
-      }
-    
-      previewProfilePic() {
+    }
+
+    previewProfilePic() {
         const reader = new FileReader();
-        reader.readAsDataURL(this.imageData); 
-        reader.onload = (_event) => { 
-          this.previewImg = reader.result; 
+        reader.readAsDataURL(this.imageData);
+        reader.onload = (_event) => {
+            this.previewImg = reader.result;
         }
-      }
-    
-      close() {
-        if(this.anyChanges) {
-          let dialogRef = this.dialog.open(CloseConfirmComponent, {
-            width: "500px",
-            hasBackdrop: false
-          });
-      
-          dialogRef.afterClosed().subscribe(
-            res => {
-              if(res) {
-                this.dialogRef.close();
-              }
-            }
-          );
+    }
+
+    close() {
+        if (this.anyChanges) {
+            let dialogRef = this.dialog.open(CloseConfirmComponent, {
+                width: "500px",
+                hasBackdrop: false
+            });
+
+            dialogRef.afterClosed().subscribe(
+                res => {
+                    if (res) {
+                        this.dialogRef.close({
+                            faculty: this.faculty,
+                            opportunity: this.opportunity
+                        });
+                    }
+                }
+            );
         }
         else {
-          this.dialogRef.close();
+            this.dialogRef.close({
+                faculty: this.faculty,
+                opportunity: this.opportunity
+            });
         }
-      }
-    
-      setChanged() {
+    }
+
+    setChanged() {
         this.anyChanges = true;
-      }
-    
+    }
+
 
 }

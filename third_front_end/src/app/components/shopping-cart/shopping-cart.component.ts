@@ -44,7 +44,7 @@ export class ShoppingCartComponent implements OnInit {
 
 
     // columns that we want to display
-    columnsToDisplay: string[] = ['select', 'first_name', 'department', 'email', 'actions'];
+    columnsToDisplay: string[] = ['select', 'first_name', 'school' ,'department', 'actions'];
 
 
     constructor(

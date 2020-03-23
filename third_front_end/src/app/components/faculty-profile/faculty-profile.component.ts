@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material';
 
 // Services
 import { FacultyService } from '../../services/faculty.service';
-import {ResearchService} from '../../services/research.service';
+import { ResearchService } from '../../services/research.service';
 
 // Components
 import { AddInterestsComponent } from '../modals/add-interests/add-interests.component';
@@ -22,10 +22,10 @@ export class FacultyProfileComponent implements OnInit {
   loadingImg = true;
 
   // store faculty
-  faculty:any;
-  
+  faculty: any;
+
   // store Opportunity
-  opportunity:any;
+  opportunity = null;
   loadingOpt = true;
 
 
@@ -38,47 +38,58 @@ export class FacultyProfileComponent implements OnInit {
 
   ngOnInit() {
     this.faculty = this.facultyService.getCurrentFacultyUser();
-    if(this.faculty.opportunity){
+    console.log(this.faculty)
+    if (this.faculty.opportunity) {
       this.researchService.getOptByIds(this.faculty.opportunity)
-      .then(res => {
-        this.opportunity = res;
-        this.finishLoad()
-      })
+        .then(res => {
+          this.opportunity = res;
+          this.finishLoad();
+        })
+    } else {
+      this.finishLoad();
     }
   }
   edit() {
-    let dialog = this.dialog.open(EditOpportunityComponent, {
+    let dialog = this.dialog.open(EditFactulyProfileComponent, {
       width: '550px',
-      data: {user: this.faculty, opportunity: this.opportunity}
+      data: { user: this.faculty },
+      disableClose: true
+    })
+
+    dialog.backdropClick().subscribe(() => {
+      // Close the dialog
+      dialog.close({ faculty: this.faculty });
     })
 
     dialog.afterClosed().subscribe(
       data => {
-        if(data.faculty) {
+        if (data.faculty) {
           this.faculty = data.faculty
-          this.snackbar.open("Profile Updated", 'Dismiss', {
-            duration: 3000,
-            panelClass: 'success-snackbar'
-          })
         }
       }
     )
   }
 
-  editopportunity() {
+  createOreditopportunity() {
     let dialog = this.dialog.open(EditOpportunityComponent, {
-      width: '550px',
-      data: {user: this.faculty}
+      width: '600px',
+      data: { user: this.faculty, opportunity: this.opportunity },
+      disableClose: true
+    })
+
+    dialog.backdropClick().subscribe(() => {
+      dialog.close({
+        faculty: null,
+        opportunity: null
+      });
     })
 
     dialog.afterClosed().subscribe(
       data => {
-        if(data.faculty) {
-          this.faculty = data.faculty
-          this.snackbar.open("Profile Updated", 'Dismiss', {
-            duration: 3000,
-            panelClass: 'success-snackbar'
-          })
+        console.log(data.factuly)
+        if (data.factuly && data.opportunity) {
+          this.faculty = data.factuly;
+          this.opportunity = data.opportunity;
         }
       }
     )
@@ -99,16 +110,16 @@ export class FacultyProfileComponent implements OnInit {
           duration: 3000
         });
       })
-  } 
+  }
 
   openInterestsDialog() {
     const dialogRef = this.dialog.open(AddInterestsComponent, {
       width: '500px',
-      data: {User: this.faculty}
+      data: { User: this.faculty }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
+      if (result) {
         this.faculty = result;
         this.snackbar.open('Interests saved', 'Close', {
           duration: 3000,
@@ -119,7 +130,7 @@ export class FacultyProfileComponent implements OnInit {
   }
 
   onFileChange(event) {
-    if(event.target.files.length > 0) {
+    if (event.target.files.length > 0) {
       let file = event.target.files[0];
       this.fileToUpload = event.target.files[0];
       console.log(this.fileToUpload);

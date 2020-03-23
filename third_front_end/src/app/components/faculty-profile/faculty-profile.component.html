@@ -10,6 +10,10 @@
                     <div class="caption-text">PhD Associate Professor</div>
 
                     <div class="profile-item">
+                        <h6>School</h6>
+                        {{faculty.school}}
+                    </div>
+                    <div class="profile-item">
                         <h6>Department</h6>
                         {{faculty.department}}
                     </div>
@@ -49,22 +53,20 @@
                                 {{opportunity.name}}
                             </p>
                         </mat-card-content>
-                        <mat-card-actions>
-                            <button mat-raised-button color="primary"  (click)="editopportunity()">Edit</button>
+                        <mat-card-actions align="center">
+                            <button mat-raised-button color="primary"  (click)="createOreditopportunity()">Edit</button>
                         </mat-card-actions>
                     </div>
-
                     <div *ngIf='!faculty.opportunity && !loadingOpt'>
                         <mat-card-content>
                             <p>
                                No opportunity created
                             </p>
                         </mat-card-content>
-                        <mat-card-actions>
-                            <button style = 'align: center;' mat-raised-button color="primary">Create</button>
+                        <mat-card-actions align="center">
+                            <button mat-raised-button color="primary" (click)="createOreditopportunity()" >Create</button>
                         </mat-card-actions>
                     </div>
-
                 </mat-card>
             </div>
             <div class="col-sm-8">

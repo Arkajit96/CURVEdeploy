@@ -31,7 +31,6 @@ export class ChatService {
         if(error) {
           console.log(error);
         } else {
-          console.log('Connected to room ' + userid);
           console.log(this.socket);
         }
       })
@@ -39,15 +38,11 @@ export class ChatService {
     }
 
     getMessages(userid) {
-      console.log(userid);
       let observable = new Observable<any>(observer => {
         this.socket = io(this.url);
         let room = 'room' + userid + '';
-        console.log(room);
         this.socket.emit('join', room, (error) => {
-          console.log('Connected again')
           this.socket.on('new-message', (data) => {
-            console.log(data);
             observer.next(data);    
           });
         });
