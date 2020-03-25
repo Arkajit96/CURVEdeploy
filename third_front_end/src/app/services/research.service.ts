@@ -20,7 +20,6 @@ export class ResearchService {
 
   constructor(
     private http: HttpClient, 
-    private flashMessage: FlashMessagesService,
     private config: ConfigService
   ) { }
 
@@ -82,6 +81,23 @@ export class ResearchService {
     })
   }
 
+  uploadOpportunityIcon(facultyId: any, imageData: any): Promise<any> {
+    return new Promise((res, rej) => {
+      const formData = new FormData();
+      formData.append('image', imageData);
+      formData.append('facultyId', facultyId);
+      this.http.post(this.url + 'research/uploadIcon', formData).subscribe(
+        data => {
+          res(data);
+        },
+        error => {
+          console.log(error);
+          rej({error: 'Error uploading profile picture'});
+        }
+      )
+    })
+  }
+
   getCandidates(optId: string): Promise<any> {
     return new Promise((res, rej) => {
       this.http.get<{ message: string; tableRow:any }>(
@@ -91,10 +107,6 @@ export class ResearchService {
           res(data.tableRow);
         },
         error => {
-          this.flashMessage.show(error.error.message, {
-            cssClass: 'alert-danger',
-            timeout: 5000
-          });
           rej(error);
         }
       )
@@ -110,10 +122,6 @@ export class ResearchService {
           res(data.opt);
         },
         error => {
-          this.flashMessage.show(error.error.message, {
-            cssClass: 'alert-danger',
-            timeout: 5000
-          });
           rej(error);
         }
       )
@@ -133,10 +141,6 @@ export class ResearchService {
           });
         },
         error => {
-          this.flashMessage.show(error.error.message, {
-            cssClass: 'alert-danger',
-            timeout: 5000
-          });
           rej(error);
         }
       )

@@ -45,7 +45,6 @@ export class EditOpportunityComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.data);
         if (this.opportunity) {
             this.opportunityForm = this.fb.group({
                 name: [this.opportunity.name],
@@ -66,8 +65,17 @@ export class EditOpportunityComponent implements OnInit {
 
     submit() {
         if (this.uploadImg) {
-            this.facultyService.uploadProfilePicture(this.faculty.user_id, this.imageData)
+            this.researchService.uploadOpportunityIcon(this.faculty._id, this.imageData)
                 .then((res) => {
+                    if (res.opportunity) {
+                        this.opportunity = res.opportunity;
+                    } else {
+                        this.snackBar.open('Error uploading icon', 'Dismiss', {
+                            duration: 3000,
+                            panelClass: 'error-snackbar'
+                        })
+                    }
+                    
                     this.saveForm();
                 })
                 .catch((e) => {

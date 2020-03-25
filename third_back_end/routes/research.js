@@ -1,6 +1,8 @@
 const express = require("express");
 const router  = express.Router();
 
+const uploadImage = require("../middleware").imgUpload;
+
 // Controller
 const researchControllor = require('../controller/research');
 
@@ -10,7 +12,10 @@ const checkAuth = require("../middleware/check-auth");
 const fileUpload = require("../middleware").fileUpload;
 
 // Opportunities create
-router.post("/createOrUpdateOpportunity", researchControllor.createOrUpdateOpportunity);
+router.post("/createOrUpdateOpportunity", checkAuth, researchControllor.createOrUpdateOpportunity);
+
+// Upload opportunities Icon
+router.post("/uploadIcon", checkAuth, uploadImage.single('image'), researchControllor.uploadOpportunityIcon);
 
 // get research opportunies 
 router.get("/getOpportunities/",researchControllor.getOpportunities);

@@ -60,6 +60,43 @@ exports.createOrUpdateOpportunity = (req, res) => {
     })
 }
 
+// Upload opportunities Icon
+exports.uploadOpportunityIcon = (req, res) => {
+    const filter = {
+        creator: req.body.facultyId
+    };
+
+    const update = {
+        icon: req.file.location
+    };
+
+    const config = {
+        upsert: true,
+        setDefaultsOnInsert: true
+    };
+
+    Opportunity.findOneAndUpdate(filter, update, config, (err, opportunity) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Icon upload failed!",
+                opportunity: null
+            });
+        } else {
+            let oldImg = opportunity.icon;
+            if (oldImg && oldImg.trim() != '') {
+                Helper.deleteS3(oldImg);
+            }
+            opportunity.icon = req.file.location;
+
+            res.status(200).json({
+                message: 'Icon upload successful',
+                opportunity: opportunity,
+            })
+        }
+    })
+}
+
 // Get all the opportunities
 exports.getOpportunities = (req, res) => {
     const pageSize = +req.query.pagesize;

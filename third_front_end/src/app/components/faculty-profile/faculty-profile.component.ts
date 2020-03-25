@@ -8,7 +8,7 @@ import { ResearchService } from '../../services/research.service';
 
 // Components
 import { AddInterestsComponent } from '../modals/add-interests/add-interests.component';
-import { EditFactulyProfileComponent } from '../modals/edit-factuly-profile/edit-factuly-profile.component'
+import { EditFacultyProfileComponent } from '../modals/edit-faculty-profile/edit-faculty-profile.component'
 import { EditOpportunityComponent } from '../modals/edit-opportunity/edit-opportunity.component'
 
 
@@ -38,7 +38,6 @@ export class FacultyProfileComponent implements OnInit {
 
   ngOnInit() {
     this.faculty = this.facultyService.getCurrentFacultyUser();
-    console.log(this.faculty)
     if (this.faculty.opportunity) {
       this.researchService.getOptByIds(this.faculty.opportunity)
         .then(res => {
@@ -50,7 +49,7 @@ export class FacultyProfileComponent implements OnInit {
     }
   }
   edit() {
-    let dialog = this.dialog.open(EditFactulyProfileComponent, {
+    let dialog = this.dialog.open(EditFacultyProfileComponent, {
       width: '550px',
       data: { user: this.faculty },
       disableClose: true
@@ -72,7 +71,7 @@ export class FacultyProfileComponent implements OnInit {
 
   createOreditopportunity() {
     let dialog = this.dialog.open(EditOpportunityComponent, {
-      width: '600px',
+      width: '100rm',
       data: { user: this.faculty, opportunity: this.opportunity },
       disableClose: true
     })
@@ -86,9 +85,8 @@ export class FacultyProfileComponent implements OnInit {
 
     dialog.afterClosed().subscribe(
       data => {
-        console.log(data.factuly)
-        if (data.factuly && data.opportunity) {
-          this.faculty = data.factuly;
+        if (data.faculty && data.opportunity) {
+          this.faculty = data.faculty;
           this.opportunity = data.opportunity;
         }
       }
