@@ -103,6 +103,7 @@ export class ResearchComponent implements OnInit, OnDestroy {
       this.studentService.search(this.searchQuery)
         .then((res) => {
           this.searchResults = res;
+          console.log(this.searchResults);
           this.searchQuery = ''
           this.filter = 'People';
           this.loadingSearch = false;
@@ -127,6 +128,7 @@ export class ResearchComponent implements OnInit, OnDestroy {
   findOptAndOpenDialog(optID: string) {
     this.researchService.getApplicationInfo(this.student._id, optID)
       .then(data => {
+        console.log(data);
         this.openApplicationDialog(data);
       });
   }

@@ -36,7 +36,8 @@ export class submitApplicationComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-
+    console.log(this.data);
+    
     if (this.data.application) {
       // init new appliction
       this.application = {

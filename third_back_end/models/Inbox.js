@@ -14,7 +14,8 @@ const InboxSchema = new mongoose.Schema({
         ref: 'User'
     },
     user2_name: {type: String},
-    user2_email: {type: String}
+    user2_email: {type: String},
+    timestamp: {type: String}
 })
 
 module.exports = mongoose.model("Inboxes", InboxSchema);
