@@ -64,6 +64,82 @@
             </div>
       </div>
     </div> 
+
+
+    <div class="container-fluid" *ngIf="Data.entity == 'faculty'">
+        <div class="row justify-content-sm-center">
+            <div class="col-lg-3 col-sm-4">
+                <div class="profile-card">
+                    <img src="{{faculty.image}}" class="pro-pic">
+                    <h4 id="name">{{faculty.first_name}} {{faculty.last_name}}</h4>
+                    <div class="caption-text">PhD Associate Professor</div>
+
+                    <div class="profile-item">
+                        <h6>School</h6>
+                        {{faculty.school}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Department</h6>
+                        {{faculty.department}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Education</h6>
+                        {{faculty.education}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Experience</h6>
+                        {{faculty.experience}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Office</h6>
+                        {{faculty.address}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Email</h6>
+                        {{faculty.email}}
+                    </div>
+                    <div class="profile-item">
+                        <h6>Phone</h6>
+                        {{faculty.phone}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="d-flex flex-column align-items-center">
+                    <h1 style="margin-bottom: 1rem;">Interests</h1>
+                    <div class="interests-container">
+                        <div class="interest" *ngFor="let interest of faculty.interests">
+                            {{interest}}
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1rem">
+                        <h1>RESEARCH SUMMARY</h1>
+                        <div class="row" style="width:100%">
+                            <mat-form-field style="width:100%" class="summary-text">
+                                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                                    cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10" disabled
+                                    [(ngModel)]="faculty.research_summary"
+                                    style="color:black!important">{{faculty.research_summary}}</textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem">
+                        <h1>CURRENT PROJECTS</h1>
+                        <div class="row" style="width:100%">
+                            <mat-form-field style="width:100%" class="summary-text">
+                                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                                    cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10" disabled
+                                    [(ngModel)]="faculty.current_projects"
+                                    style="color:black!important">{{faculty.current_projects}}</textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <div *ngIf="loadingPage">

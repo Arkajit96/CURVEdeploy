@@ -1,11 +1,11 @@
 <app-header></app-header>
 
-<div class="row justify-content-sm-center" *ngIf="loadingPage">
+<div class="row justify-content-sm-center" *ngIf="isloadingPage">
     <mat-spinner></mat-spinner>
 </div>
 
-<body>
-<div class="container-fluid" *ngIf="!loadingPage">
+<body *ngIf="!isloadingPage">
+<div class="container-fluid" >
     <div class = "row justify-content-md-center">
         <div class = "col-lg-3 col-sm-4">
             <div class = "profile">
@@ -31,9 +31,9 @@
                                   <form>
                                     <input type="text" class="search-bar" placeholder="Search" [formControl]="searchControl" [matAutocomplete]="auto">
                                     <mat-autocomplete #auto="matAutocomplete">
-                                      <mat-option *ngFor="let option of searchResults">
-                                          <span *ngIf="option.name" (click)="startNewMessage(option)">{{option.first_name}} {{option.last_name}}</span>
-                                          <span *ngIf="!option.first_name" (click)="startNewMessage(option)">{{option.email}}</span>
+                                      <mat-option *ngFor="let option of searchResults" (click)="startNewMessage(option)">
+                                          <span *ngIf="option.name">{{option.first_name}} {{option.last_name}}</span>
+                                          <span *ngIf="!option.first_name">{{option.email}}</span>
                                       </mat-option>
                                     </mat-autocomplete>
                                     <span class="input-group-addon" style="margin-left:3px">
@@ -97,4 +97,6 @@
         </div>
     </div>
 </div>
+</div>
+</body>
 

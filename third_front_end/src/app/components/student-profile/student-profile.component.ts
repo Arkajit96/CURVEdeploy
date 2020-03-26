@@ -88,11 +88,13 @@ export class StudentProfileComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       data => {
         if(data && !data.error){
-          this.student = data.student;
-          this.snackbar.open('Student info updated', 'Close', {
-            duration: 3000,
-            panelClass: 'success-snackbar'
-          })
+          if(data.student) {
+            this.student = data.student;
+            this.snackbar.open('Student info updated', 'Close', {
+              duration: 3000,
+              panelClass: 'success-snackbar'
+            })
+          }
         } else {
           if(data.error){
             this.snackbar.open(data.error, 'Close', {

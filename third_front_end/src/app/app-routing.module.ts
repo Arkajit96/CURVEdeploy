@@ -44,7 +44,7 @@ const routes: Routes = [
     path: 'candidate', component: CandidateComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'notifications/:id', component: NotificationsComponent, canActivate: [AuthGuard]
+    path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]
   },
   {
     path: '', redirectTo: 'login', pathMatch: 'full'

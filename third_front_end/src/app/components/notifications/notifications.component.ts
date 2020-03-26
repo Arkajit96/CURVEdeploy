@@ -83,6 +83,14 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
         this.search(value);
       }
     )
+
+    // let userToMessage = this.chatService.getUserToMessage();
+    // console.log(userToMessage);
+    // if(userToMessage) {
+    //   this.chatService.storeUserToMessage(null);
+    //   this.startNewMessage(userToMessage);
+    // }
+
   }
 
   ngAfterViewChecked() {
@@ -117,6 +125,13 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
               }
               
               this.loadMessage(this.inbox[this.selectedMessage]);
+              let userToMessage = this.chatService.getUserToMessage();
+              console.log(userToMessage);
+              if(userToMessage) {
+                this.chatService.storeUserToMessage(null);
+                this.messages = [];
+                this.startNewMessage(userToMessage);
+              }
             })
             .catch((e) => {
               console.log(e);
@@ -131,7 +146,8 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
   loadMessage(otherUser) {
     this.messages = [];
     this.otherUser = otherUser;
-    this.chatService.loadMessages(this.user.user_id, otherUser.id)
+    let id = otherUser.id ? otherUser.id : otherUser.user_id
+    this.chatService.loadMessages(this.user.user_id, id)
       .then((res) => {
         this.messages = res;
         this.isloadingPage = false;
@@ -160,10 +176,10 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
         console.log(e);
       })
   }
+  
   startNewMessage(user) {
-    console.log('HERE');
     for(var i = 0; i < this.inbox.length; i++) {
-      if(this.inbox[i].id == user.id) {
+      if(this.inbox[i].id == user.id || this.inbox[i].id == user.user_id) {
         this.changeInbox(i);
         return;
       }
@@ -174,6 +190,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
       email: user.email,
       class: 'chat_list'
     });
+    this.messages = [];
     this.changeInbox(this.inbox.length - 1);
   }
 
@@ -215,17 +232,17 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
   }
 
   search(value) {
-    this.chatService.searchFaculty(value)
-      .then((data) => {
-        this.searchResults = data;
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-    // this.searchResults = this.inbox.filter((user) => {
-    //   if(user.name.includes(value) || user.email.includes(value))
-    //     return user;
-    // })
+    // this.chatService.searchFaculty(value)
+    //   .then((data) => {
+    //     this.searchResults = data;
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   })
+    this.searchResults = this.inbox.filter((user) => {
+      if(user.name.includes(value) || user.email.includes(value))
+        return user;
+    })
   }
 
   ngOnDestroy() {
