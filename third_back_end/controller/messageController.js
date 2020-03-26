@@ -1,7 +1,9 @@
+const mongoose = require('mongoose');
 const Notifications = require('../models/notifications');
 const Inboxes = require('../models/inbox');
 const Messages = require('../models/message');
 const Helpers = require('../helpers/index');
+const User = require('../models/user');
 
 let messageController = {};
 
@@ -54,7 +56,8 @@ messageController.createNewInbox = async (recipient, sender) => {
                                 user1_email: Sender.email,
                                 user2_id: Recipient.user_id,
                                 user2_name: Recipient.first_name + ' ' + Recipient.last_name,
-                                user2_email: Recipient.email
+                                user2_email: Recipient.email,
+                                timestamp: new Date().getTime()
                             }, (newInbox) => {
                                 res(newInbox)
                                 console.log("New Inbox ", inbox);
@@ -96,9 +99,8 @@ messageController.createNewMessage = function(recipient, sender, text, sentAt) {
     return new Promise(async (res, rej) => {
         try {
             let inbox = await findInbox(recipient, sender);
-            console.log(inbox);
+
             if(!inbox) {
-                console.log("HERE");
                 await this.createNewInbox(recipient, sender)
                     .then((newInbox) => {
                         const newMessage = addMessage(inbox, recipient, sender, text, sentAt);
@@ -109,6 +111,8 @@ messageController.createNewMessage = function(recipient, sender, text, sentAt) {
                     })
             }
             else {
+                inbox.timestamp = new Date().getTime();
+                inbox.save();
                 const newMessage = addMessage(inbox, recipient, sender, text, sentAt);
                 res(newMessage);
             }
@@ -127,6 +131,30 @@ async function addMessage(notification, recipient, sender, text, sentAt) {
             sentAt: sentAt,
             timestamp: new Date().getTime()
         });
+        console.log(recipient);
+        // recipient = mongoose.Types.ObjectId(recipient);
+        let user = User.findById(recipient)
+        .then((user) => {
+            let newMessages = user.unreadMessages;
+            if(!newMessages.includes(sender)) {
+                newMessages.push(sender);
+                user.unreadMessages = newMessages;
+                console.log(user);
+                user.save();
+            } else {
+                return message;
+            }
+            return message;
+        })
+        .catch((e) => {
+            console.log(e);
+            return e;
+        });
+        // user = JSON.parse(user);
+        // console.log(user);
+        // console.log(user);
+        // await User.findByIdAndUpdate(recipient, {unreadMessages: newMessages});
+        // console.log(user);
         return message;
     } catch(e) {
         return e;

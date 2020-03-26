@@ -5,6 +5,7 @@ var router  = express.Router();
 
 
 var User = require("../models/user");
+const checkAuth = require("../middleware/check-auth");
 var UserController = require("../controller/auth");
 
 

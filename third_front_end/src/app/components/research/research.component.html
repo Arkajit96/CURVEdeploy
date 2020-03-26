@@ -69,12 +69,13 @@
                         <div class="col col-2">
                             <!-- <ngx-avatar name="{{person.first_name}} {{person.last_name}}" size="75"></ngx-avatar> -->
                             <ngx-avatar
-                                src="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578428133276.jpg">
+                                src="{{person.image}}">
                             </ngx-avatar>
                         </div>
                         <div class="col col-6">
                             <div class="row">
-                                {{person.first_name}} {{person.last_name}}
+                                <span *ngIf="person.first_name">{{person.first_name}} {{person.last_name}}</span>
+                                <span *ngIf="!person.first_name">{{person.email}}</span>
                             </div>
                             <div class="row">
                                 {{person.department}}
@@ -103,12 +104,13 @@
                         <div class="col col-2">
                             <!-- <ngx-avatar name="{{person.first_name}} {{person.last_name}}" size="75"></ngx-avatar> -->
                             <ngx-avatar
-                                src="https://test-image-upload-brad.s3.us-east-2.amazonaws.com/1578428133276.jpg">
+                                src="{{person.image}}">
                             </ngx-avatar>
                         </div>
                         <div class="col col-8">
                             <div class="row">
-                                {{person.first_name}} {{person.last_name}}
+                                <span *ngIf="person.first_name">{{person.first_name}} {{person.last_name}}</span>
+                                <span *ngIf="!person.first_name">{{person.email}}</span>
                             </div>
                             <div class="row">
                                 {{person.department}}

@@ -252,7 +252,7 @@ router.post("/update/summary", checkAuth, async function(req, res) {
 // UPDATE DOCUMENTS TO MATCH MODEL
 router.post("/update/model", checkAuth, async function(req, res) {
   try {
-    await Student.updateMany({}, {$set: {image: 'https://curve-public-bucket.s3.us-east-2.amazonaws.com/default_profile.png'}});
+    await User.updateMany({}, {$set: {unreadMessages: []}});
     res.status(200).send('Updated');
   } catch(e) {
     res.status(400).send(e);

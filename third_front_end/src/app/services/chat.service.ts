@@ -31,7 +31,7 @@ export class ChatService {
         if(error) {
           console.log(error);
         } else {
-          console.log(this.socket);
+          // console.log(this.socket);
         }
       })
       this.isConnected = true;
@@ -97,6 +97,34 @@ export class ChatService {
          }
        )
      })
+   }
+
+   loadUnreadMessages(userid): Promise<any> {
+     return new Promise((res, rej) => {
+       this.http.get(this.url + 'message/unreadMessages/' + userid).subscribe(
+         data => {
+            res(data);
+         },
+         error => {
+           rej(error);
+         }
+       )
+     })
+   }
+
+   readMessage(userid, messageid) {
+     let form = {
+       userId: userid,
+       messageId: messageid
+     }
+     this.http.post(this.url + 'message/readMessage', form).subscribe(
+       data => {
+         console.log(data);
+       },
+       error => {
+         console.log(error);
+       }
+     )
    }
 
    searchFaculty(query): Promise<any> {

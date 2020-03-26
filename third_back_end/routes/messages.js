@@ -11,6 +11,7 @@ const Notifications = require("../models/notifications");
 const Messages = require("../models/message");
 const Faculty = require('../models/faculty')
 const Inboxes = require('../models/inbox');
+const User = require('../models/user');
 
 // MIDDLEWARE
 const checkAuth = require("../middleware/check-auth");
@@ -81,25 +82,58 @@ router.get('/getInbox/:userid', checkAuth, async (req, res) => {
             {user1_id: userid},
             {user2_id: userid}
         ]});
+        console.log(inbox);
+        const timestamp = inbox[0].timestamp;
 
         inbox = inbox.map((users) => {
             if(users.user1_id == userid) {
                 return {
                     id: users.user2_id,
                     name: users.user2_name,
-                    email: users.user2_email
+                    email: users.user2_email,
+                    time: users.timestamp
                 };
             } else {
                 return {
                     id: users.user1_id,
                     name: users.user1_name,
-                    email: users.user1_email
+                    email: users.user1_email,
+                    time: users.timestamp
                 }
             }
         })
         res.send(inbox);
     } catch(e) {
         res.status(400).send(e);
+    }
+})
+
+router.get('/unreadMessages/:id', checkAuth, async (req, res) => {
+    let id = req.params.id;
+    try {
+      let user = await User.findById(id);
+      res.send(user.unreadMessages);
+    } catch(e) {
+      res.status(400).send('error');
+    }
+  });
+
+router.post('/readMessage', checkAuth, async (req, res) => {
+    let userId = req.body.userId;
+    let messageId = req.body.messageId
+
+    try{
+        let user = await User.findById(userId);
+        console.log(user);
+        let newMessages = user.unreadMessages;
+        newMessages = newMessages.filter((msg) => {
+            return msg != messageId;
+        })
+        user.unreadMessages = newMessages;
+        user.save();
+        res.send(newMessages);
+    } catch (e) {
+        res.status(404).send('error');
     }
 })
 

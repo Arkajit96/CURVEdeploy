@@ -81,7 +81,8 @@ export class StudentProfileComponent implements OnInit {
   edit() {
     const dialogRef = this.dialog.open(EditStudentProfileComponent, {
       width: '550px',
-      data: {User: this.student}
+      data: {User: this.student},
+      autoFocus: true
     });
 
     dialogRef.afterClosed().subscribe(

@@ -42,6 +42,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
       console.log(localStorage.getItem('userId'));
       this.chatService.connectToSocket(localStorage.getItem('userId'));
     }
+
+    const page = this.router.url.split('/')[1];
+
     // this.userId = this.authService.getUserId();
     this.entity = this.authService.getEntity();
     this.authListenerSubs = this.authService
@@ -51,7 +54,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
       });
 
     // might modify deponds on how to get notifications
-    this.notifications = this.headerService.getNotifications();
+    // this.notifications = this.headerService.getNotifications();
 
     // Get shoppingCart
     if(this.entity == 'student'){
@@ -60,14 +63,33 @@ export class HeaderComponent implements OnInit, OnDestroy{
       this.shoppingCart = [];
     }
 
+    // Get unread messages
+    if(page != 'notifications'){
+      this.chatService.loadUnreadMessages(userid)
+        .then((msgs) => {
+          this.notifications = msgs;
+          console.log(this.notifications);
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+    }
+    
     this._msgSub = this.chatService.getMessages(userid).subscribe(
       data => {
         console.log("Recieved new message");
+        console.log(data);
+        if(this.router.url.split('/')[1] != 'notifications') {
+          console.log(this.router.url.split('/'))
+          this.notifications.push('new message');
+        }
+        console.log(this.notifications);
       }
     )
   }
 
   navigateToNotifications() {
+    this.notifications = [];
     this.router.navigate(['/notifications/' + this.authService.getUserId()]);
   }
 

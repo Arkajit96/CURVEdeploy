@@ -31,8 +31,8 @@
                                   <form>
                                     <input type="text" class="search-bar" placeholder="Search" [formControl]="searchControl" [matAutocomplete]="auto">
                                     <mat-autocomplete #auto="matAutocomplete">
-                                      <mat-option *ngFor="let option of searchResults" (click)="startNewMessage(option)">
-                                          <span *ngIf="option.first_name" (click)="startNewMessage(option)">{{option.first_name}} {{option.last_name}}</span>
+                                      <mat-option *ngFor="let option of searchResults">
+                                          <span *ngIf="option.name" (click)="startNewMessage(option)">{{option.first_name}} {{option.last_name}}</span>
                                           <span *ngIf="!option.first_name" (click)="startNewMessage(option)">{{option.email}}</span>
                                       </mat-option>
                                     </mat-autocomplete>

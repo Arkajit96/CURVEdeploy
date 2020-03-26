@@ -18,9 +18,9 @@ input {
     margin-top: .5rem;
 }
 
-::ng-deep * {
-    overflow-x: hidden!important;
-}
+// ::ng-deep * {
+//     overflow-x: hidden!important;
+// }
 
 .preview-img {
     max-height: 250px;
