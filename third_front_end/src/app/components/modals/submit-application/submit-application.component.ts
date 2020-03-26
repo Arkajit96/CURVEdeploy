@@ -37,23 +37,35 @@ export class submitApplicationComponent implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     console.log(this.data);
-
-    // init new appliction
-    this.application = {
-      studentID: this.data.student._id,
-      opportunityID: this.data.opt._id,
-      // resume: this.data.application.resume,
-      resume: '',
-      // coverLetter: this.data.application.coverLetter || '',
-      coverLetter: ''
+    
+    if (this.data.application) {
+      // init new appliction
+      this.application = {
+        studentID: this.data.student._id,
+        opportunityID: this.data.opt._id,
+        resume: this.data.application.resume,
+        coverLetter: this.data.application.coverLetter
+      }
+      this.resumePreview = this.application.resume;
+      this.CVPreview = this.application.coverLetter;
+    } else {
+      // init new appliction
+      this.application = {
+        studentID: this.data.student._id,
+        opportunityID: this.data.opt._id,
+        resume: '',
+        coverLetter: ''
+      }
+      this.resumePreview = '';
+      this.CVPreview = '';
     }
-    this.resumePreview = this.application.resume;
-    this.CVPreview = this.application.coverLetter;
+
+
 
     this.isLoading = false;
   }
 
-  useDefaultFile(fileType: string){
+  useDefaultFile(fileType: string) {
     switch (fileType) {
       case "resume":
         this.resumePreview = this.data.student.resume;

@@ -46,7 +46,7 @@
                         <mat-card-title>Opportunity</mat-card-title>
                     </mat-card-header>
                     <mat-spinner style="display:block;margin:0 auto;" *ngIf="loadingOpt"></mat-spinner>
-                    <div *ngIf='faculty.opportunity && !loadingOpt'>
+                    <div *ngIf='opportunity && !loadingOpt'>
                         <img mat-card-image [src]="opportunity.icon" alt="Opportunity icon">
                         <mat-card-content>
                             <p>
@@ -57,7 +57,7 @@
                             <button mat-raised-button color="primary"  (click)="createOreditopportunity()">Edit</button>
                         </mat-card-actions>
                     </div>
-                    <div *ngIf='!faculty.opportunity && !loadingOpt'>
+                    <div *ngIf='!opportunity && !loadingOpt'>
                         <mat-card-content>
                             <p>
                                No opportunity created

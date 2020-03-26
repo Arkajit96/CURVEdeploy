@@ -12,6 +12,7 @@ import { ViewStudentProfileComponent } from '../modals/view-student-profile/view
 import { StudentService } from 'src/app/services/student.service';
 import { FacultyService } from 'src/app/services/faculty.service';
 import { ResearchService } from 'src/app/services/research.service';
+import { ChatService } from 'src/app/services/chat.service'
 
 // Define row data 
 export interface rowData {
@@ -56,6 +57,7 @@ export class CandidateComponent implements OnInit {
     private studentService: StudentService,
     private facultyService: FacultyService,
     private researchService: ResearchService,
+    private chatService: ChatService,
     private snackbar: MatSnackBar,
     private dialog: MatDialog
   ) { }
@@ -100,11 +102,11 @@ export class CandidateComponent implements OnInit {
 
   getFontColor(status: string) {
     switch (status) {
-      case 'Submit':
-        return 'orange';
-      case 'Accept':
+      case 'Submitted':
+        return 'blue';
+      case 'Accepted':
         return 'green';
-      case 'Deny':
+      case 'Declined':
         return 'red';
     }
 
@@ -131,6 +133,8 @@ export class CandidateComponent implements OnInit {
   }
 
   updateApplicationStatus(applicationID: string, status: string) {
+    
+    let message = ''
 
     this.researchService.updateApplicationStatus(applicationID, status)
       .then(res => {
@@ -138,6 +142,14 @@ export class CandidateComponent implements OnInit {
         this.candidates.forEach(row => {
           if (row.applicationID === res.application._id) {
             row.status = res.application.status;
+
+            if(status == 'Accepted'){
+              message = "Congratulation! Your application to " + this.faculty.first_name + "'s lab has been accepted."
+            }else{
+              message = "We regret to inform you that your application to " + this.faculty.first_name + "'s lab has been declined."
+            }
+
+            this.chatService.sendMessage(this.faculty.user_id, row.userId, message);
           }
         })
 

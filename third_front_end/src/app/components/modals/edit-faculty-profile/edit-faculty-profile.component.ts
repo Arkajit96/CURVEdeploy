@@ -6,11 +6,11 @@ import { MatSnackBar } from '@angular/material';
 import { FacultyService } from 'src/app/services/faculty.service';
 
 @Component({
-  selector: 'app-edit-factuly-profile',
-  templateUrl: './edit-factuly-profile.component.html',
-  styleUrls: ['./edit-factuly-profile.component.scss']
+  selector: 'app-edit-faculty-profile',
+  templateUrl: './edit-faculty-profile.component.html',
+  styleUrls: ['./edit-faculty-profile.component.scss']
 })
-export class EditFactulyProfileComponent implements OnInit {
+export class EditFacultyProfileComponent implements OnInit {
   faculty: any;
   facultyForm: any;
   loading = false;
@@ -22,7 +22,7 @@ export class EditFactulyProfileComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<EditFactulyProfileComponent>,
+    public dialogRef: MatDialogRef<EditFacultyProfileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,

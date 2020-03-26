@@ -30,5 +30,4 @@ export class HeaderService {
     getShoppingCartItems(){
         return this.studentService.getCurrentStudentUser().shopping_cart;
     }
-
 }

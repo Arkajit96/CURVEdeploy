@@ -20,6 +20,7 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
 import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CandidateComponent } from './components/candidate/candidate.component';
 import { CanidateSearchComponent } from './components/canidate-search/canidate-search.component';
@@ -40,7 +41,7 @@ import { submitAllApplicationComponent } from './components/modals/submit-all-ap
 import { CloseConfirmComponent } from './components/modals/close-confirm/close-confirm.component';
 import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
 import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
-import { EditFactulyProfileComponent } from './components/modals/edit-factuly-profile/edit-factuly-profile.component';
+import { EditFacultyProfileComponent } from './components/modals/edit-faculty-profile/edit-faculty-profile.component';
 import { EditOpportunityComponent } from './components/modals/edit-opportunity/edit-opportunity.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
@@ -58,6 +59,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     SearchResultsComponent,
     ResearchComponent,
     ShoppingCartComponent,
+    CalendarComponent,
     CandidateComponent,
     CanidateSearchComponent,
     AddInterestsComponent,
@@ -66,7 +68,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ViewStudentProfileComponent,
     submitApplicationComponent,
     NotificationsComponent,
-    EditFactulyProfileComponent,
+    EditFacultyProfileComponent,
     submitAllApplicationComponent,
     EditOpportunityComponent
   ],
@@ -101,7 +103,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditStudentProfileComponent,
     ViewStudentProfileComponent,
     submitApplicationComponent,
-    EditFactulyProfileComponent,
+    EditFacultyProfileComponent,
     submitAllApplicationComponent,
     EditOpportunityComponent
   ]

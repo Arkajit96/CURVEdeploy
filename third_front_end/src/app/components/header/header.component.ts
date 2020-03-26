@@ -26,21 +26,10 @@ export class HeaderComponent implements OnInit, OnDestroy{
               private chatService: ChatService,
               private router: Router) { }
 
-  // ngOnInit() {
-
-  //   this.identity = this.storage.get('identity');
-  //   this.id = this.storage.get('userid');
-  //   if (this.identity == 'student') {
-  //     this.val = true;
-  //   } else if (this.identity == 'faculty') {
-  //     this.val = false;
-  //   }
-  // }
   ngOnInit() {
-    let userid = localStorage.getItem('userId');
+    let userid = this.authService.getUserId();
     if(!this.chatService.getIsConnected()) {
-      console.log(localStorage.getItem('userId'));
-      this.chatService.connectToSocket(localStorage.getItem('userId'));
+      this.chatService.connectToSocket(userid);
     }
 
     const page = this.router.url.split('/')[1];
