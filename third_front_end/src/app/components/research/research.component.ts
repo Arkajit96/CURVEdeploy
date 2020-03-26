@@ -13,6 +13,8 @@ import { Opportunity } from '../../shared/opportunity';
 //Service
 import { StudentService } from '../../services/student.service';
 import { ResearchService } from '../../services/research.service';
+import { ChatService } from 'src/app/services/chat.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-research',
@@ -47,7 +49,9 @@ export class ResearchComponent implements OnInit, OnDestroy {
     private researchService: ResearchService,
     private studentService: StudentService,
     private snackbar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private chatService: ChatService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -179,10 +183,20 @@ export class ResearchComponent implements OnInit, OnDestroy {
       });
   }
 
-  ViewProfile() {
+  ViewProfile(user) {
     this.dialog.open(ViewStudentProfileComponent, {
-      data: { Data: this.student },
+      data: { 
+        user: user,
+        entity: 'faculty',
+      },
     })
+  }
+
+  message(faculty) {
+    console.log(this.student);
+    console.log(faculty);
+    this.chatService.storeUserToMessage(faculty);
+    this.router.navigate(['/notifications'])
   }
 
 

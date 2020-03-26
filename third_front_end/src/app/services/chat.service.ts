@@ -12,6 +12,7 @@ export class ChatService {
     private url = this.config.getURL();
     private socket;   
     private isConnected = false; 
+    public userToMessage = null;
 
     constructor(
       private http: HttpClient,
@@ -35,6 +36,14 @@ export class ChatService {
         }
       })
       this.isConnected = true;
+    }
+
+    storeUserToMessage(user) {
+      this.userToMessage = user;
+    }
+
+    getUserToMessage() {
+      return this.userToMessage;
     }
 
     getMessages(userid) {
@@ -119,7 +128,7 @@ export class ChatService {
      }
      this.http.post(this.url + 'message/readMessage', form).subscribe(
        data => {
-         console.log(data);
+        //  console.log(data);
        },
        error => {
          console.log(error);

@@ -85,12 +85,15 @@
                             </div>
                         </div>
                         <div class="col col-4">
-                            <button mat-fab color="warn" (click)="ViewProfile()">
+                            <button mat-fab color="warn" (click)="ViewProfile(person)" style="margin-right: 5px">
                                 <mat-icon>search</mat-icon>
                             </button>
                             <button [disabled]="!person.opportunity || !person.available " mat-fab color="primary"
-                                (click)="addToShoppingCart(person)">
+                                (click)="addToShoppingCart(person)" style="margin-right: 5px">
                                 <mat-icon>add</mat-icon>
+                            </button>
+                            <button mat-fab color="primary" (click)="message(person)">
+                                <mat-icon>message</mat-icon>
                             </button>
                         </div>
                     </div>

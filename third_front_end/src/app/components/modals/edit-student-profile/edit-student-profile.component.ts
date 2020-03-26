@@ -160,7 +160,7 @@ export class EditStudentProfileComponent implements OnInit {
       );
     }
     else {
-      this.dialogRef.close({student: this.student, imgChanged: this.imgChanged});
+      this.dialogRef.close({imgChanged: this.imgChanged});
     }
   }
 
