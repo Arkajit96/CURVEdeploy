@@ -29,6 +29,7 @@
     "hammerjs": "^2.0.8",
     "jquery": "^3.4.1",
     "jwt-decode": "^2.2.0",
+    "moment": "^2.24.0",
     "ngx-avatar": "^3.7.0",
     "ngx-socket-io": "^3.0.1",
     "popper": "^1.0.1",

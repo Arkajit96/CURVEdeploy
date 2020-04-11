@@ -1,5 +1,96 @@
 <app-header></app-header>
-<body>
 
-    
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="coll col-sm-2 col-xl-3 calendar-wrapper">
+                <mat-calendar #calendar (monthSelected)="monthSelected($event)" [(selected)]="selectedDate"
+                    (selectedChange)="dateChanged()"></mat-calendar>
+            </div>
+
+            <div class="col col-sm-10 col-xl-9 weekly-view">
+                <div class="table-responsive-sm">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col" *ngFor="let day of selectedWeek">
+                                    {{day.display}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let time of eventArr; index as i">
+                                <th scope="col">{{time.time}}</th>
+                                <td scope="col">
+                                    <ul>
+                                        <section *ngFor="let text of weeklyEvents[0][i]">
+                                            <li *ngIf="text!==''">
+                                                {{text}}
+                                            </li>
+                                        </section>
+                                    </ul>
+                                </td>
+                                <td scope="col">
+                                    <ul>
+                                        <section *ngFor="let text of weeklyEvents[1][i]">
+                                            <li *ngIf="text!==''">
+                                                {{text}}
+                                            </li>
+                                        </section>
+                                    </ul>
+                                </td>
+                                <td scope="col">
+                                    <ul>
+                                        <section *ngFor="let text of weeklyEvents[2][i]">
+                                            <li *ngIf="text!==''">
+                                                {{text}}
+                                            </li>
+                                        </section>
+                                    </ul>
+                                </td>
+                                <td scope="col">
+                                    <ul>
+                                        <section *ngFor="let text of weeklyEvents[3][i]">
+                                            <li *ngIf="text!==''">
+                                                {{text}}
+                                            </li>
+                                        </section>
+                                    </ul>
+                                </td>
+                                <td scope="col">
+                                    <ul>
+                                        <section *ngFor="let text of weeklyEvents[4][i]">
+                                            <li *ngIf="text!==''">
+                                                {{text}}
+                                            </li>
+                                        </section>
+                                    </ul>
+                                </td>
+                                <td scope="col">
+                                    <ul>
+                                        <section *ngFor="let text of weeklyEvents[5][i]">
+                                            <li *ngIf="text!==''">
+                                                {{text}}
+                                            </li>
+                                        </section>
+                                    </ul>
+                                </td>
+                                <td scope="col">
+                                    <ul>
+                                        <section *ngFor="let text of weeklyEvents[6][i]">
+                                            <li *ngIf="text!==''">
+                                                {{text}}
+                                            </li>
+                                        </section>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
