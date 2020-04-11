@@ -22,16 +22,10 @@ import {
   MatMenuModule,
   MatBadgeModule,
   MatTableModule,
-  MatFormFieldModule,
-  MatTooltipModule
+  MatFormFieldModule
 } from '@angular/material';
 
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-
 @NgModule({
-  imports: [
-    MatMomentDateModule
-  ],
   exports: [
     MatInputModule,
     MatCardModule,
@@ -56,8 +50,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatNativeDateModule, 
     MatRippleModule,
     MatTableModule,
-    MatFormFieldModule,
-    MatTooltipModule
+    MatFormFieldModule
   ]
 })
 export class AngularMaterialModule {}
