@@ -43,6 +43,7 @@ import { EditStudentProfileComponent } from './components/modals/edit-student-pr
 import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
 import { EditFacultyProfileComponent } from './components/modals/edit-faculty-profile/edit-faculty-profile.component';
 import { EditOpportunityComponent } from './components/modals/edit-opportunity/edit-opportunity.component';
+import { times } from './components/calendar/times';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -94,7 +95,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     },
     InterestList,
     ChatService,
-    ConfigService
+    ConfigService,
+    times
   ],
   bootstrap: [AppComponent],
   entryComponents: [
