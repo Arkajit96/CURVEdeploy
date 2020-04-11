@@ -1,4 +1,8 @@
 import { Component,OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
+
+// Service
+import {CalendarService} from '../../../services/calendar.service'
 
 @Component({
     selector: 'app-calendar',
@@ -15,7 +19,17 @@ import { Component,OnInit } from '@angular/core';
     MonthEncode = []
 
 
+    constructor(
+      private calendarService: CalendarService,
+      private snackbar: MatSnackBar
+    ) { }
+
+
      ngOnInit(){
+    }
+
+    googleOath(){
+      this.calendarService.googleOath()
     }
 
   }

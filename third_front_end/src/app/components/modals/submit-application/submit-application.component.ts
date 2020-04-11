@@ -11,6 +11,7 @@ import { Application } from '../../../shared/application';
 
 //Services
 import { ResearchService } from '../../../services/research.service';
+import { ChatService } from 'src/app/services/chat.service'
 
 @Component({
   selector: 'app-submit-application',
@@ -28,6 +29,7 @@ export class submitApplicationComponent implements OnInit {
 
   constructor(
     private closeDialog: MatDialog,
+    private chatService: ChatService,
     private researchService: ResearchService,
     public dialogRef: MatDialogRef<submitApplicationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -36,7 +38,6 @@ export class submitApplicationComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    console.log(this.data);
     
     if (this.data.application) {
       // init new appliction
@@ -137,10 +138,8 @@ export class submitApplicationComponent implements OnInit {
     }
     this.researchService.createApplication(this.application)
       .then(data => {
-        this.snackBar.open('Application create successful', 'Close', {
-          duration: 3000,
-          panelClass: 'success-snackbar'
-        });
+        const message = "[System message] Student " + this.data.student.first_name + " has applied to your lab, please check the candidate page for more information.";
+        this.chatService.sendMessage(this.data.student.user_id, this.data.faculty.user_id, message);
         this.dialogRef.close(data.applicationID);
       });
   }

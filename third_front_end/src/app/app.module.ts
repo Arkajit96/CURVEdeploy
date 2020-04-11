@@ -20,7 +20,8 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
 import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { CalendarComponent } from './components/calendar/home/calendar.component';
+import { CalendarSuccessComponent } from './components/calendar/success/calendarSuccess.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CandidateComponent } from './components/candidate/candidate.component';
 import { CanidateSearchComponent } from './components/canidate-search/canidate-search.component';
@@ -60,6 +61,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ResearchComponent,
     ShoppingCartComponent,
     CalendarComponent,
+    CalendarSuccessComponent,
     CandidateComponent,
     CanidateSearchComponent,
     AddInterestsComponent,

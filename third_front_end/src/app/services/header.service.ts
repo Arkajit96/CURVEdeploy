@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 // Service
 import { AuthService } from './auth.service';
@@ -10,8 +11,6 @@ import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class HeaderService {
-    private notifications = [];
-
     constructor(
         private authService : AuthService,
         private studentService: StudentService,
@@ -21,13 +20,12 @@ export class HeaderService {
 
     private url = this.config.getURL();
 
-    // hardcode this function right now, need to figure out we to get it
-    getNotifications(){
-        this.notifications = ['test 1','test 2','test 3'];
-        return this.notifications;
-    }
-
+ 
     getShoppingCartItems(){
-        return this.studentService.getCurrentStudentUser().shopping_cart;
+        let observable =  new Observable<any>(observer => {
+            observer.next(this.studentService.getCurrentStudentUser().shopping_cart)
+        })
+
+        return observable;
     }
 }

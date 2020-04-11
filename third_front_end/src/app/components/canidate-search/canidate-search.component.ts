@@ -7,6 +7,7 @@ import { ViewStudentProfileComponent } from '../modals/view-student-profile/view
 
 // Service
 import { FacultyService } from '../../services/faculty.service';
+import { ChatService } from 'src/app/services/chat.service'
 
 @Component({
   selector: 'app-canidate-search',
@@ -29,6 +30,7 @@ export class CanidateSearchComponent implements OnInit {
 
   constructor(
     private facultyService: FacultyService,
+    private chatService: ChatService,
     private dialog: MatDialog,
     private snackbar: MatSnackBar
   ) { }
@@ -74,14 +76,8 @@ export class CanidateSearchComponent implements OnInit {
     // })
   }
 
-  directMessage(person: any) {
-
-    // Send message to person
-
-    this.snackbar.open('Send message to ' + person.first_name, 'Close', {
-      duration: 3000,
-      panelClass: 'success-snackbar'
-    })
-}
+  directMessage(user: any) {
+    this.chatService.directMessage(user);
+  }
 
 }

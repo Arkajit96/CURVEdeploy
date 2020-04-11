@@ -10,7 +10,8 @@ import { EditStudentComponent } from './components/edit-student/edit-student.com
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { CalendarComponent } from './components/calendar/home/calendar.component';
+import { CalendarSuccessComponent } from './components/calendar/success/calendarSuccess.component';
 import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { CandidateComponent } from './components/candidate/candidate.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
@@ -39,6 +40,9 @@ const routes: Routes = [
   },
   {
     path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'calendarSuccess', component: CalendarSuccessComponent, canActivate: [AuthGuard]
   },
   {
     path: 'candidate', component: CandidateComponent, canActivate: [AuthGuard]

@@ -59,6 +59,8 @@ export class ResearchComponent implements OnInit, OnDestroy {
     this.student = this.studentService.getCurrentStudentUser();
     this.shopping_cart = this.student.shopping_cart;
 
+    
+
     //lab part
     this.researchService.getOppurtunities(this.numPerPage, this.currentPage);
     this.opportunitiesSub = this.researchService.getopportunitiesUpdatedListener()
@@ -132,7 +134,6 @@ export class ResearchComponent implements OnInit, OnDestroy {
   findOptAndOpenDialog(optID: string) {
     this.researchService.getApplicationInfo(this.student._id, optID)
       .then(data => {
-        console.log(data);
         this.openApplicationDialog(data);
       });
   }
@@ -156,10 +157,6 @@ export class ResearchComponent implements OnInit, OnDestroy {
           duration: 3000,
           panelClass: 'success-snackbar'
         })
-
-        // Send message to the corresponding faculty
-        // this.researchService.sendMessage();
-
       }
     })
   }
@@ -192,11 +189,8 @@ export class ResearchComponent implements OnInit, OnDestroy {
     })
   }
 
-  message(faculty) {
-    console.log(this.student);
-    console.log(faculty);
-    this.chatService.storeUserToMessage(faculty);
-    this.router.navigate(['/notifications'])
+  directMessage(faculty) {
+    this.chatService.directMessage(faculty);
   }
 
 

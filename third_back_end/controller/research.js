@@ -142,26 +142,27 @@ exports.getOptByIds = (req, res) => {
 }
 
 // Get opt and application
-exports.getApplicationInfo = (req, res) => {
-    Opportunity.findById(req.query.optId, function (err, opt) {
-        if (err) {
-            res.status(500).json({
-                message: "Fetching opportunity failed!",
-                opt: new Opportunity(),
-                application: new Application()
-            });
-        } else {
-            Application.findOne({ studentID: req.query.studentId, opportunityID: req.query.optId })
-                .then(application => {
-                    res.status(200).json({
-                        message: "Opportunity fetched successfully",
-                        opt: opt,
-                        application: application
-                    })
-                })
+exports.getApplicationInfo = async (req, res) => {
+    try {
+        let opportunity = await Opportunity.findById(req.query.optId);
+        let application = await Application.findOne({ studentID: req.query.studentId, opportunityID: req.query.optId });
+        let faculty = await Faculty.findById(opportunity.creator);
 
-        }
-    });
+        res.status(200).json({
+            message: "Opportunity fetched successfully",
+            opt: opportunity,
+            application: application,
+            faculty: faculty
+        })
+
+    } catch{
+        res.status(500).json({
+            message: "Fetching opportunity failed!",
+            opt: new Opportunity(),
+            application: new Application(),
+            faculty: new Faculty()
+        });
+    }
 }
 
 // Get opportunity by id
@@ -173,38 +174,48 @@ exports.getCandidates = (req, res) => {
                 tableRow: []
             });
         } else {
-            async.each(applications, (application, cb) => {
-                Student.findById(application.studentID, (err, student) => {
-                    if (err) {
-                        return cb(false);
+            console.log('application:' + applications)
+            if (applications.length > 0) {
+                async.each(applications, (application, cb) => {
+                    Student.findById(application.studentID, (err, student) => {
+                        if (err) {
+                            return cb(false);
 
-                    } else {
-                        data = {
-                            userId: student.user_id,
-                            applicationID: application._id,
-                            name: student.first_name + " " + student.middle_name + " " + student.last_name,
-                            address: student.address,
-                            major: student.major,
-                            status: application.status
+                        } else {
+                            data = {
+                                userId: student.user_id,
+                                applicationID: application._id,
+                                name: student.first_name + " " + student.last_name,
+                                first_name: student.first_name,
+                                last_name: student.last_name,
+                                email: student.email,
+                                address: student.address,
+                                major: student.major,
+                                status: application.status
+                            }
+                            return cb(data)
+
                         }
-                        return cb(data)
-
+                    })
+                }, (data) => {
+                    if (!data) {
+                        res.status(500).json({
+                            message: "Fetching candidates failed!",
+                            tableRow: []
+                        });
+                    } else {
+                        res.status(200).json({
+                            message: 'Fetching candidates successful',
+                            tableRow: [data]
+                        })
                     }
                 })
-            }, (data) => {
-                if (!data) {
-                    res.status(500).json({
-                        message: "Fetching candidates failed!",
-                        tableRow: []
-                    });
-                } else {
-                    res.status(200).json({
-                        message: 'Fetching candidates successful',
-                        tableRow: [data]
-                    })
-                }
-            })
-
+            } else {
+                res.status(200).json({
+                    message: 'Fetching candidates successful',
+                    tableRow: []
+                })
+            }
         }
     });
 }

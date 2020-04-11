@@ -13,6 +13,9 @@ let express     = require("express"),
     User       = require("./models/user"),
     http = require('http');
     cors = require('cors')
+
+ //session
+const session = require('express-session');
    
 const server = http.createServer(app);
 const socketio = require('socket.io');
@@ -29,6 +32,7 @@ const indexRoutes = require("./routes/index"),
       facultyRoutes = require("./routes/faculty"),
       messageRoutes = require("./routes/messages")
       researchRoutes = require("./routes/research");
+      calendarRoutes = require("./routes/calendar");
  
 // let uri = "mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve?retryWrites=true";
 
@@ -50,7 +54,7 @@ mongoose.connect(mongoDB,
       useFindAndModify: false
    })
    .then((data) => {
-      console.log('CONNECTED TO MONGODB');
+      // console.log('CONNECTED TO MONGODB');
    })
    .catch((e) => {
       console.log('ERROR');
@@ -68,11 +72,27 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 
+
+// express-session config
+app.use(
+   session({
+     name: 'curve',
+     saveUninitialized: false,
+     resave: false,
+     secret: process.env.SECRETKEY,
+     cookie: {
+       maxAge: 1000 * 60 * 60 * 2,
+       sameSite: true
+     }
+   })
+ )
+
 app.use("/", indexRoutes);
 app.use("/student", studentRoutes);
 app.use("/faculty", facultyRoutes);
 app.use("/message", messageRoutes);
 app.use("/research", researchRoutes);
+app.use("/calendar", calendarRoutes)
 
 const listener = server.listen(PORT, function() {
    console.log(`Your app is listening on port ${PORT}`);

@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 
 // import { LocalStorageService } from '../../services/local-storage.service';
-import {AuthService} from '../../services/auth.service';
-import {HeaderService} from '../../services/header.service';
+import { AuthService } from '../../services/auth.service';
+import { HeaderService } from '../../services/header.service';
 import { ChatService } from 'src/app/services/chat.service';
 import { Router } from '@angular/router';
 
@@ -13,22 +13,25 @@ import { Router } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnDestroy{
+export class HeaderComponent implements OnInit, OnDestroy {
   private userIsAuthenticated = false;
   private shoppingCart: string[];
   private entity: string;
   private notifications = [];
+
+  // subscriptions
   private authListenerSubs: Subscription;
   private _msgSub: Subscription;
+  private _notificationSub: Subscription;
 
-  constructor(private authService: AuthService, 
-              private headerService: HeaderService,
-              private chatService: ChatService,
-              private router: Router) { }
+  constructor(private authService: AuthService,
+    private headerService: HeaderService,
+    private chatService: ChatService,
+    private router: Router) { }
 
   ngOnInit() {
     let userid = this.authService.getUserId();
-    if(!this.chatService.getIsConnected()) {
+    if (!this.chatService.getIsConnected()) {
       this.chatService.connectToSocket(userid);
     }
 
@@ -42,37 +45,36 @@ export class HeaderComponent implements OnInit, OnDestroy{
         this.userIsAuthenticated = isAuthenticated;
       });
 
-    // might modify deponds on how to get notifications
-    // this.notifications = this.headerService.getNotifications();
-
     // Get shoppingCart
-    if(this.entity == 'student'){
-      this.shoppingCart = this.headerService.getShoppingCartItems();
-    }else if (this.entity == 'student'){
+    if (this.entity == 'student') {
+      this._notificationSub = this.headerService.getShoppingCartItems()
+        .subscribe(applications => {
+          this.shoppingCart = applications;
+        }
+        )
+    } else if (this.entity == 'faculty') {
       this.shoppingCart = [];
     }
 
     // Get unread messages
-    if(page != 'notifications'){
+    if (page != 'notifications') {
       this.chatService.loadUnreadMessages(userid)
         .then((msgs) => {
           this.notifications = msgs;
-          console.log(this.notifications);
         })
         .catch((e) => {
           console.log(e);
         })
     }
-    
+
     this._msgSub = this.chatService.getMessages(userid).subscribe(
       data => {
         console.log("Recieved new message");
         console.log(data);
-        if(this.router.url.split('/')[1] != 'notifications') {
+        if (this.router.url.split('/')[1] != 'notifications') {
           console.log(this.router.url.split('/'))
           this.notifications.push('new message');
         }
-        console.log(this.notifications);
       }
     )
   }
@@ -89,6 +91,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
   ngOnDestroy() {
     this.authListenerSubs.unsubscribe();
     this._msgSub.unsubscribe();
+    if (this.entity == 'student') {
+      this._notificationSub.unsubscribe();
+    }
   }
 
 }

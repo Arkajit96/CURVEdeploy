@@ -98,22 +98,23 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     // Handle application submit dialog
-    openApplicationDialog(data: any) {
+    openApplicationDialog(rowElement: any) {
 
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.autoFocus = false;
         dialogConfig.width = "200em";
         dialogConfig.data = {
-            opt: data.currentOpt,
+            opt: rowElement.currentOpt,
             student: this.student,
-            application: data.application
+            application: rowElement.application,
+            faculty: rowElement.faculty
         }
 
         let dialogRef = this.dialog.open(submitApplicationComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
-                this.deleteItem(data.currentOpt._id);
+                this.deleteItem(rowElement.currentOpt.creator);
                 this.snackbar.open('Application submitted', 'Close', {
                     duration: 3000,
                     panelClass: 'success-snackbar'
@@ -125,18 +126,16 @@ export class ShoppingCartComponent implements OnInit {
 
     // Delete from the pending application
     deleteItem(id: string) {
+        console.log(id)
         this.studentService.deleteItem(this.student.user_id, id)
             .then(res => {
                 this.student = res.student;
+                console.log(this.student);
                 this.studentService.getShoppingCartItemsByIds(this.student.shopping_cart)
                     .then(res => {
                         this.shopping_cart = res.items;
                         this.dataSource = new MatTableDataSource<any>(this.shopping_cart);
                     })
-                this.snackbar.open('Item deleted', 'Close', {
-                    duration: 3000,
-                    panelClass: 'success-snackbar'
-                })
             });
     }
 
@@ -145,8 +144,13 @@ export class ShoppingCartComponent implements OnInit {
         const itemList = this.selection.selected;
         if (itemList.length > 0) {
 
+            console.log(itemList);
             const optIdList = itemList.map(function (item, index, input) {
-                return item.opportunity;
+                return item.opportunity
+            })
+
+            const facultyUserIdList = itemList.map(function (item, index, input) {
+                return item.user_id
             })
 
             const dialogConfig = new MatDialogConfig();
@@ -155,7 +159,8 @@ export class ShoppingCartComponent implements OnInit {
             dialogConfig.width = "200em";
             dialogConfig.data = {
                 optIds: optIdList,
-                student: this.student
+                student: this.student,
+                userIds: facultyUserIdList
             }
 
             let dialogRef = this.dialog.open(submitAllApplicationComponent, dialogConfig);

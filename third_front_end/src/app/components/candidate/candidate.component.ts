@@ -123,13 +123,7 @@ export class CandidateComponent implements OnInit {
   }
 
   directMessage(element: any) {
-
-    // Send message to person
-
-    this.snackbar.open('Send message to ' + element.name, 'Close', {
-      duration: 3000,
-      panelClass: 'success-snackbar'
-    })
+    this.chatService.directMessage(element);
   }
 
   updateApplicationStatus(applicationID: string, status: string) {
@@ -144,9 +138,9 @@ export class CandidateComponent implements OnInit {
             row.status = res.application.status;
 
             if(status == 'Accepted'){
-              message = "Congratulation! Your application to " + this.faculty.first_name + "'s lab has been accepted."
+              message = "[System message] Congratulation! Your application to " + this.faculty.first_name + "'s lab has been accepted."
             }else{
-              message = "We regret to inform you that your application to " + this.faculty.first_name + "'s lab has been declined."
+              message = "[System message] We regret to inform you that your application to " + this.faculty.first_name + "'s lab has been declined."
             }
 
             this.chatService.sendMessage(this.faculty.user_id, row.userId, message);

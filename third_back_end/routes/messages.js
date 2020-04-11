@@ -82,8 +82,6 @@ router.get('/getInbox/:userid', checkAuth, async (req, res) => {
             {user1_id: userid},
             {user2_id: userid}
         ]});
-        console.log(inbox);
-        const timestamp = inbox[0].timestamp;
 
         inbox = inbox.map((users) => {
             if(users.user1_id == userid) {

@@ -1,5 +1,5 @@
-// let config = require('dotenv').config().parsed;
-const config = require('../config');
+let config = require('dotenv').config().parsed;
+// const config = require('../config');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
@@ -10,75 +10,75 @@ const Faculty = require('../models/faculty');
 
 exports.register = (req, res) => {
   // hash password
-  bcrypt.genSalt(10,(err,salt) => 
-    bcrypt.hash(req.body.password,salt,(err,hash) => {
-        if(err) throw err;
-        const user = new User({
-          email: req.body.email,
-          password: hash,
-          entity: req.body.entity
-        });
-        console.log(user);
+  bcrypt.genSalt(10, (err, salt) =>
+    bcrypt.hash(req.body.password, salt, (err, hash) => {
+      if (err) throw err;
+      const user = new User({
+        email: req.body.email,
+        password: hash,
+        entity: req.body.entity
+      });
+      console.log(user);
 
-        // save user data
-        user
-          .save()
-          .then(result => {
-            // implement this function when models are defined
-            // if (user.entity === 'student') {
-            //   model = new Student({
-            //     user_id : user._id,
-            //     email: req.body.email,
-            //     date_of_joining: new Date().Format("yyyy-MM-dd hh:mm:ss")
-            //   });
-            // } else if (user.entity === 'faculty') {
-            //   model = new Faculty({
-            //     user_id : user._id,
-            //     email: req.body.email,
-            //     date_of_joining: new Date().Format("yyyy-MM-dd hh:mm:ss")
-            //   });
-            // }
+      // save user data
+      user
+        .save()
+        .then(result => {
+          // implement this function when models are defined
+          // if (user.entity === 'student') {
+          //   model = new Student({
+          //     user_id : user._id,
+          //     email: req.body.email,
+          //     date_of_joining: new Date().Format("yyyy-MM-dd hh:mm:ss")
+          //   });
+          // } else if (user.entity === 'faculty') {
+          //   model = new Faculty({
+          //     user_id : user._id,
+          //     email: req.body.email,
+          //     date_of_joining: new Date().Format("yyyy-MM-dd hh:mm:ss")
+          //   });
+          // }
 
-            // console.log(model);
+          // console.log(model);
 
-            // model
-            //   .save()
-            //   .then(result => {
-            //     res.status(201).json({
-            //       message: "User created!"
-            //     });
-            //   })
-            //   .catch(err =>{
-            //     res.status(500).json({
-            //       message: "User profile create failed!"
-            //     });
-            //   })
-            saveProfile(user).then((newlyCreated) => {
-              res.status(201).json({
-                message: "User created!"
-              });
-            }).catch(err => { console.log(err); res.status(500).json({error: "error"})})
-          })
-          .catch(err => {
-            res.status(500).json({
-              message: "Email address is used!"
+          // model
+          //   .save()
+          //   .then(result => {
+          //     res.status(201).json({
+          //       message: "User created!"
+          //     });
+          //   })
+          //   .catch(err =>{
+          //     res.status(500).json({
+          //       message: "User profile create failed!"
+          //     });
+          //   })
+          saveProfile(user).then((newlyCreated) => {
+            res.status(201).json({
+              message: "User created!"
             });
-          });
+          }).catch(err => { console.log(err); res.status(500).json({ error: "error" }) })
         })
-    )
+        .catch(err => {
+          res.status(500).json({
+            message: "Email address is used!"
+          });
+        });
+    })
+  )
 }
 
 saveProfile = (user) => {
   return new Promise((res, rej) => {
-    if(user.entity == 'faculty') {
+    if (user.entity == 'faculty') {
 
-      let faculty = new Faculty({ 
-        user_id : user._id,
+      let faculty = new Faculty({
+        user_id: user._id,
         email: user.email,
         date_of_joining: new Date().toLocaleString()
       });
 
-      Faculty.create(faculty, function(err, newlyCreated) {
+      Faculty.create(faculty, function (err, newlyCreated) {
         if (err) {
           console.log(err);
           rej(error);
@@ -88,14 +88,14 @@ saveProfile = (user) => {
         }
       });
     } else {
-      
-      let student = new Student({ 
-            user_id : user._id,
-            email: user.email,
-            date_of_joining: new Date().toLocaleString()
+
+      let student = new Student({
+        user_id: user._id,
+        email: user.email,
+        date_of_joining: new Date().toLocaleString()
       });
 
-      Student.create(student, function(err, newlyCreated) {
+      Student.create(student, function (err, newlyCreated) {
         if (err) {
           console.log(err);
           rej(error);
@@ -109,38 +109,35 @@ saveProfile = (user) => {
 }
 
 exports.userLogin = (req, res, next) => {
-    let fetchedUser;
-    User.findOne({ email: req.body.email, entity: req.body.entity })
-      .then(user => {
-        if (!user) {
-          res.status(401).json({
-            message: "Auth failed"
-          });
-        }
-        fetchedUser = user;
-        return bcrypt.compare(req.body.password, user.password);
-      })
-      .then(result => {
-        if (!result) {
-          res.status(401).json({
-            message: "Auth failed"
-          });
-        }
+  User.findOne({ email: req.body.email, entity: req.body.entity })
+    .then(user => {
+      if (!user) {
+        res.status(401).json({
+          message: "Auth failed"
+        });
+      }
+      if (!bcrypt.compare(req.body.password, user.password)) {
+        res.status(401).json({
+          message: "Auth failed"
+        });
+      } else {
         const token = jwt.sign(
-          { email: fetchedUser.email, userId: fetchedUser._id },
+          { email: user.email, userId: user._id },
           config.SECRETKEY,
           { expiresIn: "1h" }
         );
         res.status(200).json({
           token: token,
           expiresIn: 3600,
-          userId: fetchedUser._id,
-          entity: fetchedUser.entity
+          userId: user._id,
+          entity: user.entity
         });
-      })
-      .catch(err => {
-        res.status(401).json({
-          message: "Invalid authentication credentials!"
-        });
+      }
+
+    })
+    .catch(err => {
+      res.status(401).json({
+        message: "Invalid authentication credentials!"
       });
-  }
+    });
+}

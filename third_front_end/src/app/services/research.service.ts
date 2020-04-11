@@ -9,6 +9,7 @@ import { Student } from '../shared/student';
 import { Opportunity } from '../shared/opportunity';
 import { Application } from '../shared/application';
 import { ConfigService } from './config.service';
+import { Faculty } from '../shared/faculty';
 
 @Injectable({ providedIn: 'root' })
 export class ResearchService {
@@ -131,13 +132,14 @@ export class ResearchService {
   getApplicationInfo(studentId:string, optId: string): Promise<any> {
     const queryParams = `?studentId=${studentId}&optId=${optId}`; 
     return new Promise((res, rej) => {
-      this.http.get<{ message: string; opt: Opportunity; application: Application }>(
+      this.http.get<{ message: string; opt: Opportunity; application: Application; faculty: Faculty}>(
         '/api/research/getApplicationInfo/' + queryParams
       ).toPromise().then(
         data => {
           res({
             currentOpt: data.opt,
-            application: data.application
+            application: data.application,
+            faculty: data.faculty
           });
         },
         error => {

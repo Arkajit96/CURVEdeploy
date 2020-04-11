@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { Observable, fromEvent } from 'rxjs';
 
+import { Router } from '@angular/router';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +18,8 @@ export class ChatService {
 
     constructor(
       private http: HttpClient,
-      private config: ConfigService
+      private config: ConfigService,
+      private router: Router
     ) {
         // this.socket = io(this.url);
     }
@@ -44,6 +47,11 @@ export class ChatService {
 
     getUserToMessage() {
       return this.userToMessage;
+    }
+
+    directMessage(user){
+      this.storeUserToMessage(user);
+      this.router.navigate(['/notifications'])
     }
 
     getMessages(userid) {
@@ -136,17 +144,18 @@ export class ChatService {
      )
    }
 
-   searchFaculty(query): Promise<any> {
-     return new Promise((res, rej) => {
-       this.http.get(this.url + 'message/searchFaculty/' + query).subscribe(
-         data => { 
-          res(data);
-         },
-         error => {
-           rej(error);
-         }
-       )
-     })
-   }
+   // we don't use this method anymore, so comment out for now
+  //  searchFaculty(query): Promise<any> {
+  //    return new Promise((res, rej) => {
+  //      this.http.get(this.url + 'message/searchFaculty/' + query).subscribe(
+  //        data => { 
+  //         res(data);
+  //        },
+  //        error => {
+  //          rej(error);
+  //        }
+  //      )
+  //    })
+  //  }
     
 }

@@ -11,6 +11,7 @@ import { Application } from '../../../shared/application';
 
 //Services
 import { ResearchService } from '../../../services/research.service';
+import { ChatService } from 'src/app/services/chat.service'
 
 @Component({
     selector: 'app-submit-all-application',
@@ -31,6 +32,7 @@ export class submitAllApplicationComponent implements OnInit {
     constructor(
         private closeDialog: MatDialog,
         private researchService: ResearchService,
+        private chatService: ChatService,
         public dialogRef: MatDialogRef<submitAllApplicationComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private snackBar: MatSnackBar,
@@ -49,18 +51,18 @@ export class submitAllApplicationComponent implements OnInit {
         this.isLoading = false;
     }
 
-    useDefaultFile(fileType: string){
+    useDefaultFile(fileType: string) {
         switch (fileType) {
-          case "resume":
-            this.resumePreview = this.data.student.resume;
-            this.application.resume = this.data.student.resume;
-            break;
-          case "coverLetter":
-            this.CVPreview = this.data.student.CV;
-            this.application.coverLetter = this.data.student.CV;
-            break;
+            case "resume":
+                this.resumePreview = this.data.student.resume;
+                this.application.resume = this.data.student.resume;
+                break;
+            case "coverLetter":
+                this.CVPreview = this.data.student.CV;
+                this.application.coverLetter = this.data.student.CV;
+                break;
         }
-      }
+    }
 
     onFilePicked(event: Event, fileType: string) {
         const file = (event.target as HTMLInputElement).files[0];
@@ -96,9 +98,6 @@ export class submitAllApplicationComponent implements OnInit {
         }
     }
 
-    // onNoClick(): void {
-    //   this.dialogRef.close();
-    // }
 
     deleteFile(target: string) {
         switch (target) {
@@ -122,13 +121,16 @@ export class submitAllApplicationComponent implements OnInit {
             });
             return;
         }
+
         this.researchService.createMultiApplications(this.application.studentID,
             this.data.optIds, this.application.resume, this.application.coverLetter)
             .then(data => {
-                this.dialogRef.close();
+                const message = "[System message] Student " + this.data.student.first_name + " has applied to your lab, please check the candidate page for more information.";
+                this.data.userIds.forEach(userId => {
+                    this.chatService.sendMessage(this.data.student.user_id, userId, message)
+                });
 
-                // Send message to the corresponding faculty
-                // this.researchService.sendMessage();
+                this.dialogRef.close();
 
                 this.snackBar.open(data.message, 'Close', {
                     duration: 3000,

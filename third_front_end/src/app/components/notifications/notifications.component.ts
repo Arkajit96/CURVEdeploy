@@ -25,7 +25,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
   messages = [];
   newMessage = "";
   searchQuery = "";
-  @ViewChild('msgDiv', {static: false})
+  @ViewChild('msgDiv', { static: false })
   el: ElementRef;
   unreadMessages = [];
 
@@ -40,7 +40,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
 
   constructor(
     private router: Router,
-    public route:ActivatedRoute,
+    public route: ActivatedRoute,
     private chatService: ChatService,
     private studentService: StudentService,
     private facultyService: FacultyService,
@@ -51,22 +51,20 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
 
   ngOnInit() {
 
-    if(this.authService.getEntity() == 'student') {
+    if (this.authService.getEntity() == 'student') {
       this.user = this.studentService.getCurrentStudentUser();
       this.user.caption = 'Class of ' + this.user.graduation_class
     } else {
       this.user = this.facultyService.getCurrentFacultyUser();
       this.user.caption = this.user.department;
     }
-    // console.log(this.user);
-
 
     this.loadInbox();
 
     this._msgSub = this.chatService.getMessages(this.user.user_id).subscribe(
       message => {
         let id = message.senderId == this.user.user_id ? message.recipientId : message.senderId;
-        if(this.inbox.length !== 0 && this.inbox[this.selectedMessage].id == id) {
+        if (this.inbox.length !== 0 && this.inbox[this.selectedMessage].id == id) {
           console.log(this.selectedMessage);
           this.inbox[this.selectedMessage].time = new Date().getTime();
           this.messages.push(message);
@@ -83,14 +81,6 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
         this.search(value);
       }
     )
-
-    // let userToMessage = this.chatService.getUserToMessage();
-    // console.log(userToMessage);
-    // if(userToMessage) {
-    //   this.chatService.storeUserToMessage(null);
-    //   this.startNewMessage(userToMessage);
-    // }
-
   }
 
   ngAfterViewChecked() {
@@ -98,21 +88,26 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
   }
 
   scrollToBottomMessages() {
-    if(this.el) {
-      this.renderer.setProperty(this.el.nativeElement, 'scrollTop', this.el.nativeElement.scrollHeight) 
+    if (this.el) {
+      this.renderer.setProperty(this.el.nativeElement, 'scrollTop', this.el.nativeElement.scrollHeight)
     }
   }
 
   loadInbox() {
     this.chatService.loadInbox(this.user.user_id)
-        .then((inbox) => {
-          this.inbox = inbox;
-          console.log(this.inbox);
-          this.sortInbox(this.inbox[this.selectedMessage].id, true);
+      .then((inbox) => {
+        this.inbox = inbox;
 
-          this.chatService.loadUnreadMessages(this.user.user_id)
-            .then((messages) => {
-              this.unreadMessages = messages;
+        if (this.inbox.length > 0) {
+          this.sortInbox(this.inbox[this.selectedMessage].id, true);
+        }
+
+
+        this.chatService.loadUnreadMessages(this.user.user_id)
+          .then((messages) => {
+            this.unreadMessages = messages;
+
+            if (this.inbox.length > 0) {
               this.inbox.forEach((convo) => {
                 convo.class = "chat_list";
               })
@@ -120,27 +115,31 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
               // this.inbox[0].time = new Date().getTime();
               this.chatService.readMessage(this.user.user_id, this.inbox[0].id);
 
-              for(let i = 1; i < this.inbox.length; i++) {
+              for (let i = 1; i < this.inbox.length; i++) {
                 this.inbox[i].class = this.unreadMessages.includes(this.inbox[i].id) ? "chat_list unread_msg" : "chat_list";
               }
-              
+
               this.loadMessage(this.inbox[this.selectedMessage]);
-              let userToMessage = this.chatService.getUserToMessage();
-              console.log(userToMessage);
-              if(userToMessage) {
-                this.chatService.storeUserToMessage(null);
-                this.messages = [];
-                this.startNewMessage(userToMessage);
-              }
-            })
-            .catch((e) => {
-              console.log(e);
-            })
-        })
-        .catch((e) => {
-          console.log(e);
-          this.isloadingPage = false;
-        })
+            }
+
+            let userToMessage = this.chatService.getUserToMessage();
+            if (userToMessage) {
+              this.chatService.storeUserToMessage(null);
+              this.messages = [];
+              this.startNewMessage(userToMessage);
+            }
+
+
+            this.isloadingPage = false;
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+      })
+      .catch((e) => {
+        console.log(e);
+        this.isloadingPage = false;
+      })
   }
 
   loadMessage(otherUser) {
@@ -161,7 +160,7 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
     this.inbox[this.selectedMessage].class = "chat_list";
     this.inbox[i].class = "chat_list active_chat";
     this.selectedMessage = i;
-    if(this.unreadMessages.includes(this.inbox[i].id)) {
+    if (this.unreadMessages.includes(this.inbox[i].id)) {
       this.chatService.readMessage(this.user.user_id, this.inbox[i].id);
     }
     this.loadMessage(this.inbox[i]);
@@ -176,10 +175,10 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
         console.log(e);
       })
   }
-  
+
   startNewMessage(user) {
-    for(var i = 0; i < this.inbox.length; i++) {
-      if(this.inbox[i].id == user.id || this.inbox[i].id == user.user_id) {
+    for (var i = 0; i < this.inbox.length; i++) {
+      if (this.inbox[i].id == user.id || this.inbox[i].id == user.user_id || this.inbox[i].id == user.userId) {
         this.changeInbox(i);
         return;
       }
@@ -195,8 +194,8 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
   }
 
   findInbox(id, messsage) {
-    for(var i = 0; i < this.inbox.length; i++) {
-      if(this.inbox[i].id == id) {
+    for (var i = 0; i < this.inbox.length; i++) {
+      if (this.inbox[i].id == id) {
         this.inbox[i].class = 'chat_list unread_msg'
         this.inbox[i].time = new Date().getTime();
         this.sortInbox(this.inbox[this.selectedMessage].id, false)
@@ -211,36 +210,29 @@ export class NotificationsComponent implements OnInit, AfterViewChecked, OnDestr
   sortInbox(id, init) {
     // this.inbox = this.inbox.sort()
     this.inbox = this.inbox.sort((a, b) => {
-      if(a.time > b.time) {
+      if (a.time > b.time) {
         return -1;
       }
-      if(a.time < b.time) {
+      if (a.time < b.time) {
         return 1;
       }
       return 0;
     })
-    console.log(this.inbox);
-    if(init) {
+
+    if (init) {
       this.selectedMessage = 0;
       return;
     }
-    for(let i = 0; i < this.inbox.length; i++) {
-      if(this.inbox[i].id == id) {
+    for (let i = 0; i < this.inbox.length; i++) {
+      if (this.inbox[i].id == id) {
         this.selectedMessage = i;
       }
     }
   }
 
   search(value) {
-    // this.chatService.searchFaculty(value)
-    //   .then((data) => {
-    //     this.searchResults = data;
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   })
     this.searchResults = this.inbox.filter((user) => {
-      if(user.name.includes(value) || user.email.includes(value))
+      if (user.name.includes(value) || user.email.includes(value))
         return user;
     })
   }
