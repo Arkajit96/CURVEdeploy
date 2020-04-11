@@ -57,7 +57,6 @@ export class HeaderComponent implements OnInit, OnDestroy{
       this.chatService.loadUnreadMessages(userid)
         .then((msgs) => {
           this.notifications = msgs;
-          console.log(this.notifications);
         })
         .catch((e) => {
           console.log(e);
