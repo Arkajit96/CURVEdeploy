@@ -22,6 +22,7 @@ exports.getCalendarEvents = (req, res) => {
     
     // check for valid session
     if (req.session.calenderUser) {
+        // console.log(req.session.calenderUser);
 
         // get oauth2 client
         const oauth2Client = new google.auth.OAuth2();

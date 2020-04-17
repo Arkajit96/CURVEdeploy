@@ -12,7 +12,7 @@
                 </button>
             </div>
 
-            <div class="col col-sm-8 col-xl-7 weekly-view">
+            <div class="col col-sm-10 col-xl-9 weekly-view" *ngIf="!loadingPage">
                 <div class="table-responsive-sm">
                     <table class="table table-hover table-bordered">
                         <thead>
@@ -27,73 +27,78 @@
                             <tr *ngFor="let time of eventArr; index as i">
                                 <th scope="col">{{time.time}}</th>
                                 <td scope="col">
-                                    <ul>
-                                        <section *ngFor="let text of weeklyEvents[0][i]">
-                                            <li *ngIf="text!==''">
-                                                {{text}}
-                                            </li>
-                                        </section>
-                                    </ul>
+                                    <section *ngFor="let event of weeklyEvents[0][i]">
+                                        <div class="event-card" *ngIf="text!==''" (click)="viewEventDetails(event)">
+                                            <span>
+                                                {{event.summary}}
+                                            </span>
+                                        </div>
+                                    </section>
                                 </td>
                                 <td scope="col">
-                                    <ul>
-                                        <section *ngFor="let text of weeklyEvents[1][i]">
-                                            <li *ngIf="text!==''">
-                                                {{text}}
-                                            </li>
-                                        </section>
-                                    </ul>
+                                    <section *ngFor="let event of weeklyEvents[1][i]">
+                                        <div class="event-card" *ngIf="text!==''" (click)="viewEventDetails(event)">
+                                            <span>
+                                                {{event.summary}}
+                                            </span>
+                                        </div>
+                                    </section>
                                 </td>
                                 <td scope="col">
-                                    <ul>
-                                        <section *ngFor="let text of weeklyEvents[2][i]">
-                                            <li *ngIf="text!==''">
-                                                {{text}}
-                                            </li>
-                                        </section>
-                                    </ul>
+                                    <section *ngFor="let event of weeklyEvents[2][i]">
+                                        <div class="event-card" *ngIf="text!==''" (click)="viewEventDetails(event)">
+                                            <span>
+                                                {{event.summary}}
+                                            </span>
+                                        </div>
+                                    </section>
                                 </td>
                                 <td scope="col">
-                                    <ul>
-                                        <section *ngFor="let text of weeklyEvents[3][i]">
-                                            <li *ngIf="text!==''">
-                                                {{text}}
-                                            </li>
-                                        </section>
-                                    </ul>
+                                    <section *ngFor="let event of weeklyEvents[3][i]">
+                                        <div class="event-card" *ngIf="text!==''" (click)="viewEventDetails(event)">
+                                            <span>
+                                                {{event.summary}}
+                                            </span>
+                                        </div>
+                                    </section>
                                 </td>
                                 <td scope="col">
-                                    <ul>
-                                        <section *ngFor="let text of weeklyEvents[4][i]">
-                                            <li *ngIf="text!==''">
-                                                {{text}}
-                                            </li>
-                                        </section>
-                                    </ul>
+                                    <section *ngFor="let event of weeklyEvents[4][i]">
+                                        <div class="event-card" *ngIf="text!==''" (click)="viewEventDetails(event)">
+                                            <span>
+                                                {{event.summary}}
+                                            </span>
+                                        </div>
+                                    </section>
                                 </td>
                                 <td scope="col">
-                                    <ul>
-                                        <section *ngFor="let text of weeklyEvents[5][i]">
-                                            <li *ngIf="text!==''">
-                                                {{text}}
-                                            </li>
-                                        </section>
-                                    </ul>
+                                    <section *ngFor="let event of weeklyEvents[5][i]">
+                                        <div class="event-card" *ngIf="text!==''" (click)="viewEventDetails(event)">
+                                            <span>
+                                                {{event.summary}}
+                                            </span>
+                                        </div>
+                                    </section>
                                 </td>
                                 <td scope="col">
-                                    <ul>
-                                        <section *ngFor="let text of weeklyEvents[6][i]">
-                                            <li *ngIf="text!==''">
-                                                {{text}}
-                                            </li>
-                                        </section>
-                                    </ul>
+                                    <section *ngFor="let event of weeklyEvents[6][i]">
+                                        <div class="event-card" *ngIf="text!==''" (click)="viewEventDetails(event)">
+                                            <span>
+                                                {{event.summary}}
+                                            </span>
+                                        </div>
+                                    </section>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <div class="col col-sm-10 col-xl-9 weekly-view" *ngIf="loadingPage">
+                <mat-spinner></mat-spinner>
+            </div>
+
         </div>
     </div>
 

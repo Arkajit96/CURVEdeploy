@@ -1,7 +1,10 @@
-import { Component, Output, EventEmitter, ViewChild, Renderer2, AfterViewInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
-import { MatDialog, MatDialogConfig } from "@angular/material";
+
+import { Component, OnInit, Output, EventEmitter, ViewChild, Renderer2, AfterViewInit } from '@angular/core';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialogConfig } from "@angular/material";
+
 import { ActivatedRoute } from '@angular/router';
+import { ViewEventComponent } from '../../modals/view-event/view-event.component';
 
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -30,8 +33,9 @@ export class CalendarSuccessComponent implements AfterViewInit {
     calendar: MatCalendar<Moment>;
 
     loadingEvents = true;
-
-    selectedWeek = [];
+    loadingPage = true;
+  
+    selectedWeek:any = [];
     weeklyEvents = [];
 
     private userData: any
@@ -95,7 +99,25 @@ export class CalendarSuccessComponent implements AfterViewInit {
             text: "3:00 - 4:00 CURVE Meeting"
         }
     ]
-    eventArr: any = [];
+
+    eventArr:any = [];
+
+
+    private eventsGot: any
+    private code: any
+    
+
+    ngOnInit() {
+        console.log(this.code);
+        this.calendarService.getGoogleEvents(this.code)
+            .then((events) => {
+                this.eventsGot = events;
+                console.log(this.eventsGot.events[0].start.dateTime);
+                console.log(moment(this.eventsGot.events[0].start.dateTime).format('MMMM Do YYYY'));
+                console.log(this.eventsGot)
+                this.setWeeklyView();
+            })
+    }
 
 
     ngAfterViewInit() {
@@ -108,24 +130,26 @@ export class CalendarSuccessComponent implements AfterViewInit {
         })
 
         this.dateSelected.subscribe(data => {
-            // console.log(data);
-            this.setWeek();
-            this.setWeeklyView();
+          // console.log(data);
+          this.loadingPage = true;
+          this.setWeek();
+          this.setWeeklyView();
         })
         const buttons = document.querySelectorAll('.mat-calendar-previous-button, .mat-calendar-next-button');
 
         if (buttons) {
-            Array.from(buttons).forEach(button => {
-                this.renderer.listen(button, 'click', () => {
-                    console.log('Arrow buttons clicked');
-                    this.highlightEvents();
-                    this.setTextEvents();
-                });
+          Array.from(buttons).forEach(button => {
+            this.renderer.listen(button, 'click', () => {
+              console.log('Arrow buttons clicked');
+              // this.highlightEvents();
+              // this.setTextEvents();
             });
         }
-        this.setWeek();
-        this.setWeeklyView();
-    }
+        setTimeout(() => {
+          this.setWeek();
+          // this.setWeeklyView();
+        }, 0)
+      }
 
 
     setWeeklyView() {
@@ -139,121 +163,76 @@ export class CalendarSuccessComponent implements AfterViewInit {
             this.weeklyEvents[5].push(['']);
             this.weeklyEvents[6].push(['']);
         }
-
-        for (let i = 0; i < this.weeklyEvents.length; i++) {
-            let dayHasEvent = false;
-            let eventsToAdd = [];
-            // this.events.find(d => {
-            //   if(d.date == this.selectedWeek[i].timestamp) {
-            //     dayHasEvent = true;
-            //     eventsToAdd.push(d);
-            //   }
-            // })
-            this.events.find((d): any => {
-                if (d.date == this.selectedWeek[i].timestamp) {
-                    dayHasEvent = true;
-                    eventsToAdd.push(d);
+        console.log(this.selectedWeek);
+        for(let i = 0; i < this.weeklyEvents.length; i++) {
+          let dayHasEvent = false;
+          let eventsToAdd = [];
+          this.eventsGot.events.find((d):any => {
+            if(moment(d.start.dateTime).format('MMMM Do YYYY') == this.selectedWeek[i].timestamp) {
+              dayHasEvent = true;
+              eventsToAdd.push(d);
+            }
+          })
+          if(dayHasEvent) {
+            eventsToAdd.forEach(event => {
+              let index = this.eventArr.findIndex(time => {
+                if(time.time == moment(event.start.dateTime).format('h:00 a')) {
+                  return true;
                 }
+              });
+              if(index) {
+                this.weeklyEvents[i][index].push(event)
+              }
             })
-            if (dayHasEvent) {
-                eventsToAdd.forEach(event => {
-                    // let index = -1;
-                    let index = this.eventArr.findIndex(time => {
-                        if (time.time == event.starttime) {
-                            return true;
-                        }
-                    });
-                    // this.weeklyEvents[i][index] = this.weeklyEvents[i][index] + '\n - ' + event.text;
-                    this.weeklyEvents[i][index].push(event.text)
-                })
-                let index = -1;
-            }
+          }
         }
-    }
-
-    highlightEvents() {
-        this.loadingEvents = true;
-        let dayElements = document.querySelectorAll('.mat-calendar-table .mat-calendar-body-cell');
-        Array.from(dayElements).forEach(element => {
-            const dayHasEvent = this.events.find(d =>
-                d.date === element.getAttribute("aria-label")
-            )
-            if (dayHasEvent) {
-                this.renderer.addClass(element, "event-day");
-                // this.renderer.addClass(element, "tooltip")
-                this.renderer.setAttribute(element, "title", dayHasEvent.text + "\n" + "5:00 - 6:00 Another Meeting");
-            }
-            // else {
-            //   this.renderer.removeClass(element, "event-day");
-            //   this.renderer.removeAttribute(element, "title");
-            // }
-        })
-        this.loadingEvents = false;
-    }
-
-    setTextEvents() {
-        this.loadingEvents = true;
-        let dayElements = document.querySelectorAll('.mat-calendar-table .mat-calendar-body-cell');
-        Array.from(dayElements).forEach(element => {
-            const dayHasEvent = this.textEvents.find(d =>
-                d.date === element.getAttribute("aria-label")
-            )
-            if (dayHasEvent) {
-                // console.log(dayHasEvent);
-                const span = this.renderer.createElement('span');
-                const tooltipText = this.renderer.createText(dayHasEvent.text);
-                this.renderer.appendChild(span, tooltipText);
-                this.renderer.appendChild(element, span);
-                this.renderer.addClass(span, "tooltiptext");
-                // this.renderer.addClass(element, "tooltip")
-
-                this.renderer.addClass(element, "event-day");
-                // this.renderer.setAttribute(element, "title", dayHasEvent.text);
-                let text = element.children[0].innerHTML + "<br>" + dayHasEvent.text;
-                this.renderer.setProperty(element.children[0], "innerHTML", text);
-            }
-            // else {
-            //   this.renderer.removeClass(element, "event-day");
-            //   this.renderer.removeAttribute(element, "title");
-            // }
-        })
-        this.loadingEvents = false;
-    }
-
-    setWeek() {
+        this.loadingPage = false;
+      }
+    
+      setWeek() {
         let currDayOfWeek = moment(this.selectedDate).day();
         let dayModifer = currDayOfWeek;
         let pastDay = false;
         let week = [];
-
-        for (var i = 0; i < 7; i++) {
-            if (i === currDayOfWeek) {
-                pastDay = true;
-                week.push({
-                    display: moment(this.selectedDate).format('ddd Do'),
-                    timestamp: moment(this.selectedDate).format('MMMM Do')
-                });
-                dayModifer = 1;
+    
+        for(var i = 0; i < 7; i++) {
+          if(i === currDayOfWeek) {
+            pastDay = true;
+            week.push({
+              display: moment(this.selectedDate).format('ddd Do'),
+              timestamp: moment(this.selectedDate).format('MMMM Do YYYY')
+            });
+            dayModifer = 1;
+          } else {
+            if(!pastDay) {
+              week.push({
+                display: moment(this.selectedDate).subtract(dayModifer, 'd').format('ddd Do'),
+                timestamp: moment(this.selectedDate).subtract(dayModifer, 'd').format('MMMM Do YYYY')
+              });
+              dayModifer = dayModifer - 1;
             } else {
-                if (!pastDay) {
-                    week.push({
-                        display: moment(this.selectedDate).subtract(dayModifer, 'd').format('ddd Do'),
-                        timestamp: moment(this.selectedDate).subtract(dayModifer, 'd').format('MMMM Do')
-                    });
-                    dayModifer = dayModifer - 1;
-                } else {
-                    week.push({
-                        display: moment(this.selectedDate).add(dayModifer, 'd').format('ddd Do'),
-                        timestamp: moment(this.selectedDate).add(dayModifer, 'd').format('MMMM Do')
-                    });
-                    dayModifer = dayModifer + 1;
-                }
+              week.push({
+                display: moment(this.selectedDate).add(dayModifer, 'd').format('ddd Do'),
+                timestamp: moment(this.selectedDate).add(dayModifer, 'd').format('MMMM Do YYYY')
+              });
+              dayModifer = dayModifer + 1;
+
             }
         }
         this.selectedWeek = week;
-    }
 
-    monthSelected(date: Moment) {
+      }
+
+      viewEventDetails(event) {
+        // console.log(event);
+        const dialogRef = this.dialog.open(ViewEventComponent, {
+          maxWidth: "500px",
+          data: event
+        });
+      }
+    
+      monthSelected(date: Moment) {
+
         console.log('month changed');
     }
 

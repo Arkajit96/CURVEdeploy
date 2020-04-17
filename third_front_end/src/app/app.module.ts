@@ -47,6 +47,7 @@ import { ViewStudentProfileComponent } from './components/modals/view-student-pr
 import { EditFacultyProfileComponent } from './components/modals/edit-faculty-profile/edit-faculty-profile.component';
 import { EditOpportunityComponent } from './components/modals/edit-opportunity/edit-opportunity.component';
 import { times } from './components/calendar/times';
+import { ViewEventComponent } from './components/modals/view-event/view-event.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -77,7 +78,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     NotificationsComponent,
     EditFacultyProfileComponent,
     submitAllApplicationComponent,
-    EditOpportunityComponent
+    EditOpportunityComponent,
+    ViewEventComponent
   ],
   imports: [
     BrowserModule,
@@ -114,7 +116,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     submitApplicationComponent,
     EditFacultyProfileComponent,
     submitAllApplicationComponent,
-    EditOpportunityComponent
+    EditOpportunityComponent,
+    ViewEventComponent
   ]
 })
 export class AppModule { }
