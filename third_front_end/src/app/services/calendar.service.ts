@@ -43,7 +43,7 @@ export class CalendarService {
   }
 
   getGoogleEvents(): Promise<any> {
-    console.log(this.userData);
+
     if (this.userData) {
       return new Promise((res, rej) => {
         res(this.userData);
