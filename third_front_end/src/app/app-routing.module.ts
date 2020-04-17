@@ -11,6 +11,7 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
 import { CalendarComponent } from './components/calendar/home/calendar.component';
+import { RedirectComponent } from './components/calendar/redirect/rediect.component';
 import { CalendarSuccessComponent } from './components/calendar/success/calendarSuccess.component';
 import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { CandidateComponent } from './components/candidate/candidate.component';
@@ -40,6 +41,9 @@ const routes: Routes = [
   },
   {
     path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'redirect', component: RedirectComponent, canActivate: [AuthGuard]
   },
   {
     path: 'calendarSuccess', component: CalendarSuccessComponent, canActivate: [AuthGuard]

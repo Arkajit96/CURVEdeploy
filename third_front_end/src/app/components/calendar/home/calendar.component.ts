@@ -1,9 +1,6 @@
-import { Component} from '@angular/core';
-import { Moment } from 'moment';
-import * as moment from 'moment';
-import { MatCalendar } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
-import { times } from '../times';
 
 // Service
 import {CalendarService} from '../../../services/calendar.service'
@@ -14,12 +11,19 @@ import {CalendarService} from '../../../services/calendar.service'
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent{
+export class CalendarComponent implements OnInit{
 
   constructor(
     private calendarService: CalendarService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private router: Router
   ) { }
+
+  ngOnInit() {
+    if (this.calendarService.getCurrentUserCode()){
+      this.router.navigate(['/calendarSuccess'])
+    }
+}
 
     googleOath(){
       this.calendarService.googleOath()

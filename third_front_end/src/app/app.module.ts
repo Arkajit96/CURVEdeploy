@@ -21,6 +21,7 @@ import { SearchResultsComponent } from './components/search-results/search-resul
 import { ResearchComponent } from './components/research/research.component';
 import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { CalendarComponent } from './components/calendar/home/calendar.component';
+import { RedirectComponent } from './components/calendar/redirect/rediect.component';
 import { CalendarSuccessComponent } from './components/calendar/success/calendarSuccess.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CandidateComponent } from './components/candidate/candidate.component';
@@ -41,6 +42,7 @@ import { submitApplicationComponent } from './components/modals/submit-applicati
 import { submitAllApplicationComponent } from './components/modals/submit-all-application/submit-all-application.component'
 import { CloseConfirmComponent } from './components/modals/close-confirm/close-confirm.component';
 import { EditStudentProfileComponent } from './components/modals/edit-student-profile/edit-student-profile.component';
+import { AddCalendarEventComponent } from './components/modals/add-calendar-event/add-calendar-event.component';
 import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
 import { EditFacultyProfileComponent } from './components/modals/edit-faculty-profile/edit-faculty-profile.component';
 import { EditOpportunityComponent } from './components/modals/edit-opportunity/edit-opportunity.component';
@@ -63,9 +65,11 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ResearchComponent,
     ShoppingCartComponent,
     CalendarComponent,
+    RedirectComponent,
     CalendarSuccessComponent,
     CandidateComponent,
     CanidateSearchComponent,
+    AddCalendarEventComponent,
     AddInterestsComponent,
     CloseConfirmComponent,
     EditStudentProfileComponent,
@@ -104,6 +108,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
   ],
   bootstrap: [AppComponent],
   entryComponents: [
+    AddCalendarEventComponent,
     AddInterestsComponent,
     CloseConfirmComponent,
     EditStudentProfileComponent,

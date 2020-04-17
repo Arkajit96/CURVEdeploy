@@ -3,9 +3,13 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="coll col-sm-2 col-xl-3 calendar-wrapper">
+            <div class="col col-sm-4 col-xl-5 calendar-wrapper">
                 <mat-calendar #calendar (monthSelected)="monthSelected($event)" [(selected)]="selectedDate"
                     (selectedChange)="dateChanged()"></mat-calendar>
+                <button mat-raised-button color="primary" (click)="addEvent()">
+                    <mat-icon>add_circle</mat-icon>
+                    Add event to the Calendar
+                </button>
             </div>
 
             <div class="col col-sm-10 col-xl-9 weekly-view" *ngIf="!loadingPage">

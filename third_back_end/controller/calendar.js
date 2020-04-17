@@ -39,16 +39,17 @@ exports.getCalendarEvents = (req, res) => {
                 email: req.session.calenderUser.email,
                 events: events
             }
+
             res.status(200).json({
                 message: 'get Event successful',
-                events: data
+                userData: data
             })
         });
         
     } else {
         res.status(401).json({
             message: 'get Event failed',
-            events: null
+            userData: null
         })
     }
 }

@@ -6,7 +6,7 @@ require('dotenv').config()
 const googleConfig = {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirect: 'http://localhost:4200/calendarSuccess'
+    redirect: 'http://localhost:4200/redirect'
 }
 
 // scopes use for the application

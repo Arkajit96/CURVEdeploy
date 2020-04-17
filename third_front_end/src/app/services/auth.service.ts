@@ -7,6 +7,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 // Service
 import { StudentService } from './student.service';
 import { FacultyService } from './faculty.service';
+import { CalendarService } from './calendar.service'
 
 // user model for auth
 import { User } from '../shared/User';
@@ -27,6 +28,7 @@ export class AuthService {
     private flashMessage: FlashMessagesService,
     private studentService: StudentService,
     private facultyService: FacultyService,
+    private calendarService: CalendarService,
     private chatService: ChatService,
     private config: ConfigService
   ) { }
@@ -196,6 +198,12 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('entity');
     localStorage.clear();
+
+    // clearsingleton
+    this.studentService.clearCurrentUser();
+    this.facultyService.clearCurrentUser();
+    this.calendarService.clearCurrentUserCode();
+    
   }
 
   private getAuthData() {
