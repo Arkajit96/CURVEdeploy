@@ -31,19 +31,29 @@ export class CalendarService {
     }
 
     getGoogleEvents(code: string): Promise<any> {
-
         let data = {
             code: code,
           }
+
+        this.http.post(this.url + 'calendar/getGoogleEvents', data).subscribe(
+          data => {
+            console.log(data);
+          },
+          err => {
+            console.log(err);
+          }
+        )
 
         return new Promise((res, rej) => {
             this.http.post<{ message: string; events: any}>(
               this.url + 'calendar/getGoogleEvents', data
               ).toPromise().then(
               data => {
+                console.log(data);
                 res(data.events);
               },
               error => {
+                console.log(error);
                 res(error);
               }
             )

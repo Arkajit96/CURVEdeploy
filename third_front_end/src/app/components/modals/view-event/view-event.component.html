@@ -1,0 +1,9 @@
+<div style="text-align: center;">
+    <h4>{{event.summary}}</h4>
+</div>
+<p>Attendees: </p>
+<ul>
+    <li *ngFor="let person of event.attendees">
+        {{person.email}}
+    </li>
+</ul>
