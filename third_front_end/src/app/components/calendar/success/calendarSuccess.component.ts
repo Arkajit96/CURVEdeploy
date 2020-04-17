@@ -22,7 +22,7 @@ import { CalendarService } from '../../../services/calendar.service'
     templateUrl: './calendarSuccess.component.html',
     styleUrls: ['./calendarSuccess.component.scss']
 })
-export class CalendarSuccessComponent implements AfterViewInit {
+export class CalendarSuccessComponent implements OnInit, AfterViewInit {
     @Output()
     dateSelected: EventEmitter<Moment> = new EventEmitter();
 
@@ -51,54 +51,10 @@ export class CalendarSuccessComponent implements AfterViewInit {
             .then((events) => {
                 this.userData = events;
                 console.log(this.userData)
+                this.eventsGot = this.userData;
+                this.setWeeklyView();
             })
     }
-
-    events = [
-        {
-            date: "April 7th",
-            starttime: "3:00 pm",
-            endtime: "4:00 pm",
-            text: "Machine Learning"
-        },
-        {
-            date: "April 10th",
-            starttime: "2:00 pm",
-            endtime: "3:00 pm",
-            text: "CURVE Meeting"
-        },
-        {
-            date: "April 10th",
-            starttime: "2:00 pm",
-            endtime: "3:00 pm",
-            text: "Review notes"
-        },
-        {
-            date: "April 5th",
-            starttime: "4:00 pm",
-            endtime: "6:00 pm",
-            text: "Take a nap"
-        },
-        {
-            date: "April 5th",
-            starttime: "10:00 am",
-            endtime: "11:00 am",
-            text: "Homework"
-        },
-        {
-            date: "April 16th",
-            starttime: "2:00 pm",
-            endtime: "3:00 pm",
-            text: "Another event"
-        }
-    ]
-
-    textEvents = [
-        {
-            date: "April 1, 2020",
-            text: "3:00 - 4:00 CURVE Meeting"
-        }
-    ]
 
     eventArr:any = [];
 
@@ -108,13 +64,21 @@ export class CalendarSuccessComponent implements AfterViewInit {
     
 
     ngOnInit() {
-        console.log(this.code);
-        this.calendarService.getGoogleEvents(this.code)
+      console.log("ONINIT");
+        // console.log(this.code);
+        // this.calendarService.getGoogleEvents(this.code)
+        //     .then((events) => {
+        //         this.eventsGot = events;
+        //         console.log(this.eventsGot.events[0].start.dateTime);
+        //         console.log(moment(this.eventsGot.events[0].start.dateTime).format('MMMM Do YYYY'));
+        //         console.log(this.eventsGot)
+        //         this.setWeeklyView();
+        //     })
+        this.calendarService.getGoogleEvents()
             .then((events) => {
-                this.eventsGot = events;
-                console.log(this.eventsGot.events[0].start.dateTime);
-                console.log(moment(this.eventsGot.events[0].start.dateTime).format('MMMM Do YYYY'));
-                console.log(this.eventsGot)
+                this.userData = events;
+                console.log(this.userData)
+                this.eventsGot = this.userData;
                 this.setWeeklyView();
             })
     }
@@ -135,21 +99,14 @@ export class CalendarSuccessComponent implements AfterViewInit {
           this.setWeek();
           this.setWeeklyView();
         })
-        const buttons = document.querySelectorAll('.mat-calendar-previous-button, .mat-calendar-next-button');
+        // const buttons = document.querySelectorAll('.mat-calendar-previous-button, .mat-calendar-next-button');
 
-        if (buttons) {
-          Array.from(buttons).forEach(button => {
-            this.renderer.listen(button, 'click', () => {
-              console.log('Arrow buttons clicked');
-              // this.highlightEvents();
-              // this.setTextEvents();
-            });
-        }
         setTimeout(() => {
           this.setWeek();
           // this.setWeeklyView();
         }, 0)
       }
+      
 
 
     setWeeklyView() {
@@ -219,6 +176,7 @@ export class CalendarSuccessComponent implements AfterViewInit {
 
             }
         }
+      }
         this.selectedWeek = week;
 
       }
