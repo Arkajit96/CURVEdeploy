@@ -1,6 +1,6 @@
 const { google } = require('googleapis');
 
-const {listEvents} = require('../helpers/google-util')
+const { listEvents } = require('../helpers/google-util')
 const googleUtil = require('../helpers/google-util');
 
 exports.getGoogleAuthUrl = (req, res) => {
@@ -10,7 +10,7 @@ exports.getGoogleAuthUrl = (req, res) => {
             message: 'Please login with google account',
             url: url
         })
-    }else{
+    } else {
         res.status(500).json({
             message: "Error occoured",
             url: ''
@@ -18,11 +18,10 @@ exports.getGoogleAuthUrl = (req, res) => {
     }
 }
 
-exports.getCalendarEvents = (req, res) => {
-    
+exports.getGoogleEvents = (req, res) => {
+
     // check for valid session
     if (req.session.calenderUser) {
-        // console.log(req.session.calenderUser);
 
         // get oauth2 client
         const oauth2Client = new google.auth.OAuth2();
@@ -31,7 +30,7 @@ exports.getCalendarEvents = (req, res) => {
         });
 
         // get calendar events by passing oauth2 client
-        listEvents(oauth2Client, (events) => {  
+        listEvents(oauth2Client, (events) => {
             const data = {
                 name: req.session.calenderUser.name,
                 displayPicture: req.session.calenderUser.displayPicture,
@@ -45,11 +44,103 @@ exports.getCalendarEvents = (req, res) => {
                 userData: data
             })
         });
-        
+
     } else {
         res.status(401).json({
             message: 'get Event failed',
             userData: null
         })
     }
+}
+
+
+// create multiple applications (or update if it is already there)
+exports.saveEvents = (req, res) => {
+
+    const filter = {
+        userId: req.body.userId
+    };
+
+    const config = {
+        upsert: true,
+        setDefaultsOnInsert: true
+    };
+
+    async.each(req.body.events, (event, cb) => {
+
+        const update = {
+            start: events.start,
+            end: events.end,
+            summary: event.summary,
+            organizor: event.organizer
+        }
+
+        //     Events.findOneAndUpdate(filter, update, config, (err, Application) => {
+        //         if (err) {
+        //             return cb(err);
+
+        //         } else {
+        //             return cb()
+
+        //         }
+        //     })
+    }, err => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Events save failed!"
+            });
+        } else {
+            res.status(200).json({
+                message: 'Events save successful'
+            })
+        }
+    })
+}
+
+exports.getDatabaseEvents = (req, res) => {
+    let userId = mongoose.Types.ObjectId(req.body.userId);
+    // Events.find({ userId: userId})
+    // .then(events => {
+    //     res.status(200).json({
+    //         message: 'Fetching events successfully',
+    //         events: events
+    //     })
+    // })
+    // .catch(err => {
+    //     res.status(500).json({
+    //         message: "Fetching events failed!",
+    //         events: []
+    //     });
+    // });
+}
+
+exports.addEventsToDatabase = (req, res) => {
+    const filter = {
+        userId: req.body.userId,
+    };
+
+    const update = req.body.events;
+
+    const config = {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true
+    };
+
+    // if find the old application then update the files and time
+    Events.findOneAndUpdate(filter, update, config, (err, newEvent) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Event create failed!",
+                event: null
+            });
+        } else {
+            res.status(200).json({
+                message: 'Event create successful',
+                applicationID: newEvent
+            })
+        }
+    })
 }

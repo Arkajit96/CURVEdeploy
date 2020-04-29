@@ -19,12 +19,35 @@ export class RedirectComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        if (!this.calendarService.getCurrentUserCode()) {
-            this.currentRoute.queryParams.subscribe(params => {
-                this.calendarService.setCurrentUserCode(params['code'])
-                this.router.navigate(['/calendarSuccess'])
-            })
+        switch (this.calendarService.getSyncState()) {
+            case 'google':
+                this.googleAuth();
+                break;
+            case 'Apple':
+                this.appleAuth();
+            case 'windows':
+                this.windowsAuth();
         }
+    }
+
+    googleAuth() {
+        this.currentRoute.queryParams.subscribe(params => {
+            localStorage.setItem('googleCalendarCode', params['code']);
+            this.calendarService.getGoogleEvents(params['code'])
+                .then(res => {
+                    if (res) {
+                        this.router.navigate(['/calendarSuccess'])
+                    }
+                });
+        })
+    }
+
+    appleAuth() {
+
+    }
+
+    windowsAuth() {
+
     }
 
 }

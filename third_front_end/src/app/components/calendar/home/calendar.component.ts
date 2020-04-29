@@ -20,13 +20,26 @@ export class CalendarComponent implements OnInit{
   ) { }
 
   ngOnInit() {
-    if (this.calendarService.getCurrentUserCode()){
-      this.router.navigate(['/calendarSuccess'])
-    }
+    // if (this.calendarService.getCurrentUserCode()){
+    //   this.router.navigate(['/calendarSuccess']
+      //   queryParams: {
+      //     source: 'google'
+      //   },
+      //   skipLocationChange: true 
+      // })
+      // )}
+
+      if (this.calendarService.getSyncState()){
+        this.router.navigate(['/calendarSuccess'])
+      }
 }
 
     googleOath(){
       this.calendarService.googleOath()
   }
+
+    noOathCalendar(){
+      this.router.navigate(['/calendarSuccess'])
+    }
 
 }

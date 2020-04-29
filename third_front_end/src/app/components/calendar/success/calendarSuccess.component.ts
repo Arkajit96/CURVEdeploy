@@ -11,6 +11,8 @@ import * as moment from 'moment';
 import { MatCalendar } from '@angular/material';
 import { times } from '../times';
 
+import { Router } from '@angular/router';
+
 // Components
 import { AddCalendarEventComponent } from '../../modals/add-calendar-event/add-calendar-event.component'
 
@@ -43,29 +45,28 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
     constructor(
         private calendarService: CalendarService,
         private snackbar: MatSnackBar,
+        private router: Router,
         private dialog: MatDialog,
         private renderer: Renderer2,
         private times: times
     ) {
-        this.calendarService.getGoogleEvents()
-            .then((events) => {
-                this.userData = events;
-                console.log(this.userData)
-                this.eventsGot = this.userData;
-                this.setWeeklyView();
-            })
     }
 
     eventArr:any = [];
 
-
-    private eventsGot: any
-    private code: any
-    
-
     ngOnInit() {
-      console.log("ONINIT");
-        // console.log(this.code);
+
+      this.userData = this.calendarService.getEvents()
+      .then(events => {
+        this.userData = events;
+        this.setWeeklyView();
+      });
+      
+      // this.calendarService.getEvents()
+      // .then((events) => {
+      //     this.userData = events;
+      //     this.setWeeklyView();
+      // })
         // this.calendarService.getGoogleEvents(this.code)
         //     .then((events) => {
         //         this.eventsGot = events;
@@ -74,13 +75,6 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
         //         console.log(this.eventsGot)
         //         this.setWeeklyView();
         //     })
-        this.calendarService.getGoogleEvents()
-            .then((events) => {
-                this.userData = events;
-                console.log(this.userData)
-                this.eventsGot = this.userData;
-                this.setWeeklyView();
-            })
     }
 
 
@@ -124,7 +118,7 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
         for(let i = 0; i < this.weeklyEvents.length; i++) {
           let dayHasEvent = false;
           let eventsToAdd = [];
-          this.eventsGot.events.find((d):any => {
+          this.userData.events.find((d):any => {
             if(moment(d.start.dateTime).format('MMMM Do YYYY') == this.selectedWeek[i].timestamp) {
               dayHasEvent = true;
               eventsToAdd.push(d);
