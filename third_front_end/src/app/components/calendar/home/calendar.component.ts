@@ -20,13 +20,26 @@ export class CalendarComponent implements OnInit{
   ) { }
 
   ngOnInit() {
-    if (this.calendarService.getCurrentUserCode()){
-      this.router.navigate(['/calendarSuccess'])
+    // if (this.calendarService.getCurrentUserCode()){
+    //   this.router.navigate(['/calendarSuccess'])
+    // }
+    // if(this.calendarService.getType() == 'curve') {
+    //   this.router.navigate(['/calendarSuccess']);
+    // }
+
+    if(this.calendarService.getCalendarid()) {
+      this.router.navigate(['/calendarSuccess']);
     }
-}
+  }
 
     googleOath(){
+      this.calendarService.setType('google');
       this.calendarService.googleOath()
+  }
+
+  loadCurveCalendar() {
+    this.calendarService.setType('curve');
+    this.router.navigate(['/calendarSuccess']);
   }
 
 }

@@ -33,6 +33,7 @@ const indexRoutes = require("./routes/index"),
       messageRoutes = require("./routes/messages")
       researchRoutes = require("./routes/research");
       calendarRoutes = require("./routes/calendar");
+      eventRoutes = require('./routes/events');
  
 // let uri = "mongodb+srv://yueningzhu505:volunteer123@cluster0-9ccmb.mongodb.net/curve?retryWrites=true";
 
@@ -93,6 +94,7 @@ app.use("/faculty", facultyRoutes);
 app.use("/message", messageRoutes);
 app.use("/research", researchRoutes);
 app.use("/calendar", calendarRoutes)
+app.use("/events", eventRoutes);
 
 const listener = server.listen(PORT, function() {
    console.log(`Your app is listening on port ${PORT}`);

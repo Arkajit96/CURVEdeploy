@@ -15,6 +15,7 @@ export class CalendarService {
 
   private url = this.config.getURL();
   private code: string;
+  private type: string;
   private userData: any;
 
   getCurrentUserCode() {
@@ -29,11 +30,31 @@ export class CalendarService {
     this.code = null;
   }
 
+  setType(type: string) {
+    this.type = type;
+    localStorage.setItem('calendarType', type);
+  }
+
+  getType() {
+    return localStorage.getItem('calendarType');
+    // return this.type;
+  }
+
+  setCalendarid(calendarid) {
+    localStorage.setItem('calendarid', calendarid);
+  }
+
+  getCalendarid() {
+    return localStorage.getItem('calendarid');
+  }
+
   googleOath() {
     this.http.get<{ message: string, url: string }>(
       this.url + 'calendar/googleOath/'
     ).toPromise().then(
       data => {
+        this.type = 'google';
+        console.log(data);
         window.location.href = data.url;
       },
       error => {
@@ -43,20 +64,38 @@ export class CalendarService {
   }
 
   getGoogleEvents(): Promise<any> {
-    console.log(this.userData);
     if (this.userData) {
       return new Promise((res, rej) => {
         res(this.userData);
       })
     } else {
+      localStorage.removeItem('code');
+      if(!this.code) {
+        // this.code = localStorage.getItem('code');
+      }
       let data = {code: this.code}
+      console.log(data);
+      // localStorage.setItem('code', data.code);
 
       return new Promise((res, rej) => {
         this.http.post<{ message: string; userData: any }>(
           this.url + 'calendar/getGoogleEvents', data
         ).toPromise().then(
           data => {
+            console.log(data);
             this.userData = data.userData;
+            let calendarid = new Date().getTime();
+            this.setCalendarid(calendarid);
+            let googledata = {
+              calendarid: calendarid,
+              events: this.userData
+            }
+            this.http.post(this.url + 'events/saveGoogleEvents', googledata)
+              .subscribe(
+                googledata => {
+                  console.log(googledata);
+                }
+              )
             res(data.userData);
           },
           error => {
@@ -68,4 +107,21 @@ export class CalendarService {
     }
 
   }
+
+  getCurveEvents() {
+    return new Promise((res, rej) => {
+      let calendarid = localStorage.getItem('calendarid');
+      this.http.get(this.url + 'events/' + calendarid).subscribe(
+        data => {
+          this.userData = data;
+          res(data);
+        },
+        error => {
+          console.log(error);
+          rej(error);
+        }
+      )
+    })
+  }
+
 }

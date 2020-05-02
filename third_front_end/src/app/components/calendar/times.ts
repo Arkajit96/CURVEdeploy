@@ -3,6 +3,7 @@ export class times {
         '6:00 am',
         '7:00 am',
         '8:00 am',
+        '9:00 am',
         '10:00 am',
         '11:00 am',
         '12:00 pm',
