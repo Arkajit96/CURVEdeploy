@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Output, EventEmitter, ViewChild, Renderer2, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, Renderer2, AfterViewInit } from '@angular/core';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { MatDialogConfig } from "@angular/material";
 
@@ -24,7 +24,7 @@ import { CalendarService } from '../../../services/calendar.service'
     templateUrl: './calendarSuccess.component.html',
     styleUrls: ['./calendarSuccess.component.scss']
 })
-export class CalendarSuccessComponent implements OnInit, AfterViewInit {
+export class CalendarSuccessComponent implements AfterViewInit {
     @Output()
     dateSelected: EventEmitter<Moment> = new EventEmitter();
 
@@ -40,6 +40,7 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
     selectedWeek:any = [];
     weeklyEvents = [];
 
+    userid: any;
     private userData: any
 
     constructor(
@@ -50,6 +51,46 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
         private renderer: Renderer2,
         private times: times
     ) {
+        this.times.times.forEach((timePeriod) => {
+            this.eventArr.push({
+                time: timePeriod,
+                week: []
+            })
+        })
+        let type = this.calendarService.getType();
+        let calendarid = this.calendarService.getCalendarid();
+        console.log(type);
+        if(type == 'google') {
+          if(!calendarid) {
+            this.calendarService.getGoogleEvents()
+              .then((events) => {
+                  console.log(events);
+                  this.userData = events;
+                  this.eventsGot = this.userData.events;
+                  this.setWeek();
+                  this.setWeeklyView();
+            })
+          } else {
+            this.calendarService.getCurveEvents()
+              .then((events) => {
+                console.log(events);
+                this.userData = events;
+                this.eventsGot = this.userData;
+                this.setWeek();
+                this.setWeeklyView();
+              })
+          }
+        } else if(type == 'curve') {
+          localStorage.setItem('calendarid', localStorage.getItem('userId'));
+          this.calendarService.getCurveEvents()
+            .then((events) => {
+              console.log(events);
+              this.userData = events;
+              this.eventsGot = this.userData;
+              this.setWeek();
+              this.setWeeklyView();
+            })
+        }
     }
 
     eventArr:any = [];
@@ -77,28 +118,19 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
         //     })
     }
 
+    private eventsGot: any
+    private code: any
+
 
     ngAfterViewInit() {
-        // this.timeArr = this.times.times;
-        this.times.times.forEach((timePeriod) => {
-            this.eventArr.push({
-                time: timePeriod,
-                week: []
-            })
-        })
-
         this.dateSelected.subscribe(data => {
-          // console.log(data);
           this.loadingPage = true;
           this.setWeek();
           this.setWeeklyView();
-        })
-        // const buttons = document.querySelectorAll('.mat-calendar-previous-button, .mat-calendar-next-button');
+        });
 
-        setTimeout(() => {
-          this.setWeek();
-          // this.setWeeklyView();
-        }, 0)
+        this.userid = localStorage.getItem('userId');
+        console.log(this.userid);
       }
       
 
@@ -114,11 +146,11 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
             this.weeklyEvents[5].push(['']);
             this.weeklyEvents[6].push(['']);
         }
-        console.log(this.selectedWeek);
+
         for(let i = 0; i < this.weeklyEvents.length; i++) {
           let dayHasEvent = false;
           let eventsToAdd = [];
-          this.userData.events.find((d):any => {
+          this.eventsGot.find((d):any => {
             if(moment(d.start.dateTime).format('MMMM Do YYYY') == this.selectedWeek[i].timestamp) {
               dayHasEvent = true;
               eventsToAdd.push(d);
@@ -127,11 +159,15 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
           if(dayHasEvent) {
             eventsToAdd.forEach(event => {
               let index = this.eventArr.findIndex(time => {
+                console.log(moment(event.start.dateTime).format('h:00 a'));
                 if(time.time == moment(event.start.dateTime).format('h:00 a')) {
                   return true;
                 }
               });
-              if(index) {
+              if(index > -1) {
+                console.log(index);
+                console.log(this.weeklyEvents[i][index]);
+                console.log(event);
                 this.weeklyEvents[i][index].push(event)
               }
             })
@@ -141,6 +177,7 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
       }
     
       setWeek() {
+        console.log('curr day of week ' + this.selectedDate);
         let currDayOfWeek = moment(this.selectedDate).day();
         let dayModifer = currDayOfWeek;
         let pastDay = false;
@@ -171,12 +208,11 @@ export class CalendarSuccessComponent implements OnInit, AfterViewInit {
             }
         }
       }
-        this.selectedWeek = week;
+      this.selectedWeek = week;
 
       }
 
       viewEventDetails(event) {
-        // console.log(event);
         const dialogRef = this.dialog.open(ViewEventComponent, {
           maxWidth: "500px",
           data: event

@@ -1,9 +1,9 @@
 <app-header></app-header>
 
 <body>
-    <div class="container col-4 col-offset-4">
+    <div class="container">
         <br><br>
-        <div class="row">
+        <div class="row justify-content-sm-center">
             <button mat-raised-button color="primary" (click)="googleOath()">
                 <mat-icon>calendar_today</mat-icon>
                 Google Calendar Sync
@@ -15,6 +15,13 @@
                 Skip
             </button>
         </div>
+        <div class="row justify-content-sm-center">
+            <button mat-raised-button color="primary" (click)="loadCurveCalendar()">
+                <mat-icon>calendar_today</mat-icon>
+                My CURVE Calendar
+            </button>
+        </div>
+        <br><br>
     </div>
 
     <!-- <div class="row">

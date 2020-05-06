@@ -29,17 +29,35 @@ export class CalendarComponent implements OnInit{
       // })
       // )}
 
-      if (this.calendarService.getSyncState()){
-        this.router.navigate(['/calendarSuccess'])
-      }
-}
+    //   this.router.navigate(['/calendarSuccess'])
+    // }
+    // if(this.calendarService.getType() == 'curve') {
+    //   this.router.navigate(['/calendarSuccess']);
+    // }
+
+    if(this.calendarService.getCalendarid()) {
+      this.router.navigate(['/calendarSuccess']);
+    }
+
+    // use sync state to navigate
+      // if (this.calendarService.getSyncState()){
+      //   this.router.navigate(['/calendarSuccess'])
+      // }
+  }
 
     googleOath(){
+      this.calendarService.setType('google');
       this.calendarService.googleOath()
   }
 
-    noOathCalendar(){
+  noOathCalendar(){
       this.router.navigate(['/calendarSuccess'])
-    }
+  }
+
+
+  loadCurveCalendar() {
+    this.calendarService.setType('curve');
+    this.router.navigate(['/calendarSuccess']);
+  }
 
 }
