@@ -33,7 +33,7 @@ export class RedirectComponent implements OnInit {
     googleAuth() {
         this.currentRoute.queryParams.subscribe(params => {
             localStorage.setItem('googleCalendarCode', params['code']);
-            this.calendarService.getGoogleEvents(params['code'])
+            this.calendarService.getGoogleEvents()
                 .then(res => {
                     if (res) {
                         this.router.navigate(['/calendarSuccess'])
