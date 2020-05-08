@@ -3,7 +3,7 @@ import { Component, Output, EventEmitter, ViewChild, Renderer2, AfterViewInit } 
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { MatDialogConfig } from "@angular/material";
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ViewEventComponent } from '../../modals/view-event/view-event.component';
 
 import { Moment } from 'moment';
@@ -16,6 +16,7 @@ import { AddCalendarEventComponent } from '../../modals/add-calendar-event/add-c
 
 // Service
 import { CalendarService } from '../../../services/calendar.service'
+import { MicrosoftService } from 'src/app/services/microsoft.service';
 
 @Component({
     selector: 'app-calendarSuccess',
@@ -46,7 +47,9 @@ export class CalendarSuccessComponent implements AfterViewInit {
         private snackbar: MatSnackBar,
         private dialog: MatDialog,
         private renderer: Renderer2,
-        private times: times
+        private router: Router,
+        private times: times,
+        private microsoftService: MicrosoftService
     ) {
         this.times.times.forEach((timePeriod) => {
             this.eventArr.push({
@@ -87,6 +90,15 @@ export class CalendarSuccessComponent implements AfterViewInit {
               this.setWeek();
               this.setWeeklyView();
             })
+        } else if(type == 'microsoft') {
+          this.userData = this.microsoftService.getMicrosoftEvents();
+          this.eventsGot = this.userData;
+          console.log(this.userData);
+          if(!this.eventsGot) {
+            this.router.navigate(['/calendar'])
+          }
+          this.setWeek();
+          this.setWeeklyView();
         }
     }
 
@@ -105,7 +117,6 @@ export class CalendarSuccessComponent implements AfterViewInit {
         });
 
         this.userid = localStorage.getItem('userId');
-        console.log(this.userid);
       }
       
 
@@ -134,16 +145,18 @@ export class CalendarSuccessComponent implements AfterViewInit {
           if(dayHasEvent) {
             eventsToAdd.forEach(event => {
               let index = this.eventArr.findIndex(time => {
+                console.log(new Date(event.start.dateTime))
                 console.log(moment(event.start.dateTime).format('h:00 a'));
                 if(time.time == moment(event.start.dateTime).format('h:00 a')) {
                   return true;
                 }
               });
               if(index > -1) {
-                console.log(index);
-                console.log(this.weeklyEvents[i][index]);
-                console.log(event);
-                this.weeklyEvents[i][index].push(event)
+                if(this.calendarService.getType() == 'microsoft' && index - 4 > -1) {
+                  this.weeklyEvents[i][index - 4].push(event) 
+                } else {
+                  this.weeklyEvents[i][index].push(event)
+                }
               }
             })
           }

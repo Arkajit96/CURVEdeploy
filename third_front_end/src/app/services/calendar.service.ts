@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 // Service
@@ -119,6 +119,21 @@ export class CalendarService {
         error => {
           console.log(error);
           rej(error);
+        }
+      )
+    })
+  }
+
+  microsoftSignIn() {
+    return new Promise((res, rej) => {
+      let headers = new HttpHeaders();
+      headers = headers.set('Access-Control-Allow-Origin', '*');
+      this.http.get(this.url + 'microsoft/signin', {headers: headers}).subscribe(
+        data => {
+          console.log('DATA ', data);
+        },
+        error => {
+          console.log('ERROR ', error);
         }
       )
     })

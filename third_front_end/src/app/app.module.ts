@@ -51,6 +51,10 @@ import { ViewEventComponent } from './components/modals/view-event/view-event.co
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
+// Microsoft
+import { MsalModule } from '@azure/msal-angular';
+import { MicrosoftAuthSettings } from './microsoftConfig';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,7 +97,12 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     FlashMessagesModule.forRoot(),
     BrowserAnimationsModule,
     TextFieldModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    MsalModule.forRoot({
+      auth: {
+        clientId: MicrosoftAuthSettings.appId
+      }
+    })
   ],
   providers: [
     {
