@@ -40,7 +40,7 @@ const routes: Routes = [
     path: 'shoppingCart', component: ShoppingCartComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]
+    path: 'calendar', component: CalendarSuccessComponent, canActivate: [AuthGuard]
   },
   {
     path: 'redirect', component: RedirectComponent, canActivate: [AuthGuard]

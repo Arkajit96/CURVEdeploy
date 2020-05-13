@@ -60,27 +60,27 @@ export class CalendarSuccessComponent implements AfterViewInit {
         let type = this.calendarService.getType();
         let calendarid = this.calendarService.getCalendarid();
         console.log(type);
-        if(type == 'google') {
-          if(!calendarid) {
-            this.calendarService.getGoogleEvents()
-              .then((events) => {
-                  console.log(events);
-                  this.userData = events;
-                  this.eventsGot = this.userData.events;
-                  this.setWeek();
-                  this.setWeeklyView();
-            })
-          } else {
-            this.calendarService.getCurveEvents()
-              .then((events) => {
-                console.log(events);
-                this.userData = events;
-                this.eventsGot = this.userData;
-                this.setWeek();
-                this.setWeeklyView();
-              })
-          }
-        } else if(type == 'curve') {
+        // if(type == 'google') {
+        //   if(!calendarid) {
+        //     this.calendarService.getGoogleEvents()
+        //       .then((events) => {
+        //           console.log(events);
+        //           this.userData = events;
+        //           this.eventsGot = this.userData.events;
+        //           this.setWeek();
+        //           this.setWeeklyView();
+        //     })
+        //   } else {
+        //     this.calendarService.getCurveEvents()
+        //       .then((events) => {
+        //         console.log(events);
+        //         this.userData = events;
+        //         this.eventsGot = this.userData;
+        //         this.setWeek();
+        //         this.setWeeklyView();
+        //       })
+        //   }
+        // } else if(type == 'curve') {
           localStorage.setItem('calendarid', localStorage.getItem('userId'));
           this.calendarService.getCurveEvents()
             .then((events) => {
@@ -90,16 +90,16 @@ export class CalendarSuccessComponent implements AfterViewInit {
               this.setWeek();
               this.setWeeklyView();
             })
-        } else if(type == 'microsoft') {
-          this.userData = this.microsoftService.getMicrosoftEvents();
-          this.eventsGot = this.userData;
-          console.log(this.userData);
-          if(!this.eventsGot) {
-            this.router.navigate(['/calendar'])
-          }
-          this.setWeek();
-          this.setWeeklyView();
-        }
+        // } else if(type == 'microsoft') {
+        //   this.userData = this.microsoftService.getMicrosoftEvents();
+        //   this.eventsGot = this.userData;
+        //   console.log(this.userData);
+        //   if(!this.eventsGot) {
+        //     this.router.navigate(['/calendar'])
+        //   }
+        //   this.setWeek();
+        //   this.setWeeklyView();
+        // }
     }
 
     eventArr:any = [];
@@ -145,8 +145,6 @@ export class CalendarSuccessComponent implements AfterViewInit {
           if(dayHasEvent) {
             eventsToAdd.forEach(event => {
               let index = this.eventArr.findIndex(time => {
-                console.log(new Date(event.start.dateTime))
-                console.log(moment(event.start.dateTime).format('h:00 a'));
                 if(time.time == moment(event.start.dateTime).format('h:00 a')) {
                   return true;
                 }
@@ -254,5 +252,19 @@ export class CalendarSuccessComponent implements AfterViewInit {
                 })
             }
         })
+    }
+
+    async loadMicrosoftCalendar() {
+      this.loadingPage = true;
+      await this.microsoftService.signIn();
+      this.calendarService.setType('microsoft');
+  
+      this.microsoftService.getEvents()
+        .then((events) => {
+          console.log(events);
+          this.microsoftService.saveMicrosoftEvents(events);
+          this.loadingPage = false;
+          // this.router.navigate(['/calendarSuccess']);
+        });
     }
 }
