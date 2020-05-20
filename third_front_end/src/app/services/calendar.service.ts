@@ -110,7 +110,7 @@ export class CalendarService {
 
   getCurveEvents() {
     return new Promise((res, rej) => {
-      let calendarid = localStorage.getItem('calendarid');
+      let calendarid = localStorage.getItem('userId');
       this.http.get(this.url + 'events/' + calendarid).subscribe(
         data => {
           this.userData = data;
@@ -130,7 +130,7 @@ export class CalendarService {
       headers = headers.set('Access-Control-Allow-Origin', '*');
       this.http.get(this.url + 'microsoft/signin', {headers: headers}).subscribe(
         data => {
-          console.log('DATA ', data);
+          
         },
         error => {
           console.log('ERROR ', error);

@@ -4,6 +4,9 @@ const eventsSchema = new mongoose.Schema({
     calendarid: {
         type: String
     },
+    foreignid: {
+        type: String
+    },
     start: {
         type: Object,
         dateTime: {

@@ -59,7 +59,6 @@ export class CalendarSuccessComponent implements AfterViewInit {
         })
         let type = this.calendarService.getType();
         let calendarid = this.calendarService.getCalendarid();
-        console.log(type);
         // if(type == 'google') {
         //   if(!calendarid) {
         //     this.calendarService.getGoogleEvents()
@@ -84,7 +83,6 @@ export class CalendarSuccessComponent implements AfterViewInit {
           localStorage.setItem('calendarid', localStorage.getItem('userId'));
           this.calendarService.getCurveEvents()
             .then((events) => {
-              console.log(events);
               this.userData = events;
               this.eventsGot = this.userData;
               this.setWeek();
@@ -163,7 +161,6 @@ export class CalendarSuccessComponent implements AfterViewInit {
       }
     
       setWeek() {
-        console.log('curr day of week ' + this.selectedDate);
         let currDayOfWeek = moment(this.selectedDate).day();
         let dayModifer = currDayOfWeek;
         let pastDay = false;
@@ -261,8 +258,18 @@ export class CalendarSuccessComponent implements AfterViewInit {
   
       this.microsoftService.getEvents()
         .then((events) => {
-          console.log(events);
-          this.microsoftService.saveMicrosoftEvents(events);
+          this.microsoftService.saveMicrosoftEvents(events)
+            .then((data:any) => {
+              data.forEach((newEvent) => {
+                this.userData.push(newEvent);
+              })
+              this.eventsGot = this.userData;
+              this.setWeek();
+              this.setWeeklyView();
+            })
+            .catch((e) => {
+              console.log(e);
+            })
           this.loadingPage = false;
           // this.router.navigate(['/calendarSuccess']);
         });
