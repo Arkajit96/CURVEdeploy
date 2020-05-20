@@ -29,7 +29,7 @@ module.exports = async function login() {
     prompt.start();
 
     var myCloud = new iCloud(sessionPath);
-    console.log(myCloud)
+    console.log(myCloud).
 
     myCloud.on("ready", async function() {
       // Returns
