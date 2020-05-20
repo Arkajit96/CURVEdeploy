@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 
 // Service
-import {CalendarService} from '../../../services/calendar.service'
+import { CalendarService } from 'src/app/services/calendar.service'
 
 
 @Component({
@@ -11,7 +11,7 @@ import {CalendarService} from '../../../services/calendar.service'
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit{
+export class CalendarComponent implements OnInit {
 
   constructor(
     private calendarService: CalendarService,
@@ -22,12 +22,12 @@ export class CalendarComponent implements OnInit{
   ngOnInit() {
     // if (this.calendarService.getCurrentUserCode()){
     //   this.router.navigate(['/calendarSuccess']
-      //   queryParams: {
-      //     source: 'google'
-      //   },
-      //   skipLocationChange: true 
-      // })
-      // )}
+    //   queryParams: {
+    //     source: 'google'
+    //   },
+    //   skipLocationChange: true 
+    // })
+    // )}
 
     //   this.router.navigate(['/calendarSuccess'])
     // }
@@ -35,29 +35,25 @@ export class CalendarComponent implements OnInit{
     //   this.router.navigate(['/calendarSuccess']);
     // }
 
-    if(this.calendarService.getCalendarid()) {
-      this.router.navigate(['/calendarSuccess']);
-    }
 
     // use sync state to navigate
-      // if (this.calendarService.getSyncState()){
-      //   this.router.navigate(['/calendarSuccess'])
-      // }
-  }
-
-    googleOath(){
-      this.calendarService.setType('google');
-      this.calendarService.googleOath()
-  }
-
-  noOathCalendar(){
+    console.log(this.calendarService.getState())
+    if (this.calendarService.getState().syncState) {
       this.router.navigate(['/calendarSuccess'])
+    }
   }
 
-
-  loadCurveCalendar() {
-    this.calendarService.setType('curve');
-    this.router.navigate(['/calendarSuccess']);
+  googleOath() {
+    this.calendarService.googleOath()
   }
+
+  noOathCalendar() {
+    this.router.navigate(['/calendarSuccess'])
+  }
+
+  iCloudOath(){
+    this.calendarService.getICloudEvents();
+  }
+
 
 }

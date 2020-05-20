@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 // Service
-import { CalendarService } from '../../../services/calendar.service'
+// import { CalendarService } from '../../../services/calendar.service'
 
 
 @Component({
@@ -13,32 +13,37 @@ import { CalendarService } from '../../../services/calendar.service'
 export class RedirectComponent implements OnInit {
 
     constructor(
-        private calendarService: CalendarService,
+        // private calendarService: CalendarService,
         private currentRoute: ActivatedRoute,
         private router: Router
     ) { }
 
     ngOnInit() {
-        switch (this.calendarService.getSyncState()) {
-            case 'google':
-                this.googleAuth();
-                break;
-            case 'Apple':
-                this.appleAuth();
-            case 'windows':
-                this.windowsAuth();
-        }
+        // const state = this.calendarService.getState()
+        // console.log(state)
+        // switch (state.syncState) {
+        //     case 'google':
+        //         this.googleAuth();
+        //         break;
+        //     case 'Apple':
+        //         this.appleAuth();
+        //     case 'windows':
+        //         this.windowsAuth();
+        // }
+
+        this.googleAuth()
     }
 
     googleAuth() {
         this.currentRoute.queryParams.subscribe(params => {
             localStorage.setItem('googleCalendarCode', params['code']);
-            this.calendarService.getGoogleEvents()
-                .then(res => {
-                    if (res) {
-                        this.router.navigate(['/calendarSuccess'])
-                    }
-                });
+            this.router.navigate(['/calendarSuccess'])
+        //     this.calendarService.getGoogleEventsAndSave(params['code'])
+        //         .then(res => {
+        //             if (res) {
+        //                 this.router.navigate(['/calendarSuccess'])
+        //             }
+        //         });
         })
     }
 

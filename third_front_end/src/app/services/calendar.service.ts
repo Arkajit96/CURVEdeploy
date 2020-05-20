@@ -5,17 +5,27 @@ import { HttpClient } from '@angular/common/http';
 // Service
 import { ConfigService } from './config.service';
 
+export interface State {
+  userId: string,
+  syncState: string,
+  calendarCode: string,
+  events: any[]
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarService {
 
   private url = this.config.getURL();
-  private syncState: string = null;
-  private calendarCode: string;
+  // private syncState: string = null;
+  // private calendarCode: string;
 
-  private code: string;
-  private type: string;
+
+  private state: State
+
+  // private code: string;
+  // private type: string;
   private userData: any;
 
 
@@ -25,15 +35,24 @@ export class CalendarService {
   ) { }
 
   getCalendarCode() {
-    if (!this.calendarCode) {
-      this.calendarCode = localStorage.getItem('googleCalendarCode')
+    if (!this.state.calendarCode) {
+      this.state.calendarCode = localStorage.getItem('googleCalendarCode')
         || localStorage.getItem('appleCalendarCode') || localStorage.getItem('windowsCalendarCode');
     }
-    return this.calendarCode;
+    return this.state.calendarCode;
   }
 
-  getSyncState(): string {
-    return this.syncState;
+  getState(): any {
+    return this.state;
+  }
+
+  initState(userId: string){
+    this.state = {
+      userId: userId,
+      syncState: null,
+      calendarCode: null,
+      events: []
+    };
   }
 
   autoCalendarLogin() {
@@ -42,21 +61,20 @@ export class CalendarService {
     const windowsCalendarCode = localStorage.getItem('windowsCalendarCode');
 
     if (googleCalendarCode) {
-      this.calendarCode = googleCalendarCode;
-      this.getGoogleEvents();
-      this.syncState = 'google';
+      this.state.calendarCode = googleCalendarCode;
+      this.state.syncState = 'google'
+      this.getGoogleEventsAndSave(googleCalendarCode);
     } else if (appleCalendarCode) {
-      this.calendarCode = appleCalendarCode;
-      this.syncState = 'apple';
+      this.state.calendarCode = appleCalendarCode;
+      this.state.syncState = 'apple';
     } else if (windowsCalendarCode) {
-      this.calendarCode = windowsCalendarCode;
-      this.syncState = 'windows';
+      this.state.calendarCode = windowsCalendarCode;
+      this.state.syncState = 'windows';
     }
   }
 
-  clearCurrentUserCode() {
-    this.calendarCode = null;
-    switch (this.syncState) {
+  clearCalendarInfo() {
+    switch (this.state.syncState) {
       case 'google':
         localStorage.removeItem('googleCalendarCode');
       case 'apple':
@@ -64,7 +82,14 @@ export class CalendarService {
       case 'windows':
         localStorage.removeItem('windowsCalendarCode');
     }
-    this.syncState = null;
+
+    this.state = {
+      userId: null,
+      syncState: null,
+      calendarCode: null,
+      events: null
+    }
+
   }
 
   saveEventsToDatabase(events: any): Promise<any> {
@@ -72,7 +97,7 @@ export class CalendarService {
     return new Promise((res, rej) => {
 
       const data = {
-        userId: localStorage.getItem('userId'),
+        userId: this.state.userId,
         events: events
       }
 
@@ -89,13 +114,14 @@ export class CalendarService {
     })
   }
 
-  getEvents(): Promise<boolean> {
+  getEventsFromDatabase(): Promise<any[]> {
     return new Promise(async (res, rej) => {
       this.http.get<{ message: string; events: any }>(
-        this.url + 'calendar/getDatabaseEvents'
+        this.url + 'calendar/getDatabaseEvents/' + this.state.userId
       ).toPromise().then(
         data => {
           console.log(data.events);
+          this.state.events = data.events;
           res(data.events)
         }
       ), error => {
@@ -105,31 +131,31 @@ export class CalendarService {
     })
   }
 
-  setType(type: string) {
-    this.type = type;
-    localStorage.setItem('calendarType', type);
-  }
+  // setType(type: string) {
+  //   this.type = type;
+  //   localStorage.setItem('calendarType', type);
+  // }
 
-  getType() {
-    return localStorage.getItem('calendarType');
-    // return this.type;
-  }
+  // getType() {
+  //   return localStorage.getItem('calendarType');
+  //   // return this.type;
+  // }
 
-  setCalendarid(calendarid) {
-    localStorage.setItem('calendarid', calendarid);
-  }
+  // setCalendarid(calendarid) {
+  //   localStorage.setItem('calendarid', calendarid);
+  // }
 
-  getCalendarid() {
-    return localStorage.getItem('calendarid');
-  }
+  // getCalendarid() {
+  //   return localStorage.getItem('calendarid');
+  // }
 
   googleOath() {
     this.http.get<{ message: string, url: string }>(
       this.url + 'calendar/googleOath/'
     ).toPromise().then(
       data => {
-        this.type = 'google';
-        console.log(data);
+        this.state.syncState = 'google';
+
         window.location.href = data.url;
       },
       error => {
@@ -139,104 +165,107 @@ export class CalendarService {
   }
 
 
-  // getGoogleEvents(googleCode: string): Promise<string> {
-  //   return new Promise((res, rej) => {
-  //     this.http.post<{ message: string; userData: any }>(
-  //       this.url + 'calendar/getGoogleEvents', { code: googleCode }
-  //     ).toPromise().then(
-  //       data => {
-  //         console.log(data.userData);
-  //         this.saveEventsToDatabase(data.userData.events)
-  //           .then(
-  //             result => {
-  //               this.syncState = 'google';
-  //               res(this.syncState);
-  //             }
-  //           )
-
-  //       },
-  //       error => {
-  //         this.syncState = null;
-  //         rej(null);
-  //       }
-  //     )
-  //   })
-  // }
-
-
-  // addEventsToDatabase(userId: string, eventData: any): Promise<any>{
-
-  //   const data = {
-  //     userId: userId,
-  //     events: eventData
-  //   }
-
-  //   return new Promise((res, rej) => {
-  //     this.http.post<{ message: String; event: String }>(
-  //       this.url + 'calendar/addEventsToDatabase', data)
-  //       .toPromise().then(
-  //         data => {
-  //           res(data.event);
-
-  getGoogleEvents(): Promise<any> {
-    if (this.userData) {
-      return new Promise((res, rej) => {
-        res(this.userData);
-      })
-    } else {
-      localStorage.removeItem('code');
-      if (!this.code) {
-        // this.code = localStorage.getItem('code');
-      }
-      let data = { code: this.code }
-      console.log(data);
-      // localStorage.setItem('code', data.code);
-
-      return new Promise((res, rej) => {
-        this.http.post<{ message: string; userData: any }>(
-          this.url + 'calendar/getGoogleEvents', data
-        ).toPromise().then(
-          data => {
-            console.log(data);
-            this.userData = data.userData;
-            let calendarid = new Date().getTime();
-            this.setCalendarid(calendarid);
-            let googledata = {
-              calendarid: calendarid,
-              events: this.userData
-            }
-            this.http.post(this.url + 'events/saveGoogleEvents', googledata)
-              .subscribe(
-                googledata => {
-                  console.log(googledata);
-                }
-              )
-            res(data.userData);
-          },
-          error => {
-            console.log(error);
-            rej({ error: 'Event create Error' });
-          }
-        )
-      })
-    }
-
-  }
-
-  getCurveEvents() {
+  getGoogleEventsAndSave(googleCode: string): Promise<string> {
     return new Promise((res, rej) => {
-      let calendarid = localStorage.getItem('calendarid');
-      this.http.get(this.url + 'events/' + calendarid).subscribe(
+      this.http.post<{ message: string; userData: any }>(
+        this.url + 'calendar/getGoogleEvents', { code: googleCode }
+      ).toPromise().then(
         data => {
-          this.userData = data;
-          res(data);
+          this.saveEventsToDatabase(data.userData.events)
+            .then(
+              result => {
+                res(this.state.syncState);
+              }
+            )
+
         },
         error => {
-          console.log(error);
-          rej(error);
+          this.state.syncState = null;
+          rej(null);
         }
       )
     })
   }
+
+
+
+  //iCloud sync
+  getICloudEvents() {
+
+    let start  = '2020-05-01';
+    let end = '2020-05-30';
+
+    this.http.get<{ message: string, events: string }>(
+      this.url + 'calendar/getICloudEvents?start=' + start + '&end=' + end
+    ).toPromise().then(
+      data => {
+        console.log(data.events);
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+
+  // getGoogleEvents(): Promise<any> {
+  //   if (this.userData) {
+  //     return new Promise((res, rej) => {
+  //       res(this.userData);
+  //     })
+  //   } else {
+  //     localStorage.removeItem('code');
+  //     if (!this.code) {
+  //       // this.code = localStorage.getItem('code');
+  //     }
+  //     let data = { code: this.code }
+  //     console.log(data);
+  //     // localStorage.setItem('code', data.code);
+
+  //     return new Promise((res, rej) => {
+  //       this.http.post<{ message: string; userData: any }>(
+  //         this.url + 'calendar/getGoogleEvents', data
+  //       ).toPromise().then(
+  //         data => {
+  //           console.log(data);
+  //           this.userData = data.userData;
+  //           let calendarid = new Date().getTime();
+  //           this.setCalendarid(calendarid);
+  //           let googledata = {
+  //             calendarid: calendarid,
+  //             events: this.userData
+  //           }
+  //           this.http.post(this.url + 'events/saveGoogleEvents', googledata)
+  //             .subscribe(
+  //               googledata => {
+  //                 console.log(googledata);
+  //               }
+  //             )
+  //           res(data.userData);
+  //         },
+  //         error => {
+  //           console.log(error);
+  //           rej({ error: 'Event create Error' });
+  //         }
+  //       )
+  //     })
+  //   }
+
+  // }
+
+  // getCurveEvents() {
+  //   return new Promise((res, rej) => {
+  //     let calendarid = localStorage.getItem('calendarid');
+  //     this.http.get(this.url + 'events/' + calendarid).subscribe(
+  //       data => {
+  //         this.userData = data;
+  //         res(data);
+  //       },
+  //       error => {
+  //         console.log(error);
+  //         rej(error);
+  //       }
+  //     )
+  //   })
+  // }
 
 }

@@ -1,7 +1,16 @@
 const { google } = require('googleapis');
-
 const { listEvents } = require('../helpers/google-util')
 const googleUtil = require('../helpers/google-util');
+var mongoose = require("mongoose");
+
+
+
+// helper for the iCloud
+const promptiCloud = require('../helpers/iCloud-util');
+
+
+// Model
+const Events = require('../models/events');
 
 exports.getGoogleAuthUrl = (req, res) => {
     url = googleUtil.urlGoogle()
@@ -58,7 +67,7 @@ exports.getGoogleEvents = (req, res) => {
 exports.saveEvents = (req, res) => {
 
     const filter = {
-        userId: req.body.userId
+        calendarid: req.body.userId
     };
 
     const config = {
@@ -69,21 +78,21 @@ exports.saveEvents = (req, res) => {
     async.each(req.body.events, (event, cb) => {
 
         const update = {
-            start: events.start,
-            end: events.end,
+            start: { dateTime: event.start.dateTime },
+            end: { dateTime: event.end.dateTime },
             summary: event.summary,
             organizor: event.organizer
         }
 
-        //     Events.findOneAndUpdate(filter, update, config, (err, Application) => {
-        //         if (err) {
-        //             return cb(err);
+        Events.findOneAndUpdate(filter, update, config, (err, savedEvents) => {
+            if (err) {
+                return cb(err);
 
-        //         } else {
-        //             return cb()
+            } else {
+                return cb()
 
-        //         }
-        //     })
+            }
+        })
     }, err => {
         if (err) {
             console.log(err);
@@ -99,25 +108,25 @@ exports.saveEvents = (req, res) => {
 }
 
 exports.getDatabaseEvents = (req, res) => {
-    let userId = mongoose.Types.ObjectId(req.body.userId);
-    // Events.find({ userId: userId})
-    // .then(events => {
-    //     res.status(200).json({
-    //         message: 'Fetching events successfully',
-    //         events: events
-    //     })
-    // })
-    // .catch(err => {
-    //     res.status(500).json({
-    //         message: "Fetching events failed!",
-    //         events: []
-    //     });
-    // });
+    let userId = mongoose.Types.ObjectId(req.params.userId);
+    Events.find({ userId: userId })
+        .then(events => {
+            res.status(200).json({
+                message: 'Fetching events successfully',
+                events: events
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                message: "Fetching events failed!",
+                events: []
+            });
+        });
 }
 
 exports.addEventsToDatabase = (req, res) => {
     const filter = {
-        userId: req.body.userId,
+        calendarid: req.body.userId,
     };
 
     const update = req.body.events;
@@ -143,4 +152,28 @@ exports.addEventsToDatabase = (req, res) => {
             })
         }
     })
+}
+
+
+exports.getICloudEvents = async (req, res) => {
+    const myCloud = await promptiCloud();
+
+    const startTime = req.query.start;
+    const endTime = req.query.end;
+  
+    var events = await myCloud.Calendar.getEvents(startTime, endTime);
+
+    console.log(events);
+
+    if(!events){ 
+        res.status(500).json({
+            message: "Icloud event fetching failed!",
+            event: null
+        });
+    }else{
+        res.status(200).json({
+            message: 'Icloud event fetching successful',
+            applicationID: events
+        })
+    }
 }

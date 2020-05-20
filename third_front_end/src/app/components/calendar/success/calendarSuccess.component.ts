@@ -1,9 +1,8 @@
 
-import { Component, Output, EventEmitter, ViewChild, Renderer2, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { MatDialogConfig } from "@angular/material";
 
-import { ActivatedRoute } from '@angular/router';
 import { ViewEventComponent } from '../../modals/view-event/view-event.component';
 
 import { Moment } from 'moment';
@@ -11,7 +10,6 @@ import * as moment from 'moment';
 import { MatCalendar } from '@angular/material';
 import { times } from '../times';
 
-import { Router } from '@angular/router';
 
 // Components
 import { AddCalendarEventComponent } from '../../modals/add-calendar-event/add-calendar-event.component'
@@ -20,251 +18,252 @@ import { AddCalendarEventComponent } from '../../modals/add-calendar-event/add-c
 import { CalendarService } from '../../../services/calendar.service'
 
 @Component({
-    selector: 'app-calendarSuccess',
-    templateUrl: './calendarSuccess.component.html',
-    styleUrls: ['./calendarSuccess.component.scss']
+  selector: 'app-calendarSuccess',
+  templateUrl: './calendarSuccess.component.html',
+  styleUrls: ['./calendarSuccess.component.scss']
 })
 export class CalendarSuccessComponent implements AfterViewInit {
-    @Output()
-    dateSelected: EventEmitter<Moment> = new EventEmitter();
+  @Output()
+  dateSelected: EventEmitter<Moment> = new EventEmitter();
 
-    @Output()
-    selectedDate: any = moment();
+  @Output()
+  selectedDate: any = moment();
 
-    @ViewChild('calendar', { static: true })
-    calendar: MatCalendar<Moment>;
+  @ViewChild('calendar', { static: true })
+  calendar: MatCalendar<Moment>;
 
-    loadingEvents = true;
-    loadingPage = true;
-  
-    selectedWeek:any = [];
-    weeklyEvents = [];
+  loadingEvents = true;
+  loadingPage = true;
 
-    userid: any;
-    private userData: any
+  eventArr: any = [];
+  selectedWeek: any = [];
+  weeklyEvents = [];
 
-    constructor(
-        private calendarService: CalendarService,
-        private snackbar: MatSnackBar,
-        private router: Router,
-        private dialog: MatDialog,
-        private renderer: Renderer2,
-        private times: times
-    ) {
-        this.times.times.forEach((timePeriod) => {
-            this.eventArr.push({
-                time: timePeriod,
-                week: []
-            })
-        })
-        let type = this.calendarService.getType();
-        let calendarid = this.calendarService.getCalendarid();
-        console.log(type);
-        if(type == 'google') {
-          if(!calendarid) {
-            this.calendarService.getGoogleEvents()
-              .then((events) => {
-                  console.log(events);
-                  this.userData = events;
-                  this.eventsGot = this.userData.events;
-                  this.setWeek();
-                  this.setWeeklyView();
-            })
-          } else {
-            this.calendarService.getCurveEvents()
-              .then((events) => {
-                console.log(events);
-                this.userData = events;
-                this.eventsGot = this.userData;
-                this.setWeek();
-                this.setWeeklyView();
-              })
-          }
-        } else if(type == 'curve') {
-          localStorage.setItem('calendarid', localStorage.getItem('userId'));
-          this.calendarService.getCurveEvents()
-            .then((events) => {
-              console.log(events);
+  private userData: any = [];
+
+  constructor(
+    private calendarService: CalendarService,
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog,
+    private times: times
+  ) {
+    this.times.times.forEach((timePeriod) => {
+      this.eventArr.push({
+        time: timePeriod,
+        week: []
+      })
+    })
+    // let type = this.calendarService.getType();
+    // let calendarid = this.calendarService.getCalendarid();
+    // console.log(type);
+    // if(type == 'google') {
+    //   if(!calendarid) {
+    //     this.calendarService.getGoogleEvents()
+    //       .then((events) => {
+    //           console.log(events);
+    //           this.userData = events;
+    //           this.eventsGot = this.userData.events;
+    //           this.setWeek();
+    //           this.setWeeklyView();
+    //     })
+    //   } else {
+    //     this.calendarService.getCurveEvents()
+    //       .then((events) => {
+    //         console.log(events);
+    //         this.userData = events;
+    //         this.eventsGot = this.userData;
+    //         this.setWeek();
+    //         this.setWeeklyView();
+    //       })
+    //   }
+    // } else if(type == 'curve') {
+    //   localStorage.setItem('calendarid', localStorage.getItem('userId'));
+    //   this.calendarService.getCurveEvents()
+    //     .then((events) => {
+    //       console.log(events);
+    //       this.userData = events;
+    //       this.eventsGot = this.userData;
+    //       this.setWeek();
+    //       this.setWeeklyView();
+    //     })
+    // }
+
+  }
+
+  ngOnInit() {
+    this.calendarService.getGoogleEventsAndSave(localStorage.getItem('googleCalendarCode'))
+      .then(res => {
+        if (res) {
+          this.calendarService.getEventsFromDatabase()
+          .then(events => {
+            if (events.length > 0) {
               this.userData = events;
-              this.eventsGot = this.userData;
-              this.setWeek();
-              this.setWeeklyView();
-            })
+            }
+    
+            this.setWeek();
+            this.setWeeklyView();
+          });
         }
-    }
-
-    eventArr:any = [];
-
-    ngOnInit() {
-
-      this.userData = this.calendarService.getEvents()
-      .then(events => {
-        this.userData = events;
-        this.setWeeklyView();
       });
-      
-      // this.calendarService.getEvents()
-      // .then((events) => {
-      //     this.userData = events;
-      //     this.setWeeklyView();
-      // })
-        // this.calendarService.getGoogleEvents(this.code)
-        //     .then((events) => {
-        //         this.eventsGot = events;
-        //         console.log(this.eventsGot.events[0].start.dateTime);
-        //         console.log(moment(this.eventsGot.events[0].start.dateTime).format('MMMM Do YYYY'));
-        //         console.log(this.eventsGot)
-        //         this.setWeeklyView();
-        //     })
+
+    // this.calendarService.getEvents()
+    // .then((events) => {
+    //     this.userData = events;
+    //     this.setWeeklyView();
+    // })
+    // this.calendarService.getGoogleEvents(this.code)
+    //     .then((events) => {
+    //         this.eventsGot = events;
+    //         console.log(this.eventsGot.events[0].start.dateTime);
+    //         console.log(moment(this.eventsGot.events[0].start.dateTime).format('MMMM Do YYYY'));
+    //         console.log(this.eventsGot)
+    //         this.setWeeklyView();
+    //     })
+  }
+
+  // private eventsGot: any
+  // private code: any
+
+
+  ngAfterViewInit() {
+    this.dateSelected.subscribe(data => {
+      this.loadingPage = true;
+      this.setWeek();
+      this.setWeeklyView();
+    });
+  }
+
+
+
+  setWeeklyView() {
+    this.weeklyEvents = [[], [], [], [], [], [], []];
+    for (let i = 0; i < this.eventArr.length; i++) {
+      this.weeklyEvents[0].push(['']);
+      this.weeklyEvents[1].push(['']);
+      this.weeklyEvents[2].push(['']);
+      this.weeklyEvents[3].push(['']);
+      this.weeklyEvents[4].push(['']);
+      this.weeklyEvents[5].push(['']);
+      this.weeklyEvents[6].push(['']);
     }
 
-    private eventsGot: any
-    private code: any
-
-
-    ngAfterViewInit() {
-        this.dateSelected.subscribe(data => {
-          this.loadingPage = true;
-          this.setWeek();
-          this.setWeeklyView();
-        });
-
-        this.userid = localStorage.getItem('userId');
-        console.log(this.userid);
-      }
-      
-
-
-    setWeeklyView() {
-        this.weeklyEvents = [[], [], [], [], [], [], []];
-        for (let i = 0; i < this.eventArr.length; i++) {
-            this.weeklyEvents[0].push(['']);
-            this.weeklyEvents[1].push(['']);
-            this.weeklyEvents[2].push(['']);
-            this.weeklyEvents[3].push(['']);
-            this.weeklyEvents[4].push(['']);
-            this.weeklyEvents[5].push(['']);
-            this.weeklyEvents[6].push(['']);
+    for (let i = 0; i < this.weeklyEvents.length; i++) {
+      let dayHasEvent = false;
+      let eventsToAdd = [];
+      this.userData.find((d): any => {
+        if (moment(d.start.dateTime).format('MMMM Do YYYY') == this.selectedWeek[i].timestamp) {
+          dayHasEvent = true;
+          eventsToAdd.push(d);
         }
-
-        for(let i = 0; i < this.weeklyEvents.length; i++) {
-          let dayHasEvent = false;
-          let eventsToAdd = [];
-          this.eventsGot.find((d):any => {
-            if(moment(d.start.dateTime).format('MMMM Do YYYY') == this.selectedWeek[i].timestamp) {
-              dayHasEvent = true;
-              eventsToAdd.push(d);
+      })
+      if (dayHasEvent) {
+        eventsToAdd.forEach(event => {
+          let index = this.eventArr.findIndex(time => {
+            console.log(moment(event.start.dateTime).format('h:00 a'));
+            if (time.time == moment(event.start.dateTime).format('h:00 a')) {
+              return true;
             }
-          })
-          if(dayHasEvent) {
-            eventsToAdd.forEach(event => {
-              let index = this.eventArr.findIndex(time => {
-                console.log(moment(event.start.dateTime).format('h:00 a'));
-                if(time.time == moment(event.start.dateTime).format('h:00 a')) {
-                  return true;
-                }
-              });
-              if(index > -1) {
-                console.log(index);
-                console.log(this.weeklyEvents[i][index]);
-                console.log(event);
-                this.weeklyEvents[i][index].push(event)
-              }
-            })
+          });
+          if (index > -1) {
+            console.log(index);
+            console.log(this.weeklyEvents[i][index]);
+            console.log(event);
+            this.weeklyEvents[i][index].push(event)
           }
-        }
-        this.loadingPage = false;
-      }
-    
-      setWeek() {
-        console.log('curr day of week ' + this.selectedDate);
-        let currDayOfWeek = moment(this.selectedDate).day();
-        let dayModifer = currDayOfWeek;
-        let pastDay = false;
-        let week = [];
-    
-        for(var i = 0; i < 7; i++) {
-          if(i === currDayOfWeek) {
-            pastDay = true;
-            week.push({
-              display: moment(this.selectedDate).format('ddd Do'),
-              timestamp: moment(this.selectedDate).format('MMMM Do YYYY')
-            });
-            dayModifer = 1;
-          } else {
-            if(!pastDay) {
-              week.push({
-                display: moment(this.selectedDate).subtract(dayModifer, 'd').format('ddd Do'),
-                timestamp: moment(this.selectedDate).subtract(dayModifer, 'd').format('MMMM Do YYYY')
-              });
-              dayModifer = dayModifer - 1;
-            } else {
-              week.push({
-                display: moment(this.selectedDate).add(dayModifer, 'd').format('ddd Do'),
-                timestamp: moment(this.selectedDate).add(dayModifer, 'd').format('MMMM Do YYYY')
-              });
-              dayModifer = dayModifer + 1;
-
-            }
-        }
-      }
-      this.selectedWeek = week;
-
-      }
-
-      viewEventDetails(event) {
-        const dialogRef = this.dialog.open(ViewEventComponent, {
-          maxWidth: "500px",
-          data: event
-        });
-      }
-    
-      monthSelected(date: Moment) {
-
-        console.log('month changed');
-    }
-
-    dateChanged() {
-        this.calendar.activeDate = this.selectedDate;
-        this.dateSelected.emit(this.selectedDate);
-    }
-
-    prevDay() {
-        const prevMoment = moment(this.selectedDate).add(-1, 'days');
-        this.selectedDate = prevMoment;
-        this.dateChanged();
-    }
-
-    today() {
-        this.selectedDate = moment();
-        this.dateChanged();
-    }
-
-
-    nextDay() {
-        const nextMoment = moment(this.selectedDate).add(1, 'days');
-        this.selectedDate = nextMoment;
-        this.dateChanged();
-    }
-
-
-    addEvent(){
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.autoFocus = false;
-        dialogConfig.width = "100em";
-        dialogConfig.data = {
-            userData: this.userData
-        }
-
-        let dialogRef = this.dialog.open(AddCalendarEventComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe(res => {
-            if (res) {
-                this.snackbar.open('Event Added', 'Close', {
-                    duration: 3000,
-                    panelClass: 'success-snackbar'
-                })
-            }
         })
+      }
     }
+    this.loadingPage = false;
+  }
+
+  setWeek() {
+    let currDayOfWeek = moment(this.selectedDate).day();
+    let dayModifer = currDayOfWeek;
+    let pastDay = false;
+    let week = [];
+
+    for (var i = 0; i < 7; i++) {
+      if (i === currDayOfWeek) {
+        pastDay = true;
+        week.push({
+          display: moment(this.selectedDate).format('ddd Do'),
+          timestamp: moment(this.selectedDate).format('MMMM Do YYYY')
+        });
+        dayModifer = 1;
+      } else {
+        if (!pastDay) {
+          week.push({
+            display: moment(this.selectedDate).subtract(dayModifer, 'd').format('ddd Do'),
+            timestamp: moment(this.selectedDate).subtract(dayModifer, 'd').format('MMMM Do YYYY')
+          });
+          dayModifer = dayModifer - 1;
+        } else {
+          week.push({
+            display: moment(this.selectedDate).add(dayModifer, 'd').format('ddd Do'),
+            timestamp: moment(this.selectedDate).add(dayModifer, 'd').format('MMMM Do YYYY')
+          });
+          dayModifer = dayModifer + 1;
+
+        }
+      }
+    }
+    this.selectedWeek = week;
+
+  }
+
+  viewEventDetails(event) {
+    const dialogRef = this.dialog.open(ViewEventComponent, {
+      maxWidth: "500px",
+      data: event
+    });
+  }
+
+  monthSelected(date: Moment) {
+
+    console.log('month changed');
+  }
+
+  dateChanged() {
+    this.calendar.activeDate = this.selectedDate;
+    this.dateSelected.emit(this.selectedDate);
+  }
+
+  prevDay() {
+    const prevMoment = moment(this.selectedDate).add(-1, 'days');
+    this.selectedDate = prevMoment;
+    this.dateChanged();
+  }
+
+  today() {
+    this.selectedDate = moment();
+    this.dateChanged();
+  }
+
+
+  nextDay() {
+    const nextMoment = moment(this.selectedDate).add(1, 'days');
+    this.selectedDate = nextMoment;
+    this.dateChanged();
+  }
+
+
+  addEvent() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = "100em";
+    dialogConfig.data = {
+      userData: this.userData
+    }
+
+    let dialogRef = this.dialog.open(AddCalendarEventComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.snackbar.open('Event Added', 'Close', {
+          duration: 3000,
+          panelClass: 'success-snackbar'
+        })
+      }
+    })
+  }
 }
