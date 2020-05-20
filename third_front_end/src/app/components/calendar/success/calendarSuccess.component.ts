@@ -45,6 +45,7 @@ export class CalendarSuccessComponent implements AfterViewInit {
 
   constructor(
     private calendarService: CalendarService,
+    private microsoftService: MicrosoftService,
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
     private times: times
@@ -135,8 +136,6 @@ export class CalendarSuccessComponent implements AfterViewInit {
           if(dayHasEvent) {
             eventsToAdd.forEach(event => {
               let index = this.eventArr.findIndex(time => {
-                console.log(new Date(event.start.dateTime))
-                console.log(moment(event.start.dateTime).format('h:00 a'));
                 if(time.time == moment(event.start.dateTime).format('h:00 a')) {
                   return true;
                 }
@@ -246,4 +245,17 @@ export class CalendarSuccessComponent implements AfterViewInit {
       }
     })
   }
+    async loadMicrosoftCalendar() {
+      this.loadingPage = true;
+      await this.microsoftService.signIn();
+      // this.calendarService.setType('microsoft');
+  
+      this.microsoftService.getEvents()
+        .then((events) => {
+          console.log(events);
+          this.microsoftService.saveMicrosoftEvents(events);
+          this.loadingPage = false;
+          // this.router.navigate(['/calendarSuccess']);
+        });
+    }
 }

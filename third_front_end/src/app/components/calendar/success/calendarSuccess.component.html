@@ -10,6 +10,16 @@
                     <mat-icon>add_circle</mat-icon>
                     Add event to the Calendar
                 </button>
+                <br><br>
+                <button mat-raised-button color="primary" (click)="googleOath()">
+                    <mat-icon>calendar_today</mat-icon>
+                    Google Calendar Sync
+                </button>
+                <br><br>
+                <button mat-raised-button color="primary" (click)="loadMicrosoftCalendar()">
+                    <mat-icon>calendar_today</mat-icon>
+                    Microsoft Calendar Sync
+                </button>
             </div>
 
             <div class="col col-sm-9 col-xl-8 weekly-view" *ngIf="!loadingPage">

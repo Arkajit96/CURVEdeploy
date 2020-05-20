@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 // Service
-// import { CalendarService } from '../../../services/calendar.service'
+import { CalendarService } from '../../../services/calendar.service'
 
 
 @Component({
@@ -13,7 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class RedirectComponent implements OnInit {
 
     constructor(
-        // private calendarService: CalendarService,
+        private calendarService: CalendarService,
         private currentRoute: ActivatedRoute,
         private router: Router
     ) { }
@@ -35,16 +35,32 @@ export class RedirectComponent implements OnInit {
     }
 
     googleAuth() {
-        this.currentRoute.queryParams.subscribe(params => {
-            localStorage.setItem('googleCalendarCode', params['code']);
-            this.router.navigate(['/calendarSuccess'])
-        //     this.calendarService.getGoogleEventsAndSave(params['code'])
-        //         .then(res => {
-        //             if (res) {
-        //                 this.router.navigate(['/calendarSuccess'])
-        //             }
-        //         });
-        })
+
+
+        if (!this.calendarService.getCalendarCode()) {
+            this.currentRoute.queryParams.subscribe(params => {
+                // this.calendarService.(params['code']);
+
+                this.calendarService.getEventsFromDatabase()
+                    .then((events) => {
+                        console.log(events);
+                    });
+
+                this.router.navigate(['/calendarSuccess'])
+            })
+        }
+
+
+        // this.currentRoute.queryParams.subscribe(params => {
+        //     localStorage.setItem('googleCalendarCode', params['code']);
+        //     this.router.navigate(['/calendarSuccess'])
+        // //     this.calendarService.getGoogleEventsAndSave(params['code'])
+        // //         .then(res => {
+        // //             if (res) {
+        // //                 this.router.navigate(['/calendarSuccess'])
+        // //             }
+        // //         });
+        // })
     }
 
     appleAuth() {
@@ -52,7 +68,6 @@ export class RedirectComponent implements OnInit {
     }
 
     windowsAuth() {
-
     }
 
 }
