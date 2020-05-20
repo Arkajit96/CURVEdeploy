@@ -1,7 +1,10 @@
 <app-header></app-header>
 
 <body>
-    <div class="container">
+    <div class = 'row justify-content-sm-center' *ngIf="loadingPage">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="container" *ngIf="!loadingPage">
         <br><br>
         <div class="row justify-content-sm-center">
             <button mat-raised-button color="primary" (click)="googleOath()">
@@ -12,6 +15,19 @@
         <br><br>
         <div class="row justify-content-sm-center">
             <button mat-stroked-button color="primary" (click)="iCloudOath()">
+        </div>
+        <br><br>
+        <div class="row justify-content-sm-center">
+            <button mat-stroked-button color="primary" (click)="iCloudOath()">
+            <button mat-raised-button color="primary" (click)="loadMicrosoftCalendar()">
+                <mat-icon>calendar_today</mat-icon>
+                Microsoft Calendar Sync
+            </button>
+            <!-- <button (click)="microsoftSignOut()">Sign out</button> -->
+        </div>
+        <br><br>
+        <div class="row justify-content-sm-center">
+            <button mat-raised-button color="primary" (click)="loadCurveCalendar()">
                 <mat-icon>calendar_today</mat-icon>
                 iCloud Sync
             </button>

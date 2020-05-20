@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 
 // Service
-import { CalendarService } from 'src/app/services/calendar.service'
+import {CalendarService} from '../../../services/calendar.service'
+import{ MicrosoftService } from '../../../services/microsoft.service';
 
 
 @Component({
@@ -13,8 +14,11 @@ import { CalendarService } from 'src/app/services/calendar.service'
 })
 export class CalendarComponent implements OnInit {
 
+  private loadingPage = false;
+
   constructor(
     private calendarService: CalendarService,
+    private microsoftService: MicrosoftService,
     private snackbar: MatSnackBar,
     private router: Router
   ) { }
@@ -55,5 +59,21 @@ export class CalendarComponent implements OnInit {
     this.calendarService.getICloudEvents();
   }
 
+  async loadMicrosoftCalendar() {
+    this.loadingPage = true;
+    await this.microsoftService.signIn();
+
+    this.microsoftService.getEvents()
+      .then((events) => {
+        console.log(events);
+        this.microsoftService.saveMicrosoftEvents(events);
+        this.loadingPage = false;
+        this.router.navigate(['/calendarSuccess']);
+      });
+  }
+
+  microsoftSignOut() {
+    this.microsoftService.signOut();
+  }
 
 }

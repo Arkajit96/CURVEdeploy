@@ -3,6 +3,7 @@ import { Component, Output, EventEmitter, ViewChild, AfterViewInit } from '@angu
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { MatDialogConfig } from "@angular/material";
 
+import { ActivatedRoute, Router } from '@angular/router';
 import { ViewEventComponent } from '../../modals/view-event/view-event.component';
 
 import { Moment } from 'moment';
@@ -16,6 +17,7 @@ import { AddCalendarEventComponent } from '../../modals/add-calendar-event/add-c
 
 // Service
 import { CalendarService } from '../../../services/calendar.service'
+import { MicrosoftService } from 'src/app/services/microsoft.service';
 
 @Component({
   selector: 'app-calendarSuccess',
@@ -53,40 +55,6 @@ export class CalendarSuccessComponent implements AfterViewInit {
         week: []
       })
     })
-    // let type = this.calendarService.getType();
-    // let calendarid = this.calendarService.getCalendarid();
-    // console.log(type);
-    // if(type == 'google') {
-    //   if(!calendarid) {
-    //     this.calendarService.getGoogleEvents()
-    //       .then((events) => {
-    //           console.log(events);
-    //           this.userData = events;
-    //           this.eventsGot = this.userData.events;
-    //           this.setWeek();
-    //           this.setWeeklyView();
-    //     })
-    //   } else {
-    //     this.calendarService.getCurveEvents()
-    //       .then((events) => {
-    //         console.log(events);
-    //         this.userData = events;
-    //         this.eventsGot = this.userData;
-    //         this.setWeek();
-    //         this.setWeeklyView();
-    //       })
-    //   }
-    // } else if(type == 'curve') {
-    //   localStorage.setItem('calendarid', localStorage.getItem('userId'));
-    //   this.calendarService.getCurveEvents()
-    //     .then((events) => {
-    //       console.log(events);
-    //       this.userData = events;
-    //       this.eventsGot = this.userData;
-    //       this.setWeek();
-    //       this.setWeeklyView();
-    //     })
-    // }
 
   }
 
@@ -163,12 +131,24 @@ export class CalendarSuccessComponent implements AfterViewInit {
             if (time.time == moment(event.start.dateTime).format('h:00 a')) {
               return true;
             }
-          });
-          if (index > -1) {
-            console.log(index);
-            console.log(this.weeklyEvents[i][index]);
-            console.log(event);
-            this.weeklyEvents[i][index].push(event)
+          })
+          if(dayHasEvent) {
+            eventsToAdd.forEach(event => {
+              let index = this.eventArr.findIndex(time => {
+                console.log(new Date(event.start.dateTime))
+                console.log(moment(event.start.dateTime).format('h:00 a'));
+                if(time.time == moment(event.start.dateTime).format('h:00 a')) {
+                  return true;
+                }
+              });
+              if(index > -1) {
+                if(this.calendarService.getState().syncState == 'microsoft' && index - 4 > -1) {
+                  this.weeklyEvents[i][index - 4].push(event) 
+                } else {
+                  this.weeklyEvents[i][index].push(event)
+                }
+              }
+            })
           }
         })
       }

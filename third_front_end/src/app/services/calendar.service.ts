@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 // Service
@@ -58,7 +58,7 @@ export class CalendarService {
   autoCalendarLogin() {
     const googleCalendarCode = localStorage.getItem('googleCalendarCode');
     const appleCalendarCode = localStorage.getItem('appleCalendarCode');
-    const windowsCalendarCode = localStorage.getItem('windowsCalendarCode');
+    const microsoftCalendarCode = localStorage.getItem('microsoftCalendarCode');
 
     if (googleCalendarCode) {
       this.state.calendarCode = googleCalendarCode;
@@ -67,9 +67,9 @@ export class CalendarService {
     } else if (appleCalendarCode) {
       this.state.calendarCode = appleCalendarCode;
       this.state.syncState = 'apple';
-    } else if (windowsCalendarCode) {
-      this.state.calendarCode = windowsCalendarCode;
-      this.state.syncState = 'windows';
+    } else if (microsoftCalendarCode) {
+      this.state.calendarCode = microsoftCalendarCode;
+      this.state.syncState = 'microsoft';
     }
   }
 
@@ -79,8 +79,8 @@ export class CalendarService {
         localStorage.removeItem('googleCalendarCode');
       case 'apple':
         localStorage.removeItem('appleCalendarCode');
-      case 'windows':
-        localStorage.removeItem('windowsCalendarCode');
+      case 'microsoft':
+        localStorage.removeItem('microsoftCalendarCode');
     }
 
     this.state = {
@@ -267,5 +267,22 @@ export class CalendarService {
   //     )
   //   })
   // }
+
+  microsoftSignIn() {
+    return new Promise((res, rej) => {
+      let headers = new HttpHeaders();
+      headers = headers.set('Access-Control-Allow-Origin', '*');
+      this.http.get(this.url + 'microsoft/signin', {headers: headers}).subscribe(
+        data => {
+          this.state.syncState = 'microsoft';
+
+          console.log('DATA ', data);
+        },
+        error => {
+          console.log('ERROR ', error);
+        }
+      )
+    })
+  }
 
 }
