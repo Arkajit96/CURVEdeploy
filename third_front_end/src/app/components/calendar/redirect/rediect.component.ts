@@ -19,55 +19,33 @@ export class RedirectComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // const state = this.calendarService.getState()
-        // console.log(state)
-        // switch (state.syncState) {
-        //     case 'google':
-        //         this.googleAuth();
-        //         break;
-        //     case 'Apple':
-        //         this.appleAuth();
-        //     case 'windows':
-        //         this.windowsAuth();
-        // }
+        this.currentRoute.queryParams.subscribe(params => {
+            this.calendarService.getGoogleEventsAndSave(params['code'])
+                .then((state) => {
+                    console.log('state:' + state);
 
-        this.googleAuth()
+                    this.router.navigate(['/calendar'])
+                });
+        })
     }
 
-    googleAuth() {
+    // googleAuth() {
 
 
-        if (!this.calendarService.getCalendarCode()) {
-            this.currentRoute.queryParams.subscribe(params => {
-                // this.calendarService.(params['code']);
+    //     if (!this.calendarService.getState().syncState) {
+    //         this.currentRoute.queryParams.subscribe(params => {
+    //             // this.calendarService.(params['code']);
 
-                this.calendarService.getEventsFromDatabase()
-                    .then((events) => {
-                        console.log(events);
-                    });
+    //             this.calendarService.getEventsFromDatabase()
+    //                 .then((events) => {
+    //                     console.log(events);
+    //                 });
 
-                this.router.navigate(['/calendarSuccess'])
-            })
-        }
+    //             this.router.navigate(['/calendarSuccess'])
+    //         })
+    //     }
 
 
-        // this.currentRoute.queryParams.subscribe(params => {
-        //     localStorage.setItem('googleCalendarCode', params['code']);
-        //     this.router.navigate(['/calendarSuccess'])
-        // //     this.calendarService.getGoogleEventsAndSave(params['code'])
-        // //         .then(res => {
-        // //             if (res) {
-        // //                 this.router.navigate(['/calendarSuccess'])
-        // //             }
-        // //         });
-        // })
-    }
-
-    appleAuth() {
-
-    }
-
-    windowsAuth() {
-    }
+    // }
 
 }

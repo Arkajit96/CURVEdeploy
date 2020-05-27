@@ -1,6 +1,7 @@
 const { google } = require('googleapis');
 const { listEvents } = require('../helpers/google-helper')
 const googleUtil = require('../helpers/google-helper');
+var async = require('async');
 var mongoose = require("mongoose");
 
 
@@ -66,8 +67,9 @@ exports.getGoogleEvents = (req, res) => {
 // create multiple applications (or update if it is already there)
 exports.saveEvents = (req, res) => {
 
-    const filter = {
-        calendarid: req.body.userId
+    let filter = {
+        userid: req.body.userId,
+        source: req.body.source
     };
 
     const config = {
@@ -83,6 +85,8 @@ exports.saveEvents = (req, res) => {
             summary: event.summary,
             organizor: event.organizer
         }
+
+        filter.calendarid = event.id;
 
         Events.findOneAndUpdate(filter, update, config, (err, savedEvents) => {
             if (err) {
@@ -109,7 +113,7 @@ exports.saveEvents = (req, res) => {
 
 exports.getDatabaseEvents = (req, res) => {
     let userId = mongoose.Types.ObjectId(req.params.userId);
-    Events.find({ userId: userId })
+    Events.find({ userid: userId })
         .then(events => {
             res.status(200).json({
                 message: 'Fetching events successfully',

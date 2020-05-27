@@ -10,7 +10,7 @@ import { EditStudentComponent } from './components/edit-student/edit-student.com
 import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
-import { CalendarComponent } from './components/calendar/home/calendar.component';
+import { CalendarComponent } from './components/calendar/calendar_SP/calendar.component';
 import { RedirectComponent } from './components/calendar/redirect/rediect.component';
 import { CalendarSuccessComponent } from './components/calendar/success/calendarSuccess.component';
 import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
@@ -40,7 +40,7 @@ const routes: Routes = [
     path: 'shoppingCart', component: ShoppingCartComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'calendar', component: CalendarSuccessComponent, canActivate: [AuthGuard]
+    path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]
   },
   {
     path: 'redirect', component: RedirectComponent, canActivate: [AuthGuard]

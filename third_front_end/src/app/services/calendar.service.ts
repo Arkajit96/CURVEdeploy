@@ -38,13 +38,13 @@ export class CalendarService {
     };
   }
 
-  autoCalendarLogin() {
-    if (localStorage.getItem('googleCalendarCode')) {
-      this.state.googleCalendarCode = localStorage.getItem('googleCalendarCode');
-      this.state.syncState = 'google'
-      this.getGoogleEventsAndSave(this.state.googleCalendarCode);
-    }
-  }
+  // autoCalendarLogin() {
+  //   if (localStorage.getItem('googleCalendarCode')) {
+  //     this.state.googleCalendarCode = localStorage.getItem('googleCalendarCode');
+  //     this.state.syncState = 'google'
+  //     this.getGoogleEventsAndSave(this.state.googleCalendarCode);
+  //   }
+  // }
 
   clearCalendarInfo() {
     switch (this.state.syncState) {
@@ -71,9 +71,9 @@ export class CalendarService {
 
       const data = {
         userId: this.state.userId,
+        source: this.state.syncState,
         events: events
       }
-
       this.http.post<{ message: string; newEvents: any }>(
         this.url + 'calendar/saveEvents', data
       ).toPromise().then(
@@ -93,7 +93,6 @@ export class CalendarService {
         this.url + 'calendar/getDatabaseEvents/' + this.state.userId
       ).toPromise().then(
         data => {
-          console.log(data.events);
           this.state.events = data.events;
           res(data.events)
         }
@@ -122,19 +121,22 @@ export class CalendarService {
   //   return localStorage.getItem('calendarid');
   // }
 
-  googleOath() {
-    this.http.get<{ message: string, url: string }>(
-      this.url + 'calendar/googleOath/'
-    ).toPromise().then(
-      data => {
-        this.state.syncState = 'google';
-
-        window.location.href = data.url;
-      },
-      error => {
-        console.log(error);
-      }
-    )
+  googleOath(): Promise<string> {
+    return new Promise(async (res, rej) => {
+      this.http.get<{ message: string, url: string }>(
+        this.url + 'calendar/googleOath/'
+      ).toPromise().then(
+        data => {
+          this.state.syncState = 'google';
+          console.log(this.state);
+          res(data.url);
+        },
+        error => {
+          console.log(error);
+          rej('')
+        }
+      )
+    })
   }
 
 
@@ -144,10 +146,17 @@ export class CalendarService {
         this.url + 'calendar/getGoogleEvents', { code: googleCode }
       ).toPromise().then(
         data => {
+          this.state.syncState = 'google';
+          this.state.googleCalendarCode = googleCode;
+          console.log(this.state);
           this.saveEventsToDatabase(data.userData.events)
             .then(
               result => {
                 res(this.state.syncState);
+              }
+            ).catch(
+              err => {
+                rej('')
               }
             )
 
