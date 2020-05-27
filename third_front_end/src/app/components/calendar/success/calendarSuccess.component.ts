@@ -59,45 +59,15 @@ export class CalendarSuccessComponent implements AfterViewInit {
         })
         let type = this.calendarService.getType();
         let calendarid = this.calendarService.getCalendarid();
-        // if(type == 'google') {
-        //   if(!calendarid) {
-        //     this.calendarService.getGoogleEvents()
-        //       .then((events) => {
-        //           console.log(events);
-        //           this.userData = events;
-        //           this.eventsGot = this.userData.events;
-        //           this.setWeek();
-        //           this.setWeeklyView();
-        //     })
-        //   } else {
-        //     this.calendarService.getCurveEvents()
-        //       .then((events) => {
-        //         console.log(events);
-        //         this.userData = events;
-        //         this.eventsGot = this.userData;
-        //         this.setWeek();
-        //         this.setWeeklyView();
-        //       })
-        //   }
-        // } else if(type == 'curve') {
-          localStorage.setItem('calendarid', localStorage.getItem('userId'));
-          this.calendarService.getCurveEvents()
-            .then((events) => {
-              this.userData = events;
-              this.eventsGot = this.userData;
-              this.setWeek();
-              this.setWeeklyView();
-            })
-        // } else if(type == 'microsoft') {
-        //   this.userData = this.microsoftService.getMicrosoftEvents();
-        //   this.eventsGot = this.userData;
-        //   console.log(this.userData);
-        //   if(!this.eventsGot) {
-        //     this.router.navigate(['/calendar'])
-        //   }
-        //   this.setWeek();
-        //   this.setWeeklyView();
-        // }
+
+        localStorage.setItem('calendarid', localStorage.getItem('userId'));
+        this.calendarService.getCurveEvents()
+          .then((events) => {
+            this.userData = events;
+            this.eventsGot = this.userData;
+            this.setWeek();
+            this.setWeeklyView();
+          })
     }
 
     eventArr:any = [];
@@ -242,11 +212,20 @@ export class CalendarSuccessComponent implements AfterViewInit {
 
         let dialogRef = this.dialog.open(AddCalendarEventComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(res => {
-            if (res) {
+          console.log(res);
+            if (res.reload) {
                 this.snackbar.open('Event Added', 'Close', {
                     duration: 3000,
                     panelClass: 'success-snackbar'
                 })
+                this.eventsGot.push(res.event)
+                this.setWeek();
+                this.setWeeklyView();
+            } else {
+              this.snackbar.open('Error adding event, please try again', 'Close', {
+                duration: 3000,
+                panelClass: 'error-snackbar'
+              });
             }
         })
     }

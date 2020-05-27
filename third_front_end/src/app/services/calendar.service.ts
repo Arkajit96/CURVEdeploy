@@ -139,4 +139,30 @@ export class CalendarService {
     })
   }
 
+  createEvent(event: any) {
+    return new Promise((res, rej) => {
+      console.log(event);
+      let form = {
+        calendarid: localStorage.getItem('userId'),
+        start: {
+          dateTime: event.controls.start_time.value
+        },
+        end: {
+          dateTime: event.controls.end_time.value
+        },
+        summary: event.controls.event_name.value
+      }
+      this.http.post(this.url + 'events/create', form).subscribe(
+        data => {
+          console.log(data);
+          res(data);
+        },
+        error => {
+          console.log(error);
+          rej(error);
+        }
+      )
+    })
+  }
+
 }

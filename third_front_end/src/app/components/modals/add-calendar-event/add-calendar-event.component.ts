@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material';
 
 // Components
 import { CloseConfirmComponent } from '../../modals/close-confirm/close-confirm.component';
+import { CalendarService } from 'src/app/services/calendar.service';
 
 @Component({
     selector: 'app-add-calendar-event',
@@ -26,16 +27,17 @@ export class AddCalendarEventComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         private fb: FormBuilder,
         private snackBar: MatSnackBar,
+        private calendarService: CalendarService
     ) { }
 
 
     ngOnInit() {
 
         this.eventForm = this.fb.group({
-            event_name: [this.currentEvent.event_name],
-            organizer: [this.currentEvent.organizer],
-            start_time: [this.currentEvent.start_time],
-            end_time: [this.currentEvent.end_time]
+            event_name: [''],
+            organizer: [''],
+            start_time: [''],
+            end_time: ['']
         })
 
         this.isloading = false;
@@ -43,6 +45,13 @@ export class AddCalendarEventComponent implements OnInit {
 
     onSubmit() {
         this.dialogRef.close();
+        this.calendarService.createEvent(this.eventForm)
+        .then((data) => {
+            this.dialogRef.close({'reload': true, 'event': data});
+        })
+        .catch((er) => {
+            this.dialogRef.close({'error': er});
+        })
     }
 
     setChanged() {
