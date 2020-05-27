@@ -46,18 +46,18 @@ export class AuthService {
           .then(isAuth => {
             res(this.isAuthenticated && isAuth)
           })
-          .catch(err =>{
+          .catch(err => {
             rej(false);
           })
       } else if (this.entity === 'faculty') {
         this.facultyService.LogInAsFaculty(this.userId)
-        .then(isAuth => {
-          res(this.isAuthenticated && isAuth)
-        })
-        .catch(err =>{
-          rej(false);
-        })
-      }else{
+          .then(isAuth => {
+            res(this.isAuthenticated && isAuth)
+          })
+          .catch(err => {
+            rej(false);
+          })
+      } else {
         res(this.isAuthenticated);
       }
     })
@@ -119,7 +119,14 @@ export class AuthService {
               now.getTime() + expiresInDuration * 1000
             );
             this.saveAuthData(token, expirationDate, this.userId, this.entity);
+
+            // socket service
             this.chatService.connectToSocket(this.userId);
+
+            //calendar service init
+            this.calendarService.initState(this.userId);
+
+            // entity related service
             if (this.entity === 'student') {
               this.studentService.LogInAsStudent(this.userId)
                 .then(res => {
@@ -127,9 +134,9 @@ export class AuthService {
                 })
             } else if (this.entity === 'faculty') {
               this.facultyService.LogInAsFaculty(this.userId)
-              .then(res => {
-                if (res) { this.router.navigate(['/facultyProfile']); }
-              })
+                .then(res => {
+                  if (res) { this.router.navigate(['/facultyProfile']); }
+                })
             }
           }
         },
@@ -154,6 +161,8 @@ export class AuthService {
       this.token = authInformation.token;
       this.isAuthenticated = true;
       this.userId = authInformation.userId;
+      //calendar service init
+      this.calendarService.initState(this.userId);
       this.entity = authInformation.entity;
       this.setAuthTimer(expiresIn / 1000);
       this.authStatusListener.next(true);
@@ -172,6 +181,8 @@ export class AuthService {
     } else if (this.entity === 'faculty') {
       this.facultyService.clearCurrentUser();
     }
+
+    this.calendarService.clearCalendarInfo();
 
     this.entity = null;
     clearTimeout(this.tokenTimer);
@@ -198,12 +209,6 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('entity');
     localStorage.clear();
-
-    // clearsingleton
-    this.studentService.clearCurrentUser();
-    this.facultyService.clearCurrentUser();
-    this.calendarService.clearCurrentUserCode();
-    
   }
 
   private getAuthData() {

@@ -19,18 +19,33 @@ export class RedirectComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        if (!this.calendarService.getCurrentUserCode()) {
-            this.currentRoute.queryParams.subscribe(params => {
-                this.calendarService.setCurrentUserCode(params['code']);
+        this.currentRoute.queryParams.subscribe(params => {
+            this.calendarService.getGoogleEventsAndSave(params['code'])
+                .then((state) => {
+                    console.log('state:' + state);
 
-                this.calendarService.getGoogleEvents()
-                    .then((events) => {
-                        console.log(events);
-                    });
-
-                this.router.navigate(['/calendarSuccess'])
-            })
-        }
+                    this.router.navigate(['/calendar'])
+                });
+        })
     }
+
+    // googleAuth() {
+
+
+    //     if (!this.calendarService.getState().syncState) {
+    //         this.currentRoute.queryParams.subscribe(params => {
+    //             // this.calendarService.(params['code']);
+
+    //             this.calendarService.getEventsFromDatabase()
+    //                 .then((events) => {
+    //                     console.log(events);
+    //                 });
+
+    //             this.router.navigate(['/calendarSuccess'])
+    //         })
+    //     }
+
+
+    // }
 
 }

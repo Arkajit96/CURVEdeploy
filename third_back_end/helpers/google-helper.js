@@ -86,8 +86,10 @@ module.exports.listEvents = function (auth, cb) {
       if (err) return console.log('The API returned an error: ' + err);
       const events = res.data.items;
       if (events.length) {
+          console.log(events);
         cb(events)
       } else {
+        cb([])
         console.log('No upcoming events found.');
       }
     });

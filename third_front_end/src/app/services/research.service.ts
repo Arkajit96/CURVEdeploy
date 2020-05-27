@@ -239,7 +239,7 @@ export class ResearchService {
           },
           error => {
             console.log(error);
-            rej({ error: 'Error uploading file' });
+            rej({ error: 'Creating applications error' });
           }
         )
     })

@@ -4,7 +4,10 @@ const eventsSchema = new mongoose.Schema({
     calendarid: {
         type: String
     },
-    foreignid: {
+    userid: {
+        type: String
+    },
+    source: {
         type: String
     },
     start: {

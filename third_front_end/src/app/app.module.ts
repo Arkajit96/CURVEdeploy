@@ -20,7 +20,7 @@ import { EditFacultyComponent } from './components/edit-faculty/edit-faculty.com
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { ResearchComponent } from './components/research/research.component';
 import {ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
-import { CalendarComponent } from './components/calendar/home/calendar.component';
+import { CalendarComponent } from './components/calendar/calendar_SP/calendar.component';
 import { RedirectComponent } from './components/calendar/redirect/rediect.component';
 import { CalendarSuccessComponent } from './components/calendar/success/calendarSuccess.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,9 +46,10 @@ import { AddCalendarEventComponent } from './components/modals/add-calendar-even
 import { ViewStudentProfileComponent } from './components/modals/view-student-profile/view-student-profile.component';
 import { EditFacultyProfileComponent } from './components/modals/edit-faculty-profile/edit-faculty-profile.component';
 import { EditOpportunityComponent } from './components/modals/edit-opportunity/edit-opportunity.component';
-import { times } from './components/calendar/times';
 import { ViewEventComponent } from './components/modals/view-event/view-event.component';
 
+
+import { times } from './components/calendar/times';
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 // Microsoft
@@ -83,7 +84,7 @@ import { MicrosoftAuthSettings } from './microsoftConfig';
     EditFacultyProfileComponent,
     submitAllApplicationComponent,
     EditOpportunityComponent,
-    ViewEventComponent
+    ViewEventComponent,
   ],
   imports: [
     BrowserModule,

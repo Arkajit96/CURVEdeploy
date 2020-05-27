@@ -12,7 +12,7 @@ import{ MicrosoftService } from '../../../services/microsoft.service';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit{
+export class CalendarComponent implements OnInit {
 
   private loadingPage = false;
 
@@ -24,32 +24,27 @@ export class CalendarComponent implements OnInit{
   ) { }
 
   ngOnInit() {
-    // if (this.calendarService.getCurrentUserCode()){
-    //   this.router.navigate(['/calendarSuccess'])
-    // }
-    // if(this.calendarService.getType() == 'curve') {
-    //   this.router.navigate(['/calendarSuccess']);
-    // }
-
-    if(this.calendarService.getCalendarid()) {
-      this.router.navigate(['/calendarSuccess']);
+    // use sync state to navigate
+    if (this.calendarService.getState().syncState) {
+      this.router.navigate(['/calendarSuccess'])
     }
   }
 
-    googleOath(){
-      this.calendarService.setType('google');
-      this.calendarService.googleOath()
+  googleOath() {
+    this.calendarService.googleOath()
   }
 
-  loadCurveCalendar() {
-    this.calendarService.setType('curve');
-    this.router.navigate(['/calendarSuccess']);
+  noOathCalendar() {
+    this.router.navigate(['/calendarSuccess'])
+  }
+
+  iCloudOath(){
+    this.calendarService.getICloudEvents();
   }
 
   async loadMicrosoftCalendar() {
     this.loadingPage = true;
     await this.microsoftService.signIn();
-    this.calendarService.setType('microsoft');
 
     this.microsoftService.getEvents()
       .then((events) => {
