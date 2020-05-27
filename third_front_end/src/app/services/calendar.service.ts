@@ -8,7 +8,7 @@ import { ConfigService } from './config.service';
 export interface State {
   userId: string,
   syncState: string,
-  calendarCode: string,
+  googleCalendarCode: string,
   events: any[]
 }
 
@@ -18,58 +18,31 @@ export interface State {
 export class CalendarService {
 
   private url = this.config.getURL();
-  // private syncState: string = null;
-  // private calendarCode: string;
-
-
   private state: State
-
-  // private code: string;
-  // private type: string;
-  private userData: any;
-
 
   constructor(
     private http: HttpClient,
     private config: ConfigService,
   ) { }
 
-  getCalendarCode() {
-    if (!this.state.calendarCode) {
-      this.state.calendarCode = localStorage.getItem('googleCalendarCode')
-        || localStorage.getItem('appleCalendarCode') || localStorage.getItem('windowsCalendarCode');
-    }
-    return this.state.calendarCode;
-  }
-
   getState(): any {
     return this.state;
   }
 
-  initState(userId: string){
+  initState(userId: string) {
     this.state = {
       userId: userId,
       syncState: null,
-      calendarCode: null,
+      googleCalendarCode: null,
       events: []
     };
   }
 
   autoCalendarLogin() {
-    const googleCalendarCode = localStorage.getItem('googleCalendarCode');
-    const appleCalendarCode = localStorage.getItem('appleCalendarCode');
-    const microsoftCalendarCode = localStorage.getItem('microsoftCalendarCode');
-
-    if (googleCalendarCode) {
-      this.state.calendarCode = googleCalendarCode;
+    if (localStorage.getItem('googleCalendarCode')) {
+      this.state.googleCalendarCode = localStorage.getItem('googleCalendarCode');
       this.state.syncState = 'google'
-      this.getGoogleEventsAndSave(googleCalendarCode);
-    } else if (appleCalendarCode) {
-      this.state.calendarCode = appleCalendarCode;
-      this.state.syncState = 'apple';
-    } else if (microsoftCalendarCode) {
-      this.state.calendarCode = microsoftCalendarCode;
-      this.state.syncState = 'microsoft';
+      this.getGoogleEventsAndSave(this.state.googleCalendarCode);
     }
   }
 
@@ -78,15 +51,15 @@ export class CalendarService {
       case 'google':
         localStorage.removeItem('googleCalendarCode');
       case 'apple':
-        localStorage.removeItem('appleCalendarCode');
+      // localStorage.removeItem('appleCalendarCode');
       case 'microsoft':
-        localStorage.removeItem('microsoftCalendarCode');
+      // localStorage.removeItem('microsoftCalendarCode');
     }
 
     this.state = {
       userId: null,
       syncState: null,
-      calendarCode: null,
+      googleCalendarCode: null,
       events: null
     }
 
@@ -192,7 +165,7 @@ export class CalendarService {
   //iCloud sync
   getICloudEvents() {
 
-    let start  = '2020-05-01';
+    let start = '2020-05-01';
     let end = '2020-05-30';
 
     this.http.get<{ message: string, events: string }>(
@@ -272,7 +245,7 @@ export class CalendarService {
     return new Promise((res, rej) => {
       let headers = new HttpHeaders();
       headers = headers.set('Access-Control-Allow-Origin', '*');
-      this.http.get(this.url + 'microsoft/signin', {headers: headers}).subscribe(
+      this.http.get(this.url + 'microsoft/signin', { headers: headers }).subscribe(
         data => {
           this.state.syncState = 'microsoft';
 

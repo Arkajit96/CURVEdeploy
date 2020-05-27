@@ -3,6 +3,7 @@ import { MsalService } from '@azure/msal-angular';
 import { Client } from '@microsoft/microsoft-graph-client';
 
 import { MicrosoftAuthSettings } from '../microsoftConfig';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class MicrosoftService {
   private microsoftEvents: any;
 
   constructor(
-    private msalService: MsalService
+    private msalService: MsalService,
+    private http: HttpClient
   ) {
     this.authenticated = false;
     this.user = null;
@@ -27,9 +29,7 @@ export class MicrosoftService {
             console.log(e);
             done(e, null);
           });
-          console.log(token);
           if(token) {
-            console.log(token);
             done(null, token);
           } else {
             done('could not get access token', null);
@@ -47,7 +47,6 @@ export class MicrosoftService {
       });
 
     if (result) {
-      console.log(result);
       this.authenticated = true;
       // Temporary placeholder
       this.user = {};
@@ -90,12 +89,25 @@ export class MicrosoftService {
   }
 
   saveMicrosoftEvents(events) {
-    console.log(events);
-    for(let i = 0; i < events.length; i++) {
-      events[i].summary = events[i].subject;
-    }
-    this.microsoftEvents = events;
-    console.log(this.microsoftEvents);
+    return new Promise((res, rej) => {
+        for(let i = 0; i < events.length; i++) {
+          events[i].summary = events[i].subject;
+        }
+        this.microsoftEvents = events;
+        let calendarid = localStorage.getItem('userId');
+        let params = {
+          calendarid: calendarid,
+          events: events
+        }
+        this.http.post('http://localhost:3000/events/saveMicrosoftEvents', params).subscribe(
+          data => {
+            let d:any = data;
+            res(d.newEvents);
+          }, error => {
+            console.log(error);
+          }
+        )
+    })
   }
 
   getMicrosoftEvents() {

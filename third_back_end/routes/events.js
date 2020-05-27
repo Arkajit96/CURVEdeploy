@@ -41,4 +41,19 @@ router.post('/saveGoogleEvents', checkAuth, async (req, res) => {
         })
 })
 
+router.post('/saveMicrosoftEvents', checkAuth, async (req, res) => {
+    const calendarid = req.body.calendarid;
+    const events = req.body.events;
+
+    eventController.saveMicrosoftEvents(calendarid, events)
+        .then((data) => {
+            res.send({'success': 'Saved Microsoft events',
+                      'newEvents': data});
+        })
+        .catch((e) => {
+            console.log(e);
+            res.send({'error': 'Could not save Microsoft events'});
+        })
+})
+
 module.exports = router;
