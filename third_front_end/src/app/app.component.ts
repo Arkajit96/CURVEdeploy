@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import {AuthService} from './services/auth.service';
-import { CalendarService } from './services/calendar.service';
 import { ChatService } from './services/chat.service';
 
 @Component({
@@ -12,13 +11,11 @@ import { ChatService } from './services/chat.service';
 export class AppComponent implements OnInit{
   constructor(
     private authService: AuthService,
-    private calendarService: CalendarService,
     private chatService: ChatService
   ) {}
 
 
   ngOnInit() {
     this.authService.autoAuthUser();
-    this.calendarService.autoCalendarLogin();
   }
 }

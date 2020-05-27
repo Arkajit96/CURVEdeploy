@@ -24,24 +24,7 @@ export class CalendarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // if (this.calendarService.getCurrentUserCode()){
-    //   this.router.navigate(['/calendarSuccess']
-    //   queryParams: {
-    //     source: 'google'
-    //   },
-    //   skipLocationChange: true 
-    // })
-    // )}
-
-    //   this.router.navigate(['/calendarSuccess'])
-    // }
-    // if(this.calendarService.getType() == 'curve') {
-    //   this.router.navigate(['/calendarSuccess']);
-    // }
-
-
     // use sync state to navigate
-    console.log(this.calendarService.getState())
     if (this.calendarService.getState().syncState) {
       this.router.navigate(['/calendarSuccess'])
     }
