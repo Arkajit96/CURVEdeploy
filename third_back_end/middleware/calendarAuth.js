@@ -1,4 +1,4 @@
-const googleUtil = require('../helpers/google-util');
+const googleUtil = require('../helpers/google-helper');
 
 module.exports = async (req, res, next) => {
     googleUtil.getGoogleAccountFromCode(req.body.code, (err, res) => {

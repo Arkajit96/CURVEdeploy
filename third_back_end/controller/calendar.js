@@ -1,12 +1,12 @@
 const { google } = require('googleapis');
-const { listEvents } = require('../helpers/google-util')
-const googleUtil = require('../helpers/google-util');
+const { listEvents } = require('../helpers/google-helper')
+const googleUtil = require('../helpers/google-helper');
 var mongoose = require("mongoose");
 
 
 
 // helper for the iCloud
-const promptiCloud = require('../helpers/iCloud-util');
+const promptiCloud = require('../helpers/iCloud-helper');
 
 
 // Model
