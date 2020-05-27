@@ -25,37 +25,51 @@ import { MicrosoftService } from 'src/app/services/microsoft.service';
   styleUrls: ['./calendarSuccess.component.scss']
 })
 export class CalendarSuccessComponent implements AfterViewInit {
-  @Output()
-  dateSelected: EventEmitter<Moment> = new EventEmitter();
 
-  @Output()
-  selectedDate: any = moment();
+    @Output()
+    dateSelected: EventEmitter<Moment> = new EventEmitter();
 
-  @ViewChild('calendar', { static: true })
-  calendar: MatCalendar<Moment>;
+    @Output()
+    selectedDate: any = moment();
 
-  loadingEvents = true;
-  loadingPage = true;
+    @ViewChild('calendar', { static: true })
+    calendar: MatCalendar<Moment>;
 
-  eventArr: any = [];
-  selectedWeek: any = [];
-  weeklyEvents = [];
+    loadingEvents = true;
+    loadingPage = true;
+  
+    selectedWeek:any = [];
+    weeklyEvents = [];
 
-  private userData: any = [];
+    userid: any;
+    private userData: any
 
-  constructor(
-    private calendarService: CalendarService,
-    private microsoftService: MicrosoftService,
-    private snackbar: MatSnackBar,
-    private dialog: MatDialog,
-    private times: times
-  ) {
-    this.times.times.forEach((timePeriod) => {
-      this.eventArr.push({
-        time: timePeriod,
-        week: []
-      })
-    })
+    constructor(
+        private calendarService: CalendarService,
+        private snackbar: MatSnackBar,
+        private dialog: MatDialog,
+        private renderer: Renderer2,
+        private router: Router,
+        private times: times,
+        private microsoftService: MicrosoftService
+    ) {
+        this.times.times.forEach((timePeriod) => {
+            this.eventArr.push({
+                time: timePeriod,
+                week: []
+            })
+        })
+        let type = this.calendarService.getType();
+        let calendarid = this.calendarService.getCalendarid();
+
+        localStorage.setItem('calendarid', localStorage.getItem('userId'));
+        this.calendarService.getCurveEvents()
+          .then((events) => {
+            this.userData = events;
+            this.eventsGot = this.userData;
+            this.setWeek();
+            this.setWeeklyView();
+          })
 
   }
 
@@ -114,6 +128,7 @@ export class CalendarSuccessComponent implements AfterViewInit {
       this.weeklyEvents[4].push(['']);
       this.weeklyEvents[5].push(['']);
       this.weeklyEvents[6].push(['']);
+
     }
 
     for (let i = 0; i < this.weeklyEvents.length; i++) {
@@ -229,10 +244,24 @@ export class CalendarSuccessComponent implements AfterViewInit {
   addEvent() {
     const dialogConfig = new MatDialogConfig();
 
-    dialogConfig.autoFocus = false;
-    dialogConfig.width = "100em";
-    dialogConfig.data = {
-      userData: this.userData
+        let dialogRef = this.dialog.open(AddCalendarEventComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(res => {
+          console.log(res);
+            if (res.reload) {
+                this.snackbar.open('Event Added', 'Close', {
+                    duration: 3000,
+                    panelClass: 'success-snackbar'
+                })
+                this.eventsGot.push(res.event)
+                this.setWeek();
+                this.setWeeklyView();
+            } else {
+              this.snackbar.open('Error adding event, please try again', 'Close', {
+                duration: 3000,
+                panelClass: 'error-snackbar'
+              });
+            }
+        })
     }
 
     let dialogRef = this.dialog.open(AddCalendarEventComponent, dialogConfig);

@@ -6,7 +6,7 @@ eventsController.createEvent = (body) => {
     return new Promise(async (res, rej) => {
         let event = {
             calendarid: body.calendarid,
-            foreignid: body.foreignid,
+            foreignid: body.foreignid || null,
             start: {dateTime: body.start.dateTime},
             end: {dateTime: body.end.dateTime},
             summary: body.summary
