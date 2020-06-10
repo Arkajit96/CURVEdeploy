@@ -172,21 +172,25 @@ export class CalendarService {
 
 
   //iCloud sync
-  getICloudEvents() {
+  getICloudEvents(): Promise<any> {
+    return new Promise((res, rej) => {
 
-    let start = '2020-05-01';
-    let end = '2020-05-30';
+      let start = '2020-05-01';
+      let end = '2020-05-30';
 
-    this.http.get<{ message: string, events: string }>(
-      this.url + 'calendar/getICloudEvents?start=' + start + '&end=' + end
-    ).toPromise().then(
-      data => {
-        console.log(data.events);
-      },
-      error => {
-        console.log(error);
-      }
-    )
+      this.http.get<{ message: string, events: string }>(
+        this.url + 'calendar/getICloudEvents?start=' + start + '&end=' + end
+      ).toPromise().then(
+        data => {
+          console.log(data.events);
+          res(data.events);
+        },
+        error => {
+          console.log(error);
+          rej([])
+        }
+      )
+    })
   }
 
   // getGoogleEvents(): Promise<any> {

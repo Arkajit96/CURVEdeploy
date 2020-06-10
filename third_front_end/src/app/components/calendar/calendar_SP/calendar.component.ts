@@ -236,4 +236,12 @@ export class CalendarComponent implements OnInit {
         })
     }
 
+    //load events from iCloud and save to the database
+    loadiCloudCalendar(){
+        this.calendarService.getICloudEvents()
+        .then(events => {
+            console.log(events);
+        })
+    }
+
 }
