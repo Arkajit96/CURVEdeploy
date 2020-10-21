@@ -1,13 +1,15 @@
-const { google } = require('googleapis');
-const { listEvents } = require('../helpers/google-helper')
-const googleUtil = require('../helpers/google-helper');
 var async = require('async');
 var mongoose = require("mongoose");
 
-
+// helper for google 
+const { google } = require('googleapis');
+const googleUtil = require('../helpers/google-helper');
+const { listEvents } = require('../helpers/google-helper')
 
 // helper for the iCloud
-const promptiCloud = require('../helpers/iCloud-helper');
+// const promptiCloud = require('../helpers/iCloud-helper');
+const { ICloudCalendar,LanguageLocales, TimeZones} = require('icloud-calendar');
+var prompt = require('prompt');
 
 
 // Model
@@ -160,24 +162,53 @@ exports.addEventsToDatabase = (req, res) => {
 
 
 exports.getICloudEvents = async (req, res) => {
-    const myCloud = await promptiCloud();
+    const calendar = new ICloudCalendar();
 
     const startTime = req.query.start;
     const endTime = req.query.end;
-  
-    var events = await myCloud.Calendar.getEvents(startTime, endTime);
 
-    console.log(events);
+    prompt.start();
 
-    if(!events){ 
-        res.status(500).json({
-            message: "Icloud event fetching failed!",
-            event: null
+    prompt.get({
+        properties: {
+            username: {
+                pattern: /^.*$/,
+                message: 'Mail',
+                required: false
+            },
+            password: {
+                required: false,
+                hidden: true
+            }
+        }
+    }, function (err, input) {
+        if (err) return console.error(err);
+        calendar.login(input.username, input.password).then(resp => {
+            calendar.getEvents(LanguageLocales["en-US"], TimeZones["America/New_York"], startTime, endTime).then(calendars => {
+                console.log(calendars);
+            }).catch(err => {
+                console.error(err);
+            });
+        }).catch(err => {
+            console.error(err);
         });
-    }else{
-        res.status(200).json({
-            message: 'Icloud event fetching successful',
-            applicationID: events
-        })
-    }
+    })
+
+
+
+    // var events = await myCloud.Calendar.getEvents(startTime, endTime);
+
+    // console.log(events);
+
+    // if(!events){ 
+    //     res.status(500).json({
+    //         message: "Icloud event fetching failed!",
+    //         event: null
+    //     });
+    // }else{
+    //     res.status(200).json({
+    //         message: 'Icloud event fetching successful',
+    //         applicationID: events
+    //     })
+    // }
 }
